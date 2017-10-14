@@ -229,9 +229,55 @@
 	 * 2.3.1 表格组件
 	 */
 	var TableFactory = function(){
+		Factory.call(this);
+		/*
+		{
+			model: {v},
+			index: 1~max,
+			enableWrap: false,
+			width: ,			*enableWrap: true时此项必须
+			maxHeight: 			*enableWrap: true时此项必须
+		}
+		*/
+		
+		this.defaulModel = function(model, index, textAlign){
+			return {
+				model: model,
+				index: index,
+				enableWrap: false,
+				textAlign: textAlign || "center"
+			};
+		}
+		this.widthModel = function(model, index, width){
+			return $.extend(true, {}, this.defaulModel(model, index), {
+				width: width
+			});
+		}
+		this.wrapModel = function(model, index, width, maxHeight){
+			return $.extend(true, {}, this.widthModel(model, index, width), {
+				enableWrap: true,
+				maxHeight: maxHeight
+			});
+		}
+		
+		this.defaul = $.extend(true, {}, this.defaul, {
+			loadHead: true,						//是否加载标题栏
+			loadPagination: false,				//是否加载分页栏
+			enableMuiltSelect: false,
+			enableAutoSerial: false,
+			title: "FrichUI Simple",
+			models: null,						//列模型
+			data: null							//数据模型
+		});
+		
+	}
+	TableFactory.prototype = new Factory();
+
+	TableFactory.prototype.make = function(dom, customer){
 		
 	}
 	
+	FrichUI.prototype.Table = new TableFactory();
 	/*
 	 * 2.3.2 菜单组件
 	 */
