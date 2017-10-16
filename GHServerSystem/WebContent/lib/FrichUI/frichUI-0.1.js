@@ -142,7 +142,7 @@
 			height: "extend"
 		},
 		id: function(div, options) {
-	        var result;
+	        var result = null;
 	        if(options.id == "extend") {
 	            result = $(div).attr("id");
 	            if(!result || typeof(result) == undefined) {
@@ -156,7 +156,7 @@
 	        return result;
 	    },
 		weight: function (div, options) {
-	        var result;
+	        var result = null;
 	        if (options.width == "extend") {
 	            result = $(div).width();
 	            if (result == 0) {
@@ -174,7 +174,7 @@
 	        return result;
 		},
 		height: function (div, options) {
-	        var result;
+	        var result = null;
 	        if (options.height == "extend") {
 	            result = $(div).height();
 	            if (result == 0) {
@@ -232,6 +232,7 @@
 		Factory.call(this);
 		/*
 		{
+			name: ,
 			model: {v},
 			index: 1~max,
 			enableWrap: false,
@@ -240,23 +241,24 @@
 		}
 		*/
 		
-		this.defaulModel = function(model, index, textAlign){
+		this.defaulModel = function(name, model, index, textAlign){
 			return {
+				name: name,
 				model: model,
 				index: index,
 				enableWrap: false,
 				textAlign: textAlign || "center"
 			};
 		}
-		this.widthModel = function(model, index, width){
-			return $.extend(true, {}, this.defaulModel(model, index), {
+		this.widthModel = function(name, model, index, textAlign, width){
+			return $.extend(true, {}, this.defaulModel(model, index, textAlign), {
 				width: width
 			});
 		}
-		this.wrapModel = function(model, index, width, maxHeight){
-			return $.extend(true, {}, this.widthModel(model, index, width), {
+		this.wrapModel = function(name, model, index, textAlign, width, maxHeight){
+			return $.extend(true, {}, this.widthModel(model, index, textAlign, width), {
 				enableWrap: true,
-				maxHeight: maxHeight
+				maxHeight: maxHeight || "26px"
 			});
 		}
 		
@@ -266,18 +268,31 @@
 			enableMuiltSelect: false,
 			enableAutoSerial: false,
 			title: "FrichUI Simple",
-			models: null,						//列模型
-			data: null							//数据模型
+			models: null,						//列模型 [{},{}]
+			data: null							//数据模型 {v:,c:},{v:,c:}
 		});
 		
 	}
 	TableFactory.prototype = new Factory();
 
 	TableFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		/*
+		 * 创建标题基架
+		 */
+		var titleFrame = null;
+		if(options.loadHead){
+			titleFrame = this.createFrame("FrichUI_Table_Title_Frame");
+			
+			h5 = this.createH("FrichUI_Table_TitleName");
+		}
+		
 		
 	}
 	
 	FrichUI.prototype.Table = new TableFactory();
+	
 	/*
 	 * 2.3.2 菜单组件
 	 */
@@ -290,7 +305,7 @@
 		});
 		
 		this.createOLLI = function(model, data, level){
-			var ol = this.createOl("frichUI_Menu_House " + "frichUI_Menu_Level" + level);
+			var ol = this.createOl("FrichUI_Menu_House " + "FrichUI_Menu_Level" + level);
 			
 			var param = model.match(reg1);
 			for(var a in param){
@@ -298,7 +313,7 @@
 			}
 			
 			for(var i=0; i<data.length; i++){
-				var li = this.createLi("frichUI_Menu_Room");
+				var li = this.createLi("FrichUI_Menu_Room");
 				
 				var str = model;
 				for(var j=0; j<param.length; j++){
@@ -328,7 +343,7 @@
 		var options = this.initCreate(dom, customer);
 		
 		/* 创建基架 */
-		var frame = this.createFrame('frichUI_Menu_Frame');
+		var frame = this.createFrame('FrichUI_Menu_Frame');
 		
 		frame.append(this.createOLLI(options.model, options.data, 1));
 		
@@ -347,9 +362,9 @@
 		this.options = options;
 
 		$(frame).find("a").bind('click', function(event){
-			var fh = $(this).parent(".frichUI_Menu_Room");
+			var fh = $(this).parent(".FrichUI_Menu_Room");
 			
-			if(!fh.hasClass("frichUI_Menu_Showed"))
+			if(!fh.hasClass("FrichUI_Menu_Showed"))
 			{
 				// 设置滑动效果
 				fh.css("height", "auto");
@@ -358,34 +373,34 @@
 				fh.animate({height: AutoHeight + "px"}, (AutoHeight-35) * 2.5, function(){
 					fh.css("height", "auto");
 				});
-				fh.addClass("frichUI_Menu_Showed");
+				fh.addClass("FrichUI_Menu_Showed");
 				
 			}
-			else if(fh.hasClass("frichUI_Menu_Select"))
+			else if(fh.hasClass("FrichUI_Menu_Select"))
 			{
 				fh.css("height", "auto");
 				var AutoHeight = fh.height();
 				fh.animate({height: "35px"}, (AutoHeight-35) * 2.5);
-				fh.removeClass("frichUI_Menu_Showed");
+				fh.removeClass("FrichUI_Menu_Showed");
 			}
 			else
 			{
-				var fr = fh.parents(".frichUI_Menu_Select");
+				var fr = fh.parents(".FrichUI_Menu_Select");
 				if(fr.length != 0)
 				{
 					fh.css("height", "auto");
 					var AutoHeight = fh.height();
 					fh.animate({height: "35px"}, (AutoHeight-30) * 2.5);
-					fh.removeClass("frichUI_Menu_Showed");
+					fh.removeClass("FrichUI_Menu_Showed");
 				}
 			}
 		});
 		
-		$(frame).find(".frichUI_Menu_Level1").children(".frichUI_Menu_Room").bind('click', function(event){
+		$(frame).find(".FrichUI_Menu_Level1").children(".FrichUI_Menu_Room").bind('click', function(event){
 			var fa = $(this);
 
-			$(frame).find(".frichUI_Menu_Room").removeClass("frichUI_Menu_Select");
-			fa.addClass("frichUI_Menu_Select");
+			$(frame).find(".FrichUI_Menu_Room").removeClass("FrichUI_Menu_Select");
+			fa.addClass("FrichUI_Menu_Select");
 			
 		});
 	}
