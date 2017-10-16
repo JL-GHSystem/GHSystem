@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+<title>Insert title here</title>
+<script type="text/javascript">
+ $(document).ready(function(){
+		F.init("../lib/FrichUI/", F.FRICHUI_THEME_DARK);
+		
+		
+		$("#Suc").click(function(){
+			F.Dialog.make("", {
+				id: "msg",
+				enableCover: false,
+				type:"success",
+				message:"保存成功"
+			});
+		});
+		
+		$("#Fal").click(function(){
+			F.Dialog.make("", {
+				id: "msg",
+				enableCover: false,
+				type:"error",
+				message:"保存失败"
+			});
+		});
+			
+		/* F.ProgressBar.Make({
+			enableControl: false,
+			displayNum: true,
+			numOffset: ["Top","Bottom","Center","left","right"],
+			current: function(){
+				
+			},
+			moveTo: function(num){
+				
+			},
+			date: 0
+		}) */
+		/*
+		function loadPro1(){  
+		  var prg1= document.getElementById("Progress1");  
+		  prg1.style.width = parseInt(prg1.style.width) + 1 + "%";
+		  prg1.innerHTML = prg1.style.width;  
+		  if(prg1.style.width == "100%"){  
+		     window.clearInterval(prgR1);  
+		  }  
+		}  
+		var prgR1 = window.setInterval(function(){
+			 loadPro1();
+		},100); 
+		window.onload = function(){  
+			prgR1;  
+		 }  
+		
+		function loadPro2(){  
+			  var prg2= document.getElementById("Progress2");  
+			  prg2.style.width = parseInt(prg2.style.width) + 1 + "%";
+			  if(prg2.style.width == "100%"){  
+			     window.clearInterval(prgR2);  
+			  }  
+			}  
+			var prgR2 = window.setInterval(function(){
+				 loadPro2();
+			},100); 
+			window.onload = function(){  
+			    prgR2;  
+			 }  */
+			
+ });
+</script>
+</head>
+<body>
+	<div id="btn1">
+		<div style="height: 40px;float:left;">
+			<button id="Suc">弹出成功框</button>
+		</div>
+	</div>
+	
+	
+	<div id="btn2">
+		<div style="height: 40px;">
+			<button id="Fal">弹出失败框</button>
+		</div>
+	</div>
+	
+	<div id="pro1" >
+		<div class ="FrichUI_Progress_Frame">
+			<div class ="FrichUI_Progress_Content">
+				<div class="FrichUI_Pro_Progress" id="Progress1" style="width:0%">
+				</div>  
+			</div>
+		</div>  
+	</div>
+	
+	<div id="pro2" >
+		<div class ="FrichUI_Progress_Frame"> 
+			<div class ="FrichUI_Progress_Content">
+				<div class="FrichUI_Pro_Progress" id="Progress2" style="width:0%">
+				</div>  
+			</div>
+		</div>  
+	</div>
+	
+	
+</body>
+</html>
