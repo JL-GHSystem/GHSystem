@@ -14,20 +14,52 @@ body, html
 }
 </style>
 <script type="text/javascript">
+	$(document).ready(function(){
+		F.init("../lib/FrichUI/", F.FRICHUI_THEME_DARK);
+		
+		$("#Message").click(function(){
+			F.Dialog.make("", {
+				id: "msg",
+				type: "error",
+				title: "错误框",
+				message: "保存文件失败！"
+			});
+			
+		});
+		
+	})
+	
+	/*
+	1. 无遮罩，定时消失，成功框
+	2. 无遮罩，定时消失，失败框
+	
+	3. 进度条有百分比的
+	4. 进度条无百分比的
+	*/
+
 	var options = {
 		useCover: true
 	}
 	
-	$(document).ready(function(){
-		$(".frichUI_Cover").css({
-			"width": $(document).width(),
-			"height": $(document).height()
-		});
-		
-		$("#Message").click(function(){
-			
-		});
-	})
+	var icons= {
+		info: "FrichUI_Dialog_Info",
+		help: "FrichUI_Dialog_Help",
+		warn: "FrichUI_Dialog_Warning",
+		success: "FrichUI_Dialog_Success",
+		error: "FrichUI_Dialog_Error"
+	};
+	
+
+/* 	.frichUI_Dialog_Yes,
+	.frichUI_Dialog_No,
+	.frichUI_Dialog_Confirm,
+	.frichUI_Dialog_Cancle */
+	
+	var options = {
+	}
+	
+	
+	
 </script>
 </head>
 <body>
@@ -35,9 +67,10 @@ body, html
 		<button id="Message">弹出消息框</button>
 	</div>
 	<!-- 判断有无遮罩层, body:overflow-y:hidden; -->
-	<div class="frichUI_Cover">
-		<div class="frichUI_Dialog_Frame" style="left: 100px; top: 150px">
-			<div class="frichUI_Dialog_Title">
+	<!-- 
+	<div class="FrichUI_Cover">
+		<div class="FrichUI_Dialog_Frame" style="left: 100px; top: 150px">
+			<div class="FrichUI_Dialog_Title">
 				<h5 class="frichUI_Dialog_Name">
 					消息框
 				</h5>
@@ -114,6 +147,10 @@ body, html
 				<a class="frichUI_Dialog_Confirm">确定</a>
 			</div>
 		</div>
-	</div>
+	</div> 
+	-->
+	
+	
+	
 </body>
 </html>
