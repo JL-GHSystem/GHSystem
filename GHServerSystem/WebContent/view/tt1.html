@@ -40,11 +40,15 @@
 			},
 			date: 0
 		}) */
-		/*
+		
+		
 		function loadPro1(){  
-		  var prg1= document.getElementById("Progress1");  
+		  var prg1= document.getElementById("Progress1");
+		  var prgn1=document.getElementById("ProgressNum1");
+		  var prgn2=document.getElementById("ProgressNum2");
 		  prg1.style.width = parseInt(prg1.style.width) + 1 + "%";
-		  prg1.innerHTML = prg1.style.width;  
+		  prgn1.innerHTML = prg1.style.width;
+		  prgn2.innerHTML = prg1.style.width;
 		  if(prg1.style.width == "100%"){  
 		     window.clearInterval(prgR1);  
 		  }  
@@ -68,7 +72,7 @@
 			},100); 
 			window.onload = function(){  
 			    prgR2;  
-			 }  */
+			 }  
 			
  });
 </script>
@@ -90,17 +94,29 @@
 	<div id="pro1" >
 		<div class ="FrichUI_Progress_Frame">
 			<div class ="FrichUI_Progress_Content">
-				<div class="FrichUI_Pro_Progress" id="Progress1" style="width:0%">
-				</div>  
+				<div class="FrichUI_Progress_Entity">
+					<div class="FrichUI_Pro_Progress" id="Progress1" style="width:0%">
+						<div class="FrichUI_Pro_Num1" id="ProgressNum1">
+						</div>	
+						<div class="FrichUI_Pro_Num1_Triangle">
+						</div>
+						<div class="FrichUI_Pro_Num2" id="ProgressNum2">
+						</div>	
+						<div class="FrichUI_Pro_Num2_Triangle">
+						</div>
+					</div> 
+				</div>	
 			</div>
 		</div>  
 	</div>
-	
+	<br/>
+	<br/>
+	<br/>
 	<div id="pro2" >
 		<div class ="FrichUI_Progress_Frame"> 
 			<div class ="FrichUI_Progress_Content">
 				<div class="FrichUI_Pro_Progress" id="Progress2" style="width:0%">
-				</div>  
+				</div>
 			</div>
 		</div>  
 	</div>
