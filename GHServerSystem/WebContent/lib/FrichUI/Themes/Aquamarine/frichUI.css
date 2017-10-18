@@ -594,10 +594,30 @@
 
 .FrichUI_Pro_Progress
 {
-   background: #008040;
-   float:left;
-   height:25px;
-   color:#FFF;  
-   line-height:25px; 
-   text-align:center;  
- }  
+	background: #008040;
+	float:left;
+	height:25px;
+	color:#FFF;  
+	line-height:25px; 
+	text-align:center;  
+}
+
+
+/*日期样式*/
+.FrichUI_Date_Frame
+{
+	position: absolute;
+	left: 72px;
+	top: 30px;
+	display: block;
+}
+
+.FrichUI_Date_Title
+{
+	border-top: 1px solid #B1D2EC;
+	position: relative;
+	height: 26px;
+	padding: 5px;
+	*width: 100%;
+	z-index: 99;
+}

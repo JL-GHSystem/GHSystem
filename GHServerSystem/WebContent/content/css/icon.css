@@ -23,3 +23,64 @@
 	height: 40px;
 	background: url(../../img/userHead/head.jpg);
 }
+
+.add
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/mune.png) no-repeat -55px -30px;
+}
+
+.update
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/mune.png) no-repeat -5px -55px;
+}
+.search
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/mune.png) no-repeat -5px -5px;
+}
+.exInput
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/mune.png) no-repeat -55px -5px;
+}
+
+.exOutput
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/mune.png) no-repeat -25px -5px;
+}
+
+.download
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/mune.png) no-repeat -25px -30px;
+}
+
+.delete
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/mune.png) no-repeat  -5px -30px;
+}

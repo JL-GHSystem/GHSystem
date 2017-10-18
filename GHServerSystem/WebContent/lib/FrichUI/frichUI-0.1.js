@@ -669,86 +669,12 @@
 				});
 			}, 2000);	
 		}
-		
-		
-		
 		/* 创建Dialog实体 */
 		return 0;
 	};
 
 	FrichUI.prototype.Dialog = new DialogFactory();
 	
-	
-	
-	/*
-	 * 2.3.6 进度条组件
-	 */	
-	var ProgressFactory = function(){
-		Factory.call(this);
-		
-		this.createContent = function(options){
-			var content = this.createDiv("FrichUI_Progress_Content");;
-			var progress = this.createDiv("FrichUI_Pro_Progress");
-			content.append(progress);	
-		}
-		
-		this.showNum = function(options){
-			switch(options.numOffset){
-				case "Top":
-					
-					break;
-				case "Bottom":
-					
-					break;
-				case "Center":
-					
-					break;
-				case "Left":
-					
-					break;
-				case "Right":
-					
-					break;
-				default:break;
-			}
-		}
-	}
-
-	ProgressFactory.prototype = new Factory();
-	
-	ProgressFactory.prototype.make = function(dom, customer){
-		var options = this.initCreate(dom, customer);
-		if(options.enableControl){
-			
-		}else{
-			
-		}
-		
-		if(options.displayNum){
-			
-		}else{
-			
-		}
-			
-		/* 创建基架 */
-		var frame = this.createFrame("FrichUI_ Progress_Frame");
-		
-		frame.append(this.createContent(options));
-		/*注册事件*/
-		/* 1.事件绑定 */
-		current(function(){
-			
-		});
-		/* 2.移动顶点控制*/
-		moveTo(function(){
-			
-		});
-		
-		return 0;
-	};
-
-	/* 创建.Progress实体 */
-	FrichUI.prototype.Progress = new ProgressFactory();
 	
 	
 	/*

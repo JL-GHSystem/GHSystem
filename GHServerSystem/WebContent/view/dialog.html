@@ -17,6 +17,17 @@ body, html
 	$(document).ready(function(){
 		F.init("../lib/FrichUI/", F.FRICHUI_THEME_DARK);
 		
+		$("#Message1").click(function(){
+			F.Dialog.make("", {
+				id: "msg",
+				enableCover:false,
+				type: "error",
+				title: "错误框",
+				message: "保存文件失败！"
+			});
+			
+		});
+		
 		$("#Message").click(function(){
 			F.Dialog.make("", {
 				id: "msg",
@@ -65,6 +76,7 @@ body, html
 <body>
 	<div style="height: 1000px;">
 		<button id="Message">弹出消息框</button>
+		<button id="Message1">弹出消息框</button>
 	</div>
 	<!-- 判断有无遮罩层, body:overflow-y:hidden; -->
 	<!-- 
