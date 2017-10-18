@@ -37,10 +37,10 @@ body
 }
 .userFrame
 {
+	position: absolute;
 	display: block;
-	float: right;
+	right: 10px;
 	width: 130px;
-	margin-right: 5px;
 	overflow: hidden;
 }
 .userFrame *
@@ -76,6 +76,7 @@ body
 }
 .userFrame .toolBox
 {
+	float: left;
 	height: 35px;
 	line-height: 35px;
 	font-size: 14px;

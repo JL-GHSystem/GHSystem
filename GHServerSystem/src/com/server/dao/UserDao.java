@@ -23,7 +23,7 @@ public class UserDao extends Dao implements IUserDao{
 
 	public UserModel select(UserModel userModel) {
 		// TODO Auto-generated method stub
-		ConnBean cb = Dao.getConn(Dao.ORACLE);
+		ConnBean cb = Dao.getConn();
 		if(cb != null){
 			Connection cn = cb.getConn();
 			try {
@@ -55,7 +55,7 @@ public class UserDao extends Dao implements IUserDao{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			Dao.freeConn(Dao.ORACLE, cb);
+			Dao.freeConn(cb);
 		}
 		return userModel;
 	}	

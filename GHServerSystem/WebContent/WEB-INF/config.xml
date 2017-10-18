@@ -3,9 +3,15 @@
 <connectionPool>
 	<connection>
 		<name>oracle</name>
-		<url>jdbc:oracle:thin:@122.232.28.54:1521:thinklan</url>
+		<url>jdbc:oracle:thin:@122.232.26.180:1521:thinklan</url>
 		<username>tds</username>
 		<password>tds</password>
+	</connection>
+	<connection>
+		<name>mysql</name>
+		<url>jdbc:mysql://localhost:3306/tds</url>
+		<username>root</username>
+		<password>wsdrfgtyhuiokl</password>
 	</connection>
 	<ip>jlinfo.kmdns.net</ip>
 </connectionPool>

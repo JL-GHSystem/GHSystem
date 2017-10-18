@@ -40,8 +40,22 @@ public class ConnPool {
 	
 	public synchronized ConnBean newConnection(){
 		ConnBean cb = new ConnBean(this.getLength());
-		boolean result = cb.open(Driver.oracle, this.getUrl(), 
-				this.getAccount(), this.getPassword());
+		boolean result;
+		switch(this.name) {
+			case "oracle": 
+				result = cb.open(Driver.oracle, this.getUrl(), 
+						this.getAccount(), this.getPassword());
+				break;
+			case "mysql": 
+				result = cb.open(Driver.mysql, this.getUrl(), 
+						this.getAccount(), this.getPassword());
+				break;
+			default:
+				result = false;
+				break;
+		}
+		
+		
 		if(result){
 			this.addLength();
 			return cb;

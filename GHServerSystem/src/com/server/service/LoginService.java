@@ -28,7 +28,7 @@ public class LoginService implements IService{
 	}
 	
 	public boolean isValid(UserModel userModel){
-		if(!Lib.isEmpty(userModel.getO_PERIODEND())){
+		if(Lib.istEmpty(userModel.getO_PERIODEND())){
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			try {
 				Date now = new Date();
@@ -38,7 +38,8 @@ public class LoginService implements IService{
 				}
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
+				return true;
 			}
 		}
 		return true;

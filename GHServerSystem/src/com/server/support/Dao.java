@@ -7,7 +7,10 @@ import org.w3c.dom.Node;
 import com.common.xml.XmlHelper;
 
 public class Dao {
-	public static final String ORACLE = "oracle";
+	public static final String defaul = "mysql";
+	
+	public static final String oracle = "oracle";
+	public static final String mysql = "mysql";
 
 	public static ConnPool[] connPools;
 	public static boolean isInit = false;
@@ -59,6 +62,14 @@ public class Dao {
 			}
 		}
 		
+	}
+
+	public static ConnBean getConn(){
+		return Dao.getConn(defaul);
+	}
+
+	public static boolean freeConn(ConnBean conn){
+		return Dao.freeConn(defaul, conn);
 	}
 	
 	public static ConnBean getConn(String name){
