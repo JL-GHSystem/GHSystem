@@ -257,8 +257,17 @@
 	    	a.append(value);
 	        return a;
 	    },
+	    createiFrame:function(frClass,value){
+	    	var iF=$("<iFrame></iFrame>");
+	    	iF.attr({
+	    		class:frClass,
+	    	});
+	    	iF.append(value);
+	    	return iF;
+	    },
 		initCreate: function(dom, customer){
 			options = $.extend(true, {}, this.defaul, customer);
+			this.id(dom, options);
 			
 			return options;
 		}
@@ -488,6 +497,7 @@
 			control: ["confirm"]
 		});
 		
+		
 		this.createTitle = function(options){
 			var title = this.createDiv("FrichUI_Dialog_Title");
 			
@@ -635,17 +645,134 @@
 			
 			/* 创建基架 */
 			var frame = this.createFrame("FrichUI_Dialog_Frame");
-			
-			frame.append(this.createTitle(options));
+			if(options.isiFrame){
+				frame.append(this.createTitle(options));
+				
+				var iframe = this.createiFrame("FrichUI_Dialog_iFrame");
+				iframe.src="http://www.runoob.com"
+				frame.append(iframe);
+				
+				frame.append(this.createFoot(options));
+				
+			}else{
+				frame.append(this.createTitle(options));
 
-			frame.append(this.createContent(options));
+				frame.append(this.createContent(options));
 
-			frame.append(this.createFoot(options));
-
-			if(cover){
-				frame.appendTo(cover);
-				cover.appendTo($(document).find("body").eq(0));
+				frame.append(this.createFoot(options));
 			}
+			
+
+			frame.appendTo(cover);
+			cover.appendTo($(document).find("body").eq(0));
+			
+			$(frame).animate({
+				"width":"244px",
+				"height":"164px",
+				"opacity":"1"
+			},500);
+			
+			$(frame).find(".FrichUI_Dialog_Close").bind('click',function(event){
+				$(cover).remove();
+			});
+			
+			$(frame).find(".FrichUI_Dialog_Full").bind('click',function(event){
+				if($(frame).find(".FrichUI_Dialog_Full").hasClass("FrichUI_Dialog_FullDone")){
+					$(cover).css({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					});
+					$(frame).animate({
+						"left":"30%",
+						"top":"30%",
+						"width":"244px",
+						"height":"164px"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"height":"30px"
+					});
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Full").removeClass("FrichUI_Dialog_FullDone");
+				}else{
+					$(cover).css({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					});
+					$(frame).animate({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"height":"80%"
+					});
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Full").addClass("FrichUI_Dialog_FullDone");
+					$(frame).find(".FrichUI_Dialog_Min").removeClass("FrichUI_Dialog_MinDone");
+				}
+			});
+			
+			$(frame).find(".FrichUI_Dialog_Min").bind('click',function(event){
+				if($(frame).find(".FrichUI_Dialog_Min").hasClass("FrichUI_Dialog_MinDone")){
+					$(cover).animate({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					},500);
+					$(frame).animate({
+						"left":"30%",
+						"top":"30%",
+						"width":"244px",
+						"height":"100px"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Min").removeClass("FrichUI_Dialog_MinDone");
+				}else{
+					$(cover).animate({
+						"left":"50%",
+						"top":"0",
+						"width":"150px",
+						"height":"40px"
+					},500);
+					$(frame).animate({
+						"left":"50%",
+						"top":"0",
+						"width":"150px",
+						"height":"40px"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"none"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"none"
+					});
+					$(frame).find(".FrichUI_Dialog_Min").addClass("FrichUI_Dialog_MinDone");
+					$(frame).find(".FrichUI_Dialog_Full").removeClass("FrichUI_Dialog_FullDone");
+				}
+				
+			});
+			
 			
 		}
 		else {
@@ -667,14 +794,113 @@
 				$(frame).fadeOut(500, function(){
 					$(frame).remove();
 				});
-			}, 2000);	
+			}, 2000); 
 		}
+
+		
 		/* 创建Dialog实体 */
 		return 0;
 	};
 
 	FrichUI.prototype.Dialog = new DialogFactory();
 	
+
+	
+	
+	/*
+	 * 2.3.6 进度条组件
+	 */	
+	var ProgressFactory = function(){
+		Factory.call(this);
+		
+		this.defaul = $.extend(true,{},this.defaul,{
+			displayNum:true,
+			numOffset:"right"
+		});
+		
+		this.createContent = function(options){
+			var content = this.createDiv("FrichUI_Progress_Content");
+			var entity = this.createDiv("FrichUI_Progress_Entity");
+			content.append(entity);
+			var progress=this.createDiv("FrichUI_Pro_Progress");
+			progress.width(0);
+			entity.append(progress);
+			if(options.displayNum){
+				var num;
+				var triangle;
+				switch(options.numOffset){
+					case "top":
+						num = this.createDiv("FrichUI_Pro_Num FrichUI_Pro_Top");
+						triangle=this.createDiv("FrichUI_Pro_Top_Triangle");
+						break;
+					case "bottom":
+						num = this.createDiv("FrichUI_Pro_Num FrichUI_Pro_Bottom");
+						triangle=this.createDiv("FrichUI_Pro_Bottom_Triangle");
+						break;
+					case "left":
+						num = this.createDiv("FrichUI_Pro_Num FrichUI_Pro_Left");
+						break;
+					case "center":
+						num = this.createDiv("FrichUI_Pro_Num FrichUI_Pro_Center");
+						break;
+					case "right":
+						num = this.createDiv("FrichUI_Pro_Num FrichUI_Pro_Right");
+						break;
+					default:break;
+				}
+				progress.append(num);
+				progress.append(triangle);
+			}
+			return content;
+		}
+		
+	}
+
+	ProgressFactory.prototype = new Factory();
+	
+	ProgressFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+			/* 创建基架 */
+			var frame = this.createFrame("FrichUI_Progress_Frame");
+			
+			frame.append(this.createContent(options));
+			
+			var c = $($(window).eq(0)[0].parent.document).find('body');
+			$(c).append(frame);
+			/* 注册事件 */
+			/* 1.  加载事件 */
+			
+			frichUI.push(new ProgressEntity(frame, options));
+		
+		return 0;
+	};
+
+	/* 进度条实体Entity */
+	var ProgressEntity = function(frame, options){
+		this.id = options.id;
+		this.frame = frame;
+		this.options = options;
+		this.max = 100;
+		this.progress = 0;
+		
+		this.setProgress = function(data){
+			if(this.progress + data <= this.max){
+				this.progress += data;
+				var prg = $(this.frame).find(".FrichUI_Pro_Progress");
+				var prgN = $(this.frame).find(".FrichUI_Pro_Num");
+				prg.css({
+					"width": (this.progress + "%")
+				});
+				prgN.html(this.progress + "%");
+			}
+		}
+		
+		this.getProgress = function(){
+			return this.progress;
+		}
+	}
+	
+	FrichUI.prototype.Progress = new ProgressFactory();
 	
 	
 	/*

@@ -20,9 +20,10 @@ body, html
 		$("#Message1").click(function(){
 			F.Dialog.make("", {
 				id: "msg",
-				enableCover:false,
-				type: "error",
+				enableCover:true,
+				type: "info",
 				title: "错误框",
+				tools:["min","full","close"],
 				message: "保存文件失败！"
 			});
 			
@@ -34,6 +35,15 @@ body, html
 				type: "error",
 				title: "错误框",
 				message: "保存文件失败！"
+			});
+			
+		});
+		
+		$("#Message2").click(function(){
+			F.Dialog.make("", {
+				id: "msg",
+				isiFrame:true,
+				title:"hh"
 			});
 			
 		});
@@ -77,6 +87,7 @@ body, html
 	<div style="height: 1000px;">
 		<button id="Message">弹出消息框</button>
 		<button id="Message1">弹出消息框</button>
+		<button id="Message2">弹出消息框</button>
 	</div>
 	<!-- 判断有无遮罩层, body:overflow-y:hidden; -->
 	<!-- 

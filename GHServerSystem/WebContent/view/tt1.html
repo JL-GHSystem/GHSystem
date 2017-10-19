@@ -6,11 +6,12 @@
 <script src="../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
 <title>Insert title here</title>
 <script type="text/javascript">
+
  $(document).ready(function(){
 		F.init("../lib/FrichUI/", F.FRICHUI_THEME_DARK);
 		
 		
-		$("#Suc").click(function(){
+		/* $("#Suc").click(function(){
 			F.Dialog.make("", {
 				id: "msg",
 				enableCover: false,
@@ -27,22 +28,80 @@
 				message:"保存失败"
 			});
 		});
+		
+		$("#Pro").click(function(){
+			F.Progress.make("",{
+				id:"pro",
+				displayNum:true,
+				numOffset:"bottom"
+			});
+
+			var pro = F.entitys("pro");
+			window.setInterval(function(){
+				pro.setProgress(1);
+			},100);
+		}); */
 			
-		/* F.ProgressBar.Make({
-			enableControl: false,
-			displayNum: true,
-			numOffset: ["Top","Bottom","Center","left","right"],
-			current: function(){
-				
-			},
-			moveTo: function(num){
-				
-			},
-			date: 0
-		}) */
+		
+		/*日期输入框*/
+		function today(){
+		    var today=new Date();
+		    var h=today.getFullYear();
+		    var m=today.getMonth()+1;
+		    var d=today.getDate();
+		    return h+"-"+m+"-"+d;
+		}
+		document.getElementById("today1").value = today();
+		document.getElementById("today2").value = today();
 		
 		
-		/* function loadPro1(){  
+		function checkDate(strInputDate) {
+			  // 定义一个月份天数常量数组
+			  var DA = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+			  // 统一日期格式
+			  strDate = strInputDate.replace(/-/g, "/");
+
+			  //判断日期是否是预期的格式
+			  if (strDate.indexOf("/") == -1) {
+			    alert("请输入 yyyy-M-d、yyyy-MM-dd、yyyy/M/d、yyyy/MM/dd 格式。")
+			    return false;
+			  }
+
+			  // 分解出年月日
+			  arrD = strDate.split("/");
+			  if (arrD.length != 3) return false;
+			  y = parseInt(arrD[0], 10);
+			  m = parseInt(arrD[1], 10);
+			  d = parseInt(arrD[2], 10);
+
+			  //判断年月日是否是数字
+			  if (isNaN(y) || isNaN(m) || isNaN(d)) return false;
+
+			  // 判断月份是否在1-12之间
+			  if (m > 12 || m < 1) return false;
+			  //判断是否是闰年
+			  if (isLoopYear(y)) DA[2] = 29;
+
+			  //判断输入的日是否超过了当月月份的总天数。
+			  if (d > DA[m]) return false;
+
+			  //各种条件都验证了，则应该是一个合法的日期了。
+			  // 如果要对日期进行一次格式化，则可以在这里进行处理了，下面格式化成数据库识别的日期格式 yyyy-MM-dd
+			  // str = y + "-" + (m<10?"0":"") + m + "-" + (d<10?"0":"") + d;
+			  str = y + "-" + (m < 10 ? "0" : "") + m + "-" + (d < 10 ? "0" : "") + d;
+			 
+			  return true;
+			}
+			function isLoopYear(theYear) {
+			  return (new Date(theYear, 1, 29).getDate() == 29);
+			}
+			
+			var dt= document.getElementById("today1").value;
+			checkDate(dt);
+
+		
+		 function loadPro1(){  
 		  var prg1= document.getElementById("Progress1");
 		  var prgn1=document.getElementById("ProgressNum1");
 		  var prgn2=document.getElementById("ProgressNum2");
@@ -63,6 +122,7 @@
 		function loadPro2(){  
 			  var prg2= document.getElementById("Progress2");  
 			  prg2.style.width = parseInt(prg2.style.width) + 1 + "%";
+			  prg2.innerHTML=prg2.style.width;
 			  if(prg2.style.width == "100%"){  
 			     window.clearInterval(prgR2);  
 			  }  
@@ -72,12 +132,12 @@
 			},100); 
 			window.onload = function(){  
 			    prgR2;  
-			 }   */
+			 }
 			
  });
 </script>
 </head>
-<body>
+<body><!-- 
 	<div id="btn1">
 		<div style="height: 40px;float:left;">
 			<button id="Suc">弹出成功框</button>
@@ -91,19 +151,34 @@
 		</div>
 	</div>
 	
+	<div id="btn2">
+		<div style="height: 40px;">
+			<button id="Pro">弹出进度条</button>
+		</div>
+	</div> -->
 	
-	<div id="pro1" >
+	<div id="inp" style="height: 40px;">
+		日期<input type="text" name="date"  id="today2">
+		日期<input onkeyup="value=value.replace(/[^\w&=]|_/ig,'')" onblur="value=value.replace(/[^\w&-]|_/ig,'')" id="today1"/> 
+		日期<input type="text" name="date"  id="testDate">
+	</div>
+	
+	
+	<br/>
+	<br/>
+	<br/>
+	<!-- <div id="pro1" >
 		<div class ="FrichUI_Progress_Frame">
 			<div class ="FrichUI_Progress_Content">
 				<div class="FrichUI_Progress_Entity">
 					<div class="FrichUI_Pro_Progress" id="Progress1" style="width:0%">
-						<div class="FrichUI_Pro_Num1" id="ProgressNum1">
+						<div class="FrichUI_Pro_Top" id="ProgressNum1">
 						</div>	
-						<div class="FrichUI_Pro_Num1_Triangle">
+						<div class="FrichUI_Pro_Top_Triangle">
 						</div>
-						<div class="FrichUI_Pro_Num2" id="ProgressNum2">
+						<div class="FrichUI_Pro_Bottom" id="ProgressNum2">
 						</div>	
-						<div class="FrichUI_Pro_Num2_Triangle">
+						<div class="FrichUI_Pro_Bottom_Triangle">
 						</div>
 					</div> 
 				</div>	
@@ -121,7 +196,7 @@
 			</div>
 		</div>  
 	</div>
-	
+	 -->
 	
 </body>
 </html>
