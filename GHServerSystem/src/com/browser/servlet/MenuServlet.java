@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.common.lib.Lib;
 import com.server.model.MenuModel;
 import com.server.model.UserModel;
 import com.server.service.MenuService;
@@ -75,6 +76,29 @@ public class MenuServlet extends HttpServlet implements IServlet {
 				
 				response.setContentType("application/json; charset=utf-8");
 				response.getWriter().write(content(ja));
+				break;
+			case "add":
+				MenuModel menuModel = new MenuModel();
+				
+				if(Lib.istEmpty(request.getParameter("O_MENUPREVID"))) {
+					menuModel.setO_MENUPREVID(request.getParameter("O_MENUPREVID"));
+				}
+				if(Lib.istEmpty(request.getParameter("O_MENUNAME"))) {
+					menuModel.setO_MENUNAME(request.getParameter("O_MENUNAME"));
+				}
+				if(Lib.istEmpty(request.getParameter("O_MENUURL"))) {
+					menuModel.setO_MENUURL(request.getParameter("O_MENUURL"));
+				}
+				if(request.getParameter("O_MENULEVEL")!= null) {
+					menuModel.setO_MENULEVEL(Integer.parseInt(request.getParameter("O_MENULEVEL")));
+				}
+				if(request.getParameter("O_MENUSORTID")!= null) {
+					menuModel.setO_MENUSORTID(Integer.parseInt(request.getParameter("O_MENUSORTID")));
+				}
+				if(request.getParameter("O_MENUENABLED")!= null) {
+					menuModel.setO_MENUENABLED(Boolean.parseBoolean(request.getParameter("O_MENUENABLED")));
+				}
+				boolean a = menuService.addMenu(menuModel, userModel);
 				break;
 			default: break;
 		}

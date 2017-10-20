@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../../../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="../../../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+</head>
+<body id="table">
+	<script type="text/javascript">
+		$(document).ready(function(){
+			F.init("../../../lib/FrichUI/", F.FRICHUI_THEME_DARK);
+			
+
+			var data = {
+				type: "table"
+			}
+			
+			$.ajax({
+				type: "POST",
+			    url: "../../../json/menu.do",
+			    data: data,
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data) {
+			    	F.Table.make($("#table"), {
+			    		loadHead: false,
+						loadPagination: false,
+			    		enableAutoSerial: true,
+			    		enableSingleSelect: true,
+			    		showSingleSelect: true,
+			    		models: [{
+			    			name: "id",
+			    			hide: true
+			    		}, {
+			    			name: "菜单名"
+			    		}, {
+			    			name: "上级菜单"
+			    		}, {
+			    			name: "菜单级别"
+			    		}, {
+			    			name: "菜单排序",
+			    			textAlign: "left"
+			    		}, {
+			    			name: "菜单映射",
+			    			textAlign: "left"
+			    		}, {
+			    			name: "菜单状态",
+			    			boolDisplay: ["已启用", "未启用"]
+			    		}],
+			    		data: data.o
+			    	});
+			    },
+			    error: function (err) {
+			    	
+			    }
+			});
+		})
+		
+		var select = function(){
+			return {
+				id: F.entitys("table").getSingleValue(2),
+				level: parseInt(F.entitys("table").getSingleValue(5)) + 1,
+				name: F.entitys("table").getSingleValue(3)
+			}
+		}
+	</script>
+</body>
+</html>

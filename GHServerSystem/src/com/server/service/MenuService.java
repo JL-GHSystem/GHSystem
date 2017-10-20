@@ -14,6 +14,11 @@ public class MenuService implements IService{
 	public MenuModel[] getTable() {
 		return menuApp.getTable();
 	}
+
+	public boolean addMenu(MenuModel menuModel,UserModel userModel) {
+		// TODO Auto-generated method stub
+		return menuApp.addMenu(menuModel, userModel);
+	}
 	
 	
 	

@@ -16,3 +16,8 @@ function checkForm(){
 	})
 	return a;
 }
+
+$(document).ready(function(){
+	F.init("../../../lib/FrichUI/", F.FRICHUI_THEME_DARK);
+	
+})

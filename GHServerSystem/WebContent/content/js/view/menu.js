@@ -14,9 +14,29 @@ function add(){
 		closeClick: function(){
 			return 0;
 		},
-		confirmClick: function(form, fa){
-			
-
+		confirmClick: function(doc, fa){
+			var form = $(doc).contents().find("form");
+			var a = form.serialize();
+			$.ajax({
+				type: "POST",
+			    url: "../json/menu.do",
+			    data: a + "&type=add",
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data) {
+			    	F.Affair.make({
+			    		type: "success",
+			    		message: "创建成功"
+			    	})
+			    },
+			    error: function (err) {
+			    	F.Affair.make({
+			    		type: "error",
+			    		message: "连接失败"
+			    	})
+			    }
+			});
 			fa.clear();
 		},
 		cancleClick: function(){
@@ -49,20 +69,33 @@ function update(){
 function deleted(){
 	F.Dialog.make(undefined, {
 		title: "删除菜单",
-		type: "customer",
-		url: "view/form/menu/add.html",
-		frameWidth: 640,
-		frameHeight: 360,
-		data: {},
+		message: "此操作将会影响所有拥有此权限的用户，确定删除？",
+		type: "warnning",
 		enableCover: true,
 		closeClick: function(){
-			alert("点击了关闭");
+			
 		},
 		confirmClick: function(){
-			alert("点击了确定");
+			$.ajax({
+				type: "POST",
+			    url: "../json/menu.do",
+			    data: {
+			    	type: "delete",
+			    	O_MENUID: F.entitys("table").getSingleValue(2)
+			    },
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data) {
+			    	console.log(data);
+			    },
+			    error: function (err) {
+			    	
+			    }
+			});
 		},
 		cancleClick: function(){
-			alert("点击了取消");
+			
 		}
 	});
 }

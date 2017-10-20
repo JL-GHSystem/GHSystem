@@ -1005,11 +1005,18 @@
 	/* 表格持久化实体Entity */
 	var TableEntity = function(dom, options){
 		this.id = options.id;
+		this.dom = dom;
 		this.openMuiltSelect = function(){};
 		this.closeMuiltSelect = function(){};
 		this.openSingleSelect = function(){};
 		this.closeSingleSelect = function(){};
-		
+		this.getValue = function(row, col) {
+			return $(this.dom).find(".FrichUI_Table_r" + row + " .FrichUI_Table_c" + col).html();
+		}
+		this.getSingleValue = function(col) {
+			return $(this.dom).find("input[name='radioC']:checked").parents("tr").find(" .FrichUI_Table_c" + col).html();
+		}
+
 		var te = this;
 
 		if(options.enableMuiltSelect && options.enableSingleSelect) {
@@ -1344,11 +1351,15 @@
 		this.defaul = $.extend(true, {}, this.defaul, {
 			offsetX: 0,
 			offsetY: -100,
+			zIndex: 1000,
 			type: "info",
 			frameId: "F_" + Math.random(),
 			frameWidth: 320,
 			frameHeight: 180,
 			enableCover: true,
+			clear: function(){
+				
+			},
 			closeClick: function(){
 				
 			},
@@ -1602,7 +1613,8 @@
 		
 		cover.css({
 			"width": cWidth,
-			"height": cHeight
+			"height": cHeight,
+			"z-index": options.zIndex
 		});
 		
 		/* 设置长宽 */
@@ -1610,19 +1622,16 @@
 		var fHeight = $(frame).height();
 		frame.css({
 			"top": (cHeight + options.offsetY - fHeight - 4) / 2,
-			"left": (cWidth + options.offsetX - fWidth - 4) / 2
+			"left": (cWidth + options.offsetX - fWidth - 4) / 2,
+			"opacity": 1,
+			"transform": "scale(1)",
+			"z-index": options.zIndex + 10
 		})
 		
 		/* 创建Dialog实体 */
-		if(options.enableCover){
-			var dialongEntity = new DialogEntity(frame, options, cover);
-		}
-		else {
-			var dialongEntity = new DialogEntity(dom, options, cover);
-		}
+		var dialongEntity = new DialogEntity(frame, options, cover);
 		
 		frichUI.push(dialongEntity);
-		return 0;
 	};
 
 	FrichUI.prototype.Dialog = new DialogFactory();
@@ -1631,16 +1640,26 @@
 		this.dom = dom;
 		this.options = options;
 		this.cover = cover;
+
+		var fa = this;
 		
 		this.clear = function() {
-			if(frichUI.istEmpty(this.cover)){
-				this.cover.remove();
-			}
-			this.dom.remove();
+			options.clear();
+			
+			dom.css({
+				"opacity": 0,
+				"transform": "scale(0.65)"
+			})
+			
+			window.setTimeout(function(){
+				if(frichUI.istEmpty(fa.cover)){
+					$(fa.cover).remove();
+				}
+				$(fa.dom).remove();
+			}, 400);
+
 		}
 		
-		var fa = this;
-
 		$(cover).click(function (){
 			fa.clear();
 		});
@@ -1662,9 +1681,13 @@
 		
 		$(dom).find(".FrichUI_Dialog_Confirm").click(function (){
 			var doc = $(fa.dom).find("iframe")[0];
-			if(doc.contentWindow.checkForm()) {
-				var form = $(doc).contents().find("form");
-				options.confirmClick(form, fa);
+			if(doc.contentWindow.checkForm != null) {
+				if(doc.contentWindow.checkForm()) {
+					options.confirmClick(doc, fa);
+				}
+			}
+			else {
+				options.confirmClick(doc, fa);
 			}
 		});
 		
@@ -1675,6 +1698,105 @@
 		
 		
 	}
+	
+	/*
+	 * 2.3.6事务组件
+	 */	
+	var AffairFactory = function(){
+		Factory.call(this);
+		
+		this.icons = {
+			success: "FrichUI_Dialog_Success",
+			error: "FrichUI_Dialog_Error"
+		}
+		
+		this.defaul = $.extend(true, {}, this.defaul, {
+			type: "info",
+			offsetX: 0,
+			offsetY: -100,
+			zIndex: 1000,
+			enableCover: false
+		});
+		this.successDefaul = $.extend(true, {}, this.defaul, {
+			icon: "success",
+			message: "这是一个成功框"
+		});
+		
+		this.errorDefaul = $.extend(true, {}, this.defaul, {
+			icon: "error",
+			message: "这是一个错误框"
+		});
+			
+		this.createContent = function(options){
+			var content;
+			content = this.createDiv("FrichUI_Affair_Content");
+			
+			for(var i in this.icons){
+				if(i == options.icon){
+					var icon = this.createI(this.icons[i]);
+					content.append(icon);
+				}
+			}
+
+			var a = this.createA(undefined, options.message);
+			content.append(a);
+			return content;
+		}
+		
+		
+	}
+
+	AffairFactory.prototype = new Factory();
+	
+	AffairFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		switch(options.type){
+			case "success":
+				options = $.extend(true, {}, this.successDefaul, options);
+				break;
+			case "error":
+				options = $.extend(true, {}, this.errorDefaul, options);
+				break;
+			default: break;
+		}
+		
+		var frame = this.createFrame("FrichUI_Dialog_Frame");
+
+		frame.append(this.createContent(options));
+
+		var body = $(top.document.body);
+		
+		frame.appendTo(body);
+		
+		var cWidth = body.width();
+		var cHeight = body.height();
+		
+		/* 设置长宽 */
+		var fWidth = $(frame).width();
+		var fHeight = $(frame).height();
+		frame.css({
+			"top": (cHeight + options.offsetY - fHeight - 4) / 2,
+			"left": (cWidth + options.offsetX - fWidth - 4) / 2,
+			"opacity": 1,
+			"transform": "scale(1)",
+			"z-index": options.zIndex + 10
+		})
+		
+		/* 注册事件 */
+		/*1. 2000ms 消失 */
+		setTimeout(function(){
+			$(frame).fadeOut(500, function(){
+				$(frame).remove();
+			});
+		}, 2000);
+
+		 /*创建Dialog实体 */
+		return 0;
+	}
+	
+	FrichUI.prototype.Affair = new AffairFactory();
+
 	/*
 	 * 3. 静态定义层
 	 */
