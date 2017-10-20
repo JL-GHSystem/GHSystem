@@ -11,23 +11,23 @@
 		F.init("../lib/FrichUI/", F.FRICHUI_THEME_DARK);
 		
 		
-		/* $("#Suc").click(function(){
+		$("#Suc").click(function(){
 			F.Dialog.make("", {
 				id: "msg",
 				enableCover: false,
+				tools:["min","full","close"],
 				type:"success",
 				message:"保存成功"
 			});
 		});
 		
 		$("#Fal").click(function(){
-			F.Dialog.make("", {
+			F.Affair.make("", {
 				id: "msg",
-				enableCover: false,
 				type:"error",
 				message:"保存失败"
 			});
-		});*/
+		});
 		
 		$("#Pro").click(function(){
 			F.Progress.make("",{
@@ -102,7 +102,7 @@
 			checkDate(dt);
 
 		
-		 function loadPro1(){  
+		 /* function loadPro1(){  
 		  var prg1= document.getElementById("Progress1");
 		  var prgn1=document.getElementById("ProgressNum1");
 		  var prgn2=document.getElementById("ProgressNum2");
@@ -133,24 +133,23 @@
 			},100); 
 			window.onload = function(){  
 			    prgR2;  
-			 }
+			 } */
 			
  });
 </script>
 </head>
-<body><!-- 
+<body> 
 	<div id="btn1">
 		<div style="height: 40px;float:left;">
 			<button id="Suc">弹出成功框</button>
 		</div>
 	</div>
 	
-	
 	<div id="btn2">
 		<div style="height: 40px;">
 			<button id="Fal">弹出失败框</button>
 		</div>
-	</div> -->
+	</div> 
 	
 	<div id="btn2">
 		<div style="height: 40px;">
