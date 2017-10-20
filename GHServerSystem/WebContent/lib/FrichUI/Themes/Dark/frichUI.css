@@ -674,6 +674,7 @@
 	display:block;
 	top: 30%;
 	left: 30%;
+	position:absolute;
 }
 
 .FrichUI_Progress_Content

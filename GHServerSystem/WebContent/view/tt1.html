@@ -27,20 +27,21 @@
 				type:"error",
 				message:"保存失败"
 			});
-		});
+		});*/
 		
 		$("#Pro").click(function(){
 			F.Progress.make("",{
 				id:"pro",
 				displayNum:true,
-				numOffset:"bottom"
+				numOffset:"bottom",
+				enableCover:false
 			});
 
 			var pro = F.entitys("pro");
 			window.setInterval(function(){
 				pro.setProgress(1);
 			},100);
-		}); */
+		}); 
 			
 		
 		/*日期输入框*/
@@ -149,13 +150,13 @@
 		<div style="height: 40px;">
 			<button id="Fal">弹出失败框</button>
 		</div>
-	</div>
+	</div> -->
 	
 	<div id="btn2">
 		<div style="height: 40px;">
 			<button id="Pro">弹出进度条</button>
 		</div>
-	</div> -->
+	</div>
 	
 	<div id="inp" style="height: 40px;">
 		日期<input type="text" name="date"  id="today2">
