@@ -1125,10 +1125,14 @@
 		
 		this.defaul = $.extend(true, {}, this.defaul, {
 			model: "<a href=\"{h}\"><label>{v}</label></a>",
+			child: "c",
+			sortId: null,
 			data: null
 		});
 		
-		this.createOLLI = function(model, data, level){
+		this.createOLLI = function(options, model, data, level){
+			var child = options.child;
+			
 			var ol = this.createOl("FrichUI_Menu_House " + "FrichUI_Menu_Level" + level);
 			
 			var param = model.match(reg1);
@@ -1150,8 +1154,8 @@
 				
 				li.append(str);
 				
-				if(typeof(data[i].c) != "undefined" && data[i].c && !$.isEmptyObject(data[i].c)){
-					li.append(this.createOLLI(model, data[i].c, level+1));
+				if(!$.isEmptyObject(data[i][child])){
+					li.append(this.createOLLI(options, model, data[i][child], level+1));
 				}
 				
 				ol.append(li);
@@ -1160,16 +1164,38 @@
 			return ol;
 		};
 		
+		this.sortData = function(bool, options, data){
+			for(var i=0; i<data.length-1; i++){
+				for(var j=i+1; j<data.length; j++){
+					if(data[i][options.sortId] > data[j][options.sortId]) {
+						a = data[i];
+						data[i] = data[j];
+						data[j] = a;
+					}
+				}
+			}
+			
+			if(bool) {
+				for(var i=0; i<data.length; i++){
+					data[i][options.child] = this.sortData(bool, options, data[i][options.child]);
+				}
+			}
+			return data;
+		}
+		
 	}
 	MenuFactory.prototype = new Factory();
 
 	MenuFactory.prototype.make = function(dom, customer){
 		var options = this.initCreate(dom, customer);
 		
+		if(options.sortId != null) {
+			options.data = this.sortData(true, options, options.data);
+		}
 		/* 创建基架 */
 		var frame = this.createFrame('FrichUI_Menu_Frame');
 		
-		frame.append(this.createOLLI(options.model, options.data, 1));
+		frame.append(this.createOLLI(options, options.model, options.data, 1));
 		
 		frame.appendTo(dom);
 		
@@ -1198,7 +1224,6 @@
 					fh.css("height", "auto");
 				});
 				fh.addClass("FrichUI_Menu_Showed");
-				
 			}
 			else if(fh.hasClass("FrichUI_Menu_Select"))
 			{
@@ -1207,25 +1232,15 @@
 				fh.animate({height: "35px"}, (AutoHeight-35) * 2.5);
 				fh.removeClass("FrichUI_Menu_Showed");
 			}
-			else
-			{
-				var fr = fh.parents(".FrichUI_Menu_Select");
-				if(fr.length != 0)
-				{
-					fh.css("height", "auto");
-					var AutoHeight = fh.height();
-					fh.animate({height: "35px"}, (AutoHeight-30) * 2.5);
-					fh.removeClass("FrichUI_Menu_Showed");
-				}
-			}
 		});
 		
-		$(frame).find(".FrichUI_Menu_Level1").children(".FrichUI_Menu_Room").bind('click', function(event){
+		$(frame).find("li").bind('click', function(event){
 			var fa = $(this);
 
 			$(frame).find(".FrichUI_Menu_Room").removeClass("FrichUI_Menu_Select");
 			fa.addClass("FrichUI_Menu_Select");
 			
+			event.stopPropagation();
 		});
 	}
 	
@@ -1236,9 +1251,394 @@
 	
 	
 	/*
-	 * 2.3.4 表格组件
+	 * 2.3.4 会话组件
 	 */
+	var DialogFactory = function(){
+		Factory.call(this);
+		
+		this.tools = {
+			close: "FrichUI_Dialog_Close",
+			full: "FrichUI_Dialog_Full",
+			min: "FrichUI_Dialog_Min"
+		}
+		
+		this.icons = {
+			info: "FrichUI_Dialog_Info",
+			help: "FrichUI_Dialog_Help",
+			warnning: "FrichUI_Dialog_Warning",
+			success: "FrichUI_Dialog_Success",
+			error: "FrichUI_Dialog_Error"
+		}
+		
+		this.control = {
+			yes: "FrichUI_Dialog_Yes",
+			no: "FrichUI_Dialog_No",
+			confirm: "FrichUI_Dialog_Confirm",
+			cancle: "FrichUI_Dialog_Cancle"
+		}
+		
+		this.defaul = $.extend(true, {}, this.defaul, {
+			type: "info",
+			enableCover: true,
+			closeClick: function(){
+				alert("点击了关闭");
+			},
+			yesClick: function(){
+				alert("点击了是");
+			},
+			noClick: function(){
+				alert("点击了否");
+			},
+			confirmClick: function(){
+				alert("点击了确定");
+			},
+			cancleClick: function(){
+				alert("点击了取消");
+			}
+		});
+		
+		this.infoDefaul = $.extend(true, {}, this.defaul, {
+			title: "消息框",
+			tools: ["close"],
+			icon: "info",
+			message: "这是一个消息框",
+			control: ["confirm"]
+		});
+
+		this.helpDefaul = $.extend(true, {}, this.defaul, {
+			title: "询问框",
+			tools: ["close"],
+			icon: "help",
+			message: "这是一个询问框",
+			control: ["yes", "no", "cancle"]
+		});
+		
+		this.warnningDefaul = $.extend(true, {}, this.defaul, {
+			title: "警告框",
+			tools: ["close"],
+			icon: "warnning",
+			message: "这是一个警告框",
+			control: ["confirm", "cancle"]
+		});
+		
+		this.successDefaul = $.extend(true, {}, this.defaul, {
+			title: "成功框",
+			tools: ["close"],
+			icon: "success",
+			message: "这是一个成功框",
+			control: ["confirm"]
+		});
+		
+		this.errorDefaul = $.extend(true, {}, this.defaul, {
+			title: "错误框",
+			tools: ["close"],
+			icon: "error",
+			message: "这是一个错误框",
+			control: ["confirm"]
+		});
+		
+		
+		this.createTitle = function(options){
+			var title = this.createDiv("FrichUI_Dialog_Title");
+			
+			var h5 = this.createH(5, "FrichUI_Dialog_Name", options.title);
+			
+			title.append(h5);
+			
+			var def = {
+				close: false,
+				min: false,
+				full: false
+			}
+			
+			for(var i=0; i<options.tools.length; i++){
+				switch(options.tools[i]){
+					case "close":
+						def.close = true;
+						break;
+					case "min":
+						def.min = true;
+						break;
+					case "full":
+						def.full = true;
+						break;
+					default: break;
+				}
+			}
+			
+			if(def.close){
+				var tool = this.createI(this.tools.close);
+				title.append(tool);
+			}
+			if(def.full){
+				var tool = this.createI(this.tools.full);
+				title.append(tool);
+			}
+			if(def.min){
+				var tool = this.createI(this.tools.min);
+				title.append(tool);
+			}
+			
+			return title;
+		}
+		
+		this.createContent = function(options){
+			var content;
+			if(options.enableCover){
+				content = this.createDiv("FrichUI_Dialog_Content");
+			}
+			else {
+				content = this.createDiv("FrichUI_Affair_Content");
+			}
+
+			for(var i in this.icons){
+				if(i == options.icon){
+					var icon = this.createI(this.icons[i]);
+					content.append(icon);
+				}
+			}
+
+			var a = this.createA(undefined, options.message);
+			
+			content.append(a);
+			return content;
+		}
+
+		this.createFoot = function(options){
+			var foot = this.createDiv("FrichUI_Dialog_Foot");
+			
+			var def = {
+				yes: false,
+				no: false,
+				confirm: false,
+				cancle: false,
+			}
+			
+			for(var i=0; i<options.control.length; i++){
+				switch(options.control[i]){
+					case "yes":
+						def.yes = true;
+						break;
+					case "no":
+						def.no = true;
+						break;
+					case "confirm":
+						def.confirm = true;
+						break;
+					case "cancle":
+						def.cancle = true;
+						break;
+					default: break;
+				}
+			}
+			
+			if(def.cancle){
+				var control = this.createA(this.control.cancle, "取消");
+				foot.append(control);
+			}
+			if(def.no){
+				var control = this.createA(this.control.no, "否");
+				foot.append(control);
+			}
+			if(def.yes){
+				var control = this.createA(this.control.yes, "是");
+				foot.append(control);
+			}
+			if(def.confirm){
+				var control = this.createA(this.control.confirm, "确定");
+				foot.append(control);
+			}
+			
+			return foot;
+		}
+		
+	}
+
+	DialogFactory.prototype = new Factory();
 	
+	DialogFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		switch(options.type){
+			case "info":
+				options = $.extend(true, {}, this.infoDefaul, options);
+				break;
+			case "help":
+				options = $.extend(true, {}, this.helpDefaul, options);
+				break;
+			case "warnning":
+				options = $.extend(true, {}, this.warnningDefaul, options);
+				break;
+			case "success":
+				options = $.extend(true, {}, this.successDefaul, options);
+				break;
+			case "error":
+				options = $.extend(true, {}, this.errorDefaul, options);
+				break;
+			default: break;
+		}
+		
+		/* 添加遮罩层 */
+		var cover;
+		if(options.enableCover){
+			cover = this.createFrame("FrichUI_Cover");
+			
+			/* 创建基架 */
+			var frame = this.createFrame("FrichUI_Dialog_Frame");
+			if(options.isiFrame){
+				frame.append(this.createTitle(options));
+				
+				var iframe = this.createiFrame("FrichUI_Dialog_iFrame");
+				iframe.src="http://www.runoob.com"
+				frame.append(iframe);
+				
+				frame.append(this.createFoot(options));
+				
+			}else{
+				frame.append(this.createTitle(options));
+
+				frame.append(this.createContent(options));
+
+				frame.append(this.createFoot(options));
+			}
+			
+
+			frame.appendTo(cover);
+			cover.appendTo($(document).find("body").eq(0));
+			
+			$(frame).animate({
+				"width":"244px",
+				"height":"164px",
+				"opacity":"1"
+			},500);
+			
+			$(frame).find(".FrichUI_Dialog_Close").bind('click',function(event){
+				$(cover).remove();
+			});
+			
+			$(frame).find(".FrichUI_Dialog_Full").bind('click',function(event){
+				if($(frame).find(".FrichUI_Dialog_Full").hasClass("FrichUI_Dialog_FullDone")){
+					$(cover).css({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					});
+					$(frame).animate({
+						"left":"30%",
+						"top":"30%",
+						"width":"244px",
+						"height":"164px"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"height":"30px"
+					});
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Full").removeClass("FrichUI_Dialog_FullDone");
+				}else{
+					$(cover).css({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					});
+					$(frame).animate({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"height":"80%"
+					});
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Full").addClass("FrichUI_Dialog_FullDone");
+					$(frame).find(".FrichUI_Dialog_Min").removeClass("FrichUI_Dialog_MinDone");
+				}
+			});
+			
+			$(frame).find(".FrichUI_Dialog_Min").bind('click',function(event){
+				if($(frame).find(".FrichUI_Dialog_Min").hasClass("FrichUI_Dialog_MinDone")){
+					$(cover).animate({
+						"left":"0",
+						"top":"0",
+						"width":"100%",
+						"height":"100%"
+					},500);
+					$(frame).animate({
+						"left":"30%",
+						"top":"30%",
+						"width":"244px",
+						"height":"100px"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"block"
+					});
+					$(frame).find(".FrichUI_Dialog_Min").removeClass("FrichUI_Dialog_MinDone");
+				}else{
+					$(cover).animate({
+						"left":"50%",
+						"top":"0",
+						"width":"150px",
+						"height":"40px"
+					},500);
+					$(frame).animate({
+						"left":"50%",
+						"top":"0",
+						"width":"150px",
+						"height":"40px"
+					},500);
+					$(frame).find(".FrichUI_Dialog_Content").css({
+						"display":"none"
+					});
+					$(frame).find(".FrichUI_Dialog_Foot").css({
+						"display":"none"
+					});
+					$(frame).find(".FrichUI_Dialog_Min").addClass("FrichUI_Dialog_MinDone");
+					$(frame).find(".FrichUI_Dialog_Full").removeClass("FrichUI_Dialog_FullDone");
+				}
+			});
+		}
+		else {
+			
+			/* 创建基架 */
+			var frame = this.createFrame("FrichUI_Dialog_Frame");
+
+			frame.append(this.createContent(options));
+
+			frame.appendTo($(document).find("body").eq(0));
+			
+			frame.css({
+				"min-width":"0"
+			});
+			
+			/* 注册事件 */
+			/* 1. 2000ms 消失 */
+			setTimeout(function(){
+				$(frame).fadeOut(500, function(){
+					$(frame).remove();
+				});
+			}, 2000); 
+		}
+		
+		/* 创建Dialog实体 */
+		return 0;
+	};
+
+	FrichUI.prototype.Dialog = new DialogFactory();
 	
 	
 	

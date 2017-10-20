@@ -10,6 +10,8 @@ import javax.servlet.http.HttpSession;
 import com.server.model.UserModel;
 import com.server.service.LoginService;
 
+import net.sf.json.JSONObject;
+
 /**
  * Servlet implementation class LoginServlet
  */
@@ -50,9 +52,9 @@ public class LoginServlet extends HttpServlet implements IServlet{
 		if("Frich".equals(userModel.getO_USERNAME()) 
 				&& "0".equals(userModel.getO_PASSWORD())) {
 			userModel.setO_USERDISPLAYNAME("Frich");
-			userModel.setO_USERID("{100001}");
+			userModel.setO_USERID("303e3065-c1ca-4865-bf94-969e181dd283");
 			
-			response.getWriter().write(success("登录成功"));
+			response.getWriter().write(success("登陆成功"));
 			HttpSession session = request.getSession();
 			session.setAttribute("P_User", userModel);
 			session.setAttribute("K_IsLogin", true);
@@ -62,12 +64,17 @@ public class LoginServlet extends HttpServlet implements IServlet{
 			
 			if(userModel != null){
 				if(loginService.isValid(userModel)){
-					response.getWriter().write(success("登录成功"));
+					JSONObject json = new JSONObject();
+					json.put("id", userModel.getO_USERID());
+					json.put("name", userModel.getO_USERNAME());
+					json.put("darling", userModel.getO_USERDISPLAYNAME());
+					
+					response.getWriter().write(success("登陆成功", json));
 					HttpSession session = request.getSession();
 					session.setAttribute("P_User", userModel);
 				}
 				else{
-					response.getWriter().write(error(3, "账户已过期或被禁用"));
+					response.getWriter().write(error(3, "该账户已过期，已禁用"));
 				}
 			}
 			else{

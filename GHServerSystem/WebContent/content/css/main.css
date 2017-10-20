@@ -1,17 +1,25 @@
 @charset "UTF-8";
-body
+html, body
 {
 	overflow: hidden;
 }
 .head
 {
-	position: static;
+	position: absolute;
 	margin: 0;
 	padding: 0;
 	width: 100%;
-	height: 50px;
-	background: linear-gradient(to top,#3d4455, #606880);
-	line-height: 50px;
+	height: 80px;
+	background: #2b91a0; /* Old browsers */
+	background: -webkit-linear-gradient(top, #2eacba, #2b91a0); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(top, #2eacba, #2b91a0); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(top, #2eacba, #2b91a0); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to bottom,#2eacba, #2b91a0); /* 标准的语法 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2b91a0', endColorstr='#2eacba',GradientType=0 ); /* IE6-9 */
+	border-bottom: 1px solid #d8d8d8;
+	box-shadow: 0 0 5px #CCC;
+	line-height: 80px;
+	z-index: 10;
 }
 .logo
 {
@@ -32,7 +40,7 @@ body
 	height: 100%;
 	text-indent: 5px;
 	font-size: 22px;
-	color: #EFEFEF;
+	color: #FFF;
 	text-shadow: 0 0 5px #000;
 }
 .userFrame
@@ -71,7 +79,7 @@ body
 }
 .userFrame .userBox label
 {
-	color: #EFEFEF;
+	color: #FFF;
 	text-shadow: 0 0 5px #000;
 }
 .userFrame .toolBox
@@ -96,7 +104,7 @@ body
 }
 .main
 {
-	position: static;
+	position: absolute;
 	margin: 0 0 0 220px;
 	/* height: 于js中自适应控制 */
 }
@@ -106,15 +114,16 @@ body
 	margin: 0 0 0 -220px;
 	float: left;
 	padding: 0 0 0 0;
-	width: 220px;
+	width: 217px;
 	height: 100%;
-	background: #4c5469;
-	/* #4A5864; */
+	background: #F3F3F3; /* Old browsers */
+	border-right: 3px solid #CCC;
 }
 .information
 {
 	display: block;
 	width: 100%;
 	height: 100%;
-	background-color: #f3f7fd;
+	background: #F3F3F3; /* Old browsers */
+	
 }

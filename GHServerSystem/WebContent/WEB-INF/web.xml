@@ -49,4 +49,36 @@
     <servlet-name>logoutServlet</servlet-name>
     <url-pattern>/json/logout.do</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>menuServlet</servlet-name>
+    <servlet-class>com.browser.servlet.MenuServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>menuServlet</servlet-name>
+    <url-pattern>/json/menu.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>userServlet</servlet-name>
+    <servlet-class>com.browser.servlet.UserServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>userServlet</servlet-name>
+    <url-pattern>/json/user.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>departmentServlet</servlet-name>
+    <servlet-class>com.browser.servlet.DepartmentServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>departmentServlet</servlet-name>
+    <url-pattern>/json/department.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>vehicleServlet</servlet-name>
+    <servlet-class>com.browser.servlet.VehicleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>vehicleServlet</servlet-name>
+    <url-pattern>/json/vehicle.do</url-pattern>
+  </servlet-mapping>
 </web-app>

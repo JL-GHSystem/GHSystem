@@ -1,38 +1,21 @@
 /**
  * 
  */
-function height(div){
-	var realHeight = $(div).height();
-	var borderHeight = parseInt($(div).css("border-top-width")) 
-	+ parseInt($(div).css("border-bottom-width"));
-	var paddingHeight = parseInt($(div).css("padding-top")) 
-	+ parseInt($(div).css("padding-bottom"));
-	return realHeight + borderHeight + paddingHeight;
-}
-function width(div){
-	var realHeight = $(div).width();
-	var borderHeight = parseInt($(div).css("border-left-width")) 
-	+ parseInt($(div).css("border-right-width"));
-	var paddingHeight = parseInt($(div).css("padding-left")) 
-	+ parseInt($(div).css("padding-right"));
-	return realHeight + borderHeight + paddingHeight;
-}
-
 function initLayout(){
 	var view = $(window).height();
 	
-	var header = height($(".head"));
+	var header = common.height($(".head"));
+	var headerw = common.width($(".head"));
 	
-	var borderHeight = parseInt($(".main").css("border-top-width")) 
-	+ parseInt($(".main").css("border-bottom-width"));
-	var paddingHeight = parseInt($(".main").css("padding-top")) 
-	+ parseInt($(".main").css("padding-bottom"));
+	$(".main").height(view - header);
+	$(".main").width(headerw - 220);
 	
-	$(".main").height(view - header - borderHeight - paddingHeight);
-	
+	$(".main").css({
+		top: header + "px"
+	})
 	//$(".logo").width(width($(".navigation")));
 	
-	var userHeight = height($(".userFrame"));
+	var userHeight = common.height($(".userFrame"));
 	$(".userFrame").css({"height": "50px"});
 	
 	$(".userFrame").hover(function(){
@@ -50,17 +33,19 @@ function initLayout(){
 
 $(document).ready(function(){
 	
-	
-	
-	
-	
-	
-	
-	
 	initLayout();
 	$(window).resize(initLayout);
 	
+	//cookie读取用户名
+	var d = JSON.parse($.cookie("user"));
+	$("#darling").html(d.darling);
+	
+	//退出登录请求
 	$(".toolBox").click(function(){
     	window.location.href = "json/logout.do";
-	})
+	});
+	
+	//建立Menu菜单
+	
+	
 });

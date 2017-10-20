@@ -1,0 +1,161 @@
+﻿html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
+}
+ul, li
+{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+h1, h2, h3, h4, h5, a, span, div, label
+{
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+}
+a
+{
+    text-decoration: none;
+}
+.Frame
+{
+    border-radius: 5px 5px 5px 5px;
+    border: 1px solid #1ABC9C ;
+    background-color: rgba(255, 255, 255, .8);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+.Title
+{
+    position: static;
+    width: 100%;
+    height: 40px;
+    font-family: Arial,Helvetica,Verdana,sans-serif !important;
+}
+.Title .Name
+{
+    position: static;
+    display: block;
+    padding: 0 0 0 10px;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    height: 100%;
+    line-height: 40px;
+}
+.Title .Tools
+{
+    margin: 9.5px 10px 9.5px 0;
+    float: right;
+    width: 21px;
+    height: 21px;
+}
+.Page
+{
+
+}
+.Tools
+{
+    position: static;
+    display: block;
+    cursor: pointer;
+    border-radius: 5px 5px;
+}
+.Tools:hover
+{
+    background-color: rgba(221, 221, 221, 0.7);
+}
+.Search
+{
+    background: url('../../icon/TransportUI.png') no-repeat -5px -10px;
+}
+.First
+{
+    background: url('../../icon/TransportUI.png') no-repeat -27px -7px;
+}
+.Previous
+{
+    background: url('../../icon/TransportUI.png') no-repeat -79px -7px;
+}
+.PageSubmit
+{
+    text-align: center;
+    line-height: 21px;
+}
+.Next
+{
+    background: url('../../icon/TransportUI.png') no-repeat -102px -7px;
+}
+.Last
+{
+    background: url('../../icon/TransportUI.png') no-repeat -53px -7px;
+}
+.OperationList
+{
+    background: url('../../icon/TransportUI.png') no-repeat -126px -7px;
+}
+.New
+{
+    background: url('../../icon/TransportUI.png') no-repeat -126px -7px;
+}
+.Locked
+{
+    background: url('../../icon/TransportUI.png') no-repeat -151px -7px;
+}
+.Save
+{
+    background: url('../../icon/TransportUI.png') no-repeat -3px -34px;
+}
+.Clear
+{
+    background: url('../../icon/TransportUI.png') no-repeat -28px -33px;
+}
+.Close
+{
+    background: url('../../icon/TransportUI.png') no-repeat -53px -33px;
+}
+.Polygon
+{
+    background: url('../../icon/TransportUI.png') no-repeat -2px -53px;
+}
+.Oval
+{
+    background: url('../../icon/TransportUI.png') no-repeat -47px -53px;
+}
+.Line
+{
+    background: url('../../icon/TransportUI.png') no-repeat -95px -53px;
+}
+.Acetangle
+{
+    background: url('../../icon/TransportUI.png') no-repeat -139px -53px;
+}
+.Loading
+{
+    background: url('../../icon/FenceLoading.gif') no-repeat -0px -0px;
+}
+/*
+.Title
+{
+    height: 40px;
+    background-color: #CBCBCB;
+}
+.Message
+{
+    height: 40px;
+    background-color: #FFF;
+}
+.Input
+{
+    height: 40px;
+    background-color: #FFF;
+}
+.Box
+{
+    height: 40px;
+    background-color: #FFF;
+}
+*/

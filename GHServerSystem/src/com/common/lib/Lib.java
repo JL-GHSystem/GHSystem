@@ -4,8 +4,11 @@ public class Lib {
 	
 	public static boolean isEmpty(String s){
 		if(null == s || s.length() == 0){
+			return true;
+		}
+		else {
 			s.trim();
-			if("".equals(s)) {
+			if ("".equals(s)){
 				return true;
 			}
 		}

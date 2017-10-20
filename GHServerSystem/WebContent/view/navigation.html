@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <script src="../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="../lib/jquery/jquery.cookie.js" type="text/javascript"></script>
 <script src="../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
 <script src="../content/js/common.js" type="text/javascript"></script>
 <link href="../content/css/common.css" rel="stylesheet" type="text/css">
@@ -11,30 +12,32 @@
 <body id="nav">
 	<script type="text/javascript">
 		$(document).ready(function(){
+			F.init("../lib/FrichUI/", new F.Theme("Themes/Dark/frichUI.css", "dark"));
 			
-			F.Menu.make($("#nav"), {
-				id: "nav",
-				model: "<a href=\"{url}\" target=\"content\"><i class=\"frichUI_Node\"></i><label>{v}</label></a>",
-				data: [{
-					url: "home.html",
-					icon: "",
-					v: "欢迎首页"
-				},{
-					url: "javaScript:void(0)",
-					icon: "",
-					v: "基础数据",
-					c: [{
-						url: "department.html",
-						icon: "",
-						v: "部门管理",
-					},{
-						url: "user.html",
-						icon: "",
-						v: "用户管理",
-					}]
-				}]
+			var data = {
+				type: "tree"
+			}
+			
+			$.ajax({
+				type: "POST",
+			    url: "../json/menu.do",
+			    data: data,
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data) {
+			    	F.Menu.make($("#nav"), {
+						id: "nav",
+						model: "<a href=\"{o_MENUURL}\" target=\"content\"><i class=\"FrichUI_Node\"></i><label>{o_MENUNAME}</label></a>",
+						child: "j_CHILD",
+						sortId: "o_MENUSORTID",
+						data: data.o
+			    	});
+			    },
+			    error: function (err) {
+			    	
+			    }
 			});
-			
 			
 			
 		});

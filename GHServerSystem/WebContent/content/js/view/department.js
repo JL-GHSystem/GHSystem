@@ -17,8 +17,36 @@ function select(){
 	alert("select");
 }
 
+function ajax(){
+
+	var data = {
+		type: "table"
+	}
+	
+	$.ajax({
+		type: "POST",
+	    url: "../json/department.do",
+	    data: data,
+	    beforeSend: function(){
+	    	
+	    },
+	    success: function (data) {
+	    	F.Table.make($("#table"), {
+				loadPagination: false,
+	    		enableAutoSerial: true,
+	    		enableSingleSelect: true,
+	    		showSingleSelect: true,
+	    		data: data.o
+	    	});
+	    },
+	    error: function (err) {
+	    	
+	    }
+	});
+}
 
 $(document).ready(function(){
+	ajax();
 	
 	$("#add").click(add);
 
@@ -27,49 +55,5 @@ $(document).ready(function(){
 	$("#delete").click(deleted);
 
 	$("#select").click(select);
-	
-	
-	F.Table.make($("#table"), {
-		enableAutoSerial: true,
-		enableSingleSelect: true,
-		showSingleSelect: true,
-		data: [{
-			ad: 1,
-			sd: 2,
-			cd: 3,
-			fd: 4,
-			gd: 5,
-			hd: 6,
-			jd: 7,
-			kd: 8
-		},{
-			ad: 1,
-			sd: 2,
-			cd: 3,
-			fd: 4,
-			gd: 5,
-			hd: 6,
-			jd: 7,
-			kd: 8
-		},{
-			ad: 1,
-			sd: 2,
-			cd: 3,
-			fd: 4,
-			gd: 5,
-			hd: 6,
-			jd: 7,
-			kd: 8
-		},{
-			ad: 1,
-			sd: 2,
-			cd: 3,
-			fd: 4,
-			gd: 5,
-			hd: 6,
-			jd: 7,
-			kd: 8
-		}]
-	});
 	
 });

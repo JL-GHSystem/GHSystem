@@ -9,6 +9,12 @@ public interface IServlet {
 	 * r: 标记最终的状态enum类型
 	 * 
 	 */
+
+	default String content(Object o) {
+		JSONObject js = new JSONObject();
+		js.put("o", o);
+		return js.toString();
+	}
 	
 	default String success(String msg) {
 		JSONObject js = new JSONObject();
@@ -17,6 +23,14 @@ public interface IServlet {
 		return js.toString();
 	}
 
+	default String success(String msg, Object o) {
+		JSONObject js = new JSONObject();
+		js.put("r", "1");
+		js.put("m", msg);
+		js.put("o", o);
+		return js.toString();
+	}
+	
 	default String error(int number, String msg) {
 		JSONObject js = new JSONObject();
 		if(number <= 1) {

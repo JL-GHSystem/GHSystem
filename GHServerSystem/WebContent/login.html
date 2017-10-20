@@ -4,14 +4,17 @@
 <meta charset="UTF-8">
 <title>嘉兴国鸿智能公交管理系统 | 登录页</title>
 <script src="lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="lib/jquery/jquery.cookie.js" type="text/javascript"></script>
+<script src="content/js/common.js" type="text/javascript"></script>
 <script src="content/js/login.js" type="text/javascript"></script>
 <link href="content/css/common.css" rel="stylesheet" type="text/css">
 <link href="content/css/icon.css" rel="stylesheet" type="text/css">
-<link href="content/css/login.css" rel="stylesheet" type="text/css">
+<link href="content/css/login2.css" rel="stylesheet" type="text/css">
+<!-- <link href="content/css/login.css" rel="stylesheet" type="text/css"> -->
 </head>
 <body>
 	<div class="main">
-		<div class="left">
+		<!-- <div class="left">
 			<div class="frame">
 				<div class="title">
 					智能公交管理系统
@@ -38,6 +41,40 @@
 					</div>
 				</form>
 			</div>
+		</div> -->
+		<div class="top">
+			<h5 class="welcome">欢迎进入 <a>智能公交系统</a></h5>
+			<a class="language"><I class="chinese"></I>简体中文</a>
+		</div>
+		<div class="center">
+			<div class="login">
+				<div class="content">
+					<div class="logoBox">
+					
+					</div>
+					<div class="hr">
+					
+					</div>
+					<div class="loginBox">
+						<form id="Login">
+							<div class="tag">
+								<label><i class="user"></i></label><input type="text" name="username" id="User" placeholder="用户名..." value="sjs">
+							</div>
+							<div class="tag">
+								<label><i class="pasw"></i></label><input type="password" name="password" id="Pasw" placeholder="密码..." value="bad182260">
+							</div>
+							<div class="submit">
+								<a href="javaScript:void(0)" id="submit">登录</a>
+								<label id="LoginInfo"></label>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bottom">
+			<h5 class="copyright">copyright 2017</h5>
+			<a class="dns">www.xxx.com</a>
 		</div>
 	</div>
 </body>

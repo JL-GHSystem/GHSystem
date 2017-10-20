@@ -7,7 +7,7 @@ import org.w3c.dom.Node;
 import com.common.xml.XmlHelper;
 
 public class Dao {
-	public static final String defaul = "mysql";
+	public static final String defaul = "oracle";
 	
 	public static final String oracle = "oracle";
 	public static final String mysql = "mysql";

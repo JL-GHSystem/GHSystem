@@ -2,29 +2,8 @@
  * 
  */
 /* 样式处理器 */
-$(document).ready(function(){
-	var width = $(window).width();
-	var height = $(window).height();
+$(document).ready(function(){	
 	
-	var t = $(".main");
-	
-	var mWidth = t.width();
-	var mHeight = t.height();
-	
-	var offset = 40;
-	
-	$(".main").css({
-		top: ((height - mHeight)/2 - offset) + "px",
-		left: (width - mWidth)/2 + "px"
-	});
-	
-	$("input").focus(function(){
-		$(this).addClass("active");
-	});
-
-	$("input").blur(function(){
-		$(this).removeClass("active");
-	});
 	
 });
 
@@ -54,6 +33,7 @@ $(document).ready(function(){
 				    	fa.html("登录成功");
 				    	fa.addClass("success");
 				    	window.location.href = "main.html";
+				    	$.cookie("user", JSON.stringify(date.o));
 			    	}
 			    	else if(date.r == 2){
 			    		$("#LoginInfo").html(date.m);

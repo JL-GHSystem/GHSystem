@@ -38,7 +38,7 @@ public class LogoutServlet extends HttpServlet implements IServlet{
 	
 		HttpSession session = request.getSession();
 		
-		if((boolean)session.getAttribute("K_IsLogin")) {
+		if(session.getAttribute("K_IsLogin") != null || session.getAttribute("P_User") != null) {
 			session.removeAttribute("P_User");
 			session.removeAttribute("K_IsLogin");
 			session.invalidate();

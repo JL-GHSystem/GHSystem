@@ -3,7 +3,7 @@
 <connectionPool>
 	<connection>
 		<name>oracle</name>
-		<url>jdbc:oracle:thin:@122.232.26.180:1521:thinklan</url>
+		<url>jdbc:oracle:thin:@122.232.20.244:1521:thinklan</url>
 		<username>tds</username>
 		<password>tds</password>
 	</connection>
