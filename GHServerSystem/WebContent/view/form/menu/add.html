@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../../../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="../../../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+<script src="../../../content/js/form.js" type="text/javascript"></script>
+<link href="../../../content/css/form.css" rel="stylesheet" />
+</head>
+<body>
+	<form id="add">
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<label for="O_MENUNAME">菜单名*</label>
+						<input name="O_MENUNAME" type="text" class="NoEmpty">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="O_MENUPREVID">父级菜单*</label>
+						<input name="O_MENUPREVID" type="text" class="NoEmpty">
+					</td>
+					<td>
+						<label for="O_MENULEVEL">菜单级别*</label>
+						<input name="O_MENULEVEL" type="text" disabled="disabled">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="O_MENUSORTID">菜单排序</label>
+						<input name="O_MENUSORTID" type="text">
+					</td>
+					<td>
+						<label for="O_MENUURL">菜单映射</label>
+						<input name="O_MENUURL" type="text">
+					</td>
+					<td>
+						<label for="O_MENUENABLED">菜单状态</label>
+						<input name="O_MENUENABLED" type="text">
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td>
+						<p class="info"></p>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+</body>
+</html>

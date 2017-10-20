@@ -69,7 +69,7 @@ public class MenuDao extends Dao implements IMenuDao {
 	}
 
 	@Override
-	public MenuModel[] selectByGroupInTable(String o_USERGROUPID) {
+	public MenuModel[] selectByGroupInTable() {
 		// TODO Auto-generated method stub
 		ArrayList<MenuModel> menuModels = new ArrayList<MenuModel>();
 		ConnBean cb = Dao.getConn();
@@ -77,25 +77,17 @@ public class MenuDao extends Dao implements IMenuDao {
 			Connection cn = cb.getConn();
 			try {
 				//DTO²Ù×÷
-				PreparedStatement pst = cn.prepareStatement("select " + 
-						Map.MENU_MAP + ".O_MENUID, " + 
-						Map.MENU_MAP + ".O_MENUPEVID, " + 
-						Map.MENU_MAP + ".O_MENUNAME, " + 
-						Map.MENU_MAP + ".O_MENULEVEL, " + 
-						Map.MENU_MAP + ".O_MENUSORTID, " + 
-						Map.MENU_MAP + ".O_MENUURL, " + 
-						Map.MENU_MAP + ".O_MENUENABLED " + 
-						"from "+ Map.MENU_MAP + " " + 
-						"LEFT JOIN "+ Map.MENU_USERGROUP_MAP +" on "+ Map.MENU_USERGROUP_MAP +".O_MENUID = "+ Map.MENU_MAP +".O_MENUID " + 
-						"where O_USERGROUPID = ? ");
-				pst.setString(1, o_USERGROUPID);
+				PreparedStatement pst = cn.prepareStatement("select T1.O_MENUID, T1.O_MENUNAME, T2.O_MENUNAME, " + 
+						"T1.O_MENULEVEL, T1.O_MENUSORTID, T1.O_MENUURL, T1.O_MENUENABLED " + 
+						"from "+ Map.MENU_MAP +" t1 LEFT JOIN "+ Map.MENU_MAP +" t2 on t1.O_MENUPEVID = t2.O_MENUID " + 
+						"ORDER BY T1.O_MENULEVEL, T1.O_MENUSORTID ");
 				ResultSet rs = pst.executeQuery();
 				while(rs.next()) 
 				{
 					MenuModel menuModel = new MenuModel();
 					menuModel.setO_MENUID(rs.getString(1));
-					menuModel.setO_MENUPREVID(rs.getString(2));
-					menuModel.setO_MENUNAME(rs.getString(3));
+					menuModel.setO_MENUNAME(rs.getString(2));
+					menuModel.setF_MENUPREVNAME(rs.getString(3));
 					menuModel.setO_MENULEVEL(rs.getInt(4));
 					menuModel.setO_MENUSORTID(rs.getInt(5));
 					menuModel.setO_MENUURL(rs.getString(6));

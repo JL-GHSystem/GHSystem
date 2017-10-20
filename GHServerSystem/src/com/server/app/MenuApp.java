@@ -22,12 +22,10 @@ public class MenuApp {
 		return menuModels;
 	}
 
-	public MenuModel[] getTable (UserModel userModel) {
+	public MenuModel[] getTable () {
 		// TODO Auto-generated method stub
-
-		UserGroupModel userGroupModel = userGroupDao.selectByUser(userModel.getO_USERID());
 		
-		MenuModel[] menuModels = menuDao.selectByGroupInTable(userGroupModel.getO_USERGROUPID());
+		MenuModel[] menuModels = menuDao.selectByGroupInTable();
 		
 		return menuModels;
 	}

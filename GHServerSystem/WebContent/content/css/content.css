@@ -18,7 +18,12 @@
 	height: 25px;
 	line-height: 25px;
 	font-size: 12px;
-	background: linear-gradient(to top, #e4e7ee 35%, #FFF 65%);
+	background: #e4e7ee; /* Old browsers */
+	background: -webkit-linear-gradient(top, #FFF 40%, #e4e7ee 60%); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(top, #FFF 40%, #e4e7ee 60%); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(top, #FFF 40%, #e4e7ee 60%); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to bottom,#FFF 40%, #e4e7ee 60%); /* 标准的语法 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#e4e7ee',GradientType=0 ); /* IE6-9 */
 	border: 1px solid #AFAFAF;
 	border-radius: 5px;
 	color: #000;
@@ -27,10 +32,15 @@
 }
 .tool:hover
 {
-	background: #f0feff;
+	background: #d5ebff; /* Old browsers */
+	background: -webkit-linear-gradient(top, #FFF 40%, #d5ebff 60%); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(top, #FFF 40%, #d5ebff 60%); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(top, #FFF 40%, #d5ebff 60%); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to bottom,#FFF 40%, #d5ebff 60%); /* 标准的语法 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#d5ebff',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #6f9fa9;
 	color: #551a8b;
-	border: 1px solid #bbb;
-	box-shadow: 2px 2px 3px #DDD inset;
+	box-shadow: 0 0 3px #a4d3ff;
 }
 .tool i
 {
@@ -49,24 +59,24 @@
 #add
 {
 	float: left;
-	margin: 0 8px 0 0;
+	margin: 5px 8px 5px 0;
 }
 #delete,
 #hide
 {
 	float: right;
-	margin: 0 0 0 8px;
+	margin: 5px 0 5px 8px;
 }
 #output,
 #download
 {
 	float: left;
-	margin: 0 0 0 8px;
+	margin: 5px 0 5px 8px;
 }
 #input
 {
 	float: left;
-	margin: 0 0 0 20px;
+	margin: 5px 0 5px 20px;
 }
 .selectBox
 {
@@ -77,7 +87,7 @@
 .toolBox
 {
 	width: 100%;
-	padding: 0 0 10px 0;
+	padding: 0 0 5px 0;
 	overflow: hidden;
 }
 #table

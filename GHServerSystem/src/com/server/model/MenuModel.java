@@ -14,6 +14,8 @@ public class MenuModel {
 	private int O_MENUSORTID;
 	private String O_MENUURL;
 	private boolean O_MENUENABLED;
+
+	private String F_MENUPREVNAME;
 	
 	private ArrayList<MenuModel> J_CHILD = new ArrayList<MenuModel>();
 	
@@ -107,6 +109,12 @@ public class MenuModel {
 	}
 	public void setO_MENUENABLED(boolean o_MENUENABLED) {
 		O_MENUENABLED = o_MENUENABLED;
+	}
+	public String getF_MENUPREVNAME() {
+		return F_MENUPREVNAME;
+	}
+	public void setF_MENUPREVNAME(String f_MENUPREVNAME) {
+		F_MENUPREVNAME = f_MENUPREVNAME;
 	}
 	
 	public static MenuModel[] toTree (ArrayList<MenuModel> menuModels) {

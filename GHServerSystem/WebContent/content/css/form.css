@@ -1,0 +1,19 @@
+@charset "UTF-8";
+input
+{
+	height: 25px;
+	padding: 0;
+	border: 1px solid #CCC;
+	outline: none;
+	text-indent: 5px;
+}
+input:focus
+{
+	border: 1px solid #88F;
+	box-shadow: 0 0 3px #88F;
+}
+input.error
+{
+	border: 1px solid #F88;
+	box-shadow: 0 0 3px #F88;
+}

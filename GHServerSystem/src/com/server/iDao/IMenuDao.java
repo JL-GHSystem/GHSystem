@@ -6,7 +6,7 @@ public interface IMenuDao {
 	
 	public MenuModel[] selectByGroup(String o_USERGROUPID);
 
-	public MenuModel[] selectByGroupInTable(String o_USERGROUPID);
+	public MenuModel[] selectByGroupInTable();
 	
 	
 	

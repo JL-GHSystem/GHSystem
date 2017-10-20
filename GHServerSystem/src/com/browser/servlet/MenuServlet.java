@@ -12,6 +12,7 @@ import com.server.model.UserModel;
 import com.server.service.MenuService;
 
 import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Servlet implementation class MenuServlet
@@ -57,10 +58,23 @@ public class MenuServlet extends HttpServlet implements IServlet {
 				response.getWriter().write(content(JSONArray.fromObject(menuModels)));
 				break;
 			case "table":
-				menuModels = menuService.getTable(userModel);
+				menuModels = menuService.getTable();
+				
+				JSONArray ja = new JSONArray();
+				for(int i=0; i<menuModels.length; i++) {
+					JSONObject jo = new JSONObject();
+					jo.put("O_MENUID", menuModels[i].getO_MENUID());
+					jo.put("O_MENUNAME", menuModels[i].getO_MENUNAME());
+					jo.put("F_MENUPREVNAME", menuModels[i].getF_MENUPREVNAME());
+					jo.put("O_MENULEVEL", menuModels[i].getO_MENULEVEL());
+					jo.put("O_MENUSORTID", menuModels[i].getO_MENUSORTID());
+					jo.put("O_MENUURL", menuModels[i].getO_MENUURL());
+					jo.put("O_MENUENABLED", menuModels[i].isO_MENUENABLED());
+					ja.add(jo);
+				}
 				
 				response.setContentType("application/json; charset=utf-8");
-				response.getWriter().write(content(JSONArray.fromObject(menuModels)));
+				response.getWriter().write(content(ja));
 				break;
 			default: break;
 		}

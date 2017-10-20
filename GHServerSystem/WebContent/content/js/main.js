@@ -32,6 +32,7 @@ function initLayout(){
 }
 
 $(document).ready(function(){
+	F.init("lib/FrichUI/", F.FRICHUI_THEME_DARK);
 	
 	initLayout();
 	$(window).resize(initLayout);

@@ -126,6 +126,9 @@
 		
 		isEmpty: function(obj){
 			if(typeof(obj) == "undefined" || !obj){
+				if(obj == 0) {
+					return false;
+				}
 				return true;
 			}
 			return false;
@@ -148,14 +151,16 @@
 	}
 	Factory.prototype = {
 		defaul: {
-			id: "extend"
+			id: "extend",
+			width: "auto",
+			height: "auto"
 		},
 		id: function(div, options) {
 	        var result;
 	        if(options.id == "extend") {
 	            result = $(div).attr("id");
 	            if(!result || typeof(result) == undefined) {
-	                console.error("you must set a id for the initialized div or in options");
+	                console.warn("you'd better set a id for the initialized div or in options");
 	            }
 	        }
 	        else {
@@ -178,6 +183,26 @@
 	    	});
 	        div.append(value);
 	        return div;
+	    },
+	    createIframe: function (frClass, url, id, value) {
+	        var iframe = $("<iframe></iframe>");
+	        iframe.attr({
+	    		"class": frClass,
+	    		"id": id
+	    	});
+	        if(frichUI.isEmpty(url)){
+		        iframe.attr({
+		        	"src": "#"
+		        });
+		        console.error("customer must set url");
+	        }
+	        else {
+		        iframe.attr({
+		        	"src": url
+		        });
+	        }
+	        iframe.append(value);
+	        return iframe;
 	    },
 	    createOl: function (frClass) {
 	        var ol = $("<ol></ol>");
@@ -298,6 +323,9 @@
 			textAlign: "center",
 			fixed: false,
 			enableWrap: false,
+			hide: false,
+			emptyDisplay: "",
+			boolDisplay: ["true", "false"],
 			width: ,				*enableWrap: true时此项必须
 			maxHeight: 				*enableWrap: true时此项必须
 		}
@@ -306,8 +334,10 @@
 			model: "{v}",
 			sort: "last",
 			fixed: false,
+			hide: false,
 			textAlign: "center",
 			emptyDisplay: "",
+			boolDisplay: ["true", "false"],
 			enableWrap: false
 		}
 		
@@ -505,6 +535,8 @@
 					if(frichUI.isEmpty(D)){
 						D = this.runTime.fixedModels[j].emptyDisplay;
 					}
+					D = this.checkBool(this.runTime.fixedModels[j], D);
+					
 					var model = this.runTime.fixedModels[j].model;
 
 					model = model.replace(reg2, D);
@@ -514,6 +546,7 @@
 					td.append(div);
 					i++;
 
+					this.setTdCss(this.runTime.fixedModels[j], td);
 					tr.append(td);
 				}
 				if(!onlyFixed){
@@ -529,6 +562,7 @@
 						if(frichUI.isEmpty(D)){
 							D = this.runTime.dataModels[j].emptyDisplay;
 						}
+						D = this.checkBool(this.runTime.dataModels[j], D);
 						
 						var model = this.runTime.dataModels[j].model;
 
@@ -539,6 +573,7 @@
 						td.append(div);
 						i++;
 
+						this.setTdCss(this.runTime.dataModels[j], td);
 						tr.append(td);
 					}
 				}
@@ -604,7 +639,8 @@
 				
 				th.append(div);
 				i++;
-				
+
+				this.setTdCss(this.runTime.fixedModels[j], th);
 				tr.append(th);
 			}
 
@@ -628,6 +664,7 @@
 					th.append(div);
 					i++;
 					
+					this.setTdCss(this.runTime.dataModels[j], th);
 					tr.append(th);
 				}
 				
@@ -753,6 +790,30 @@
 			frame.append(house);
 			return frame;
 		}
+		
+		this.checkBool = function(model, value) {
+			if(typeof(value) == "boolean") {
+				if(value) {
+					return model.boolDisplay[0];
+				}
+				else {
+					return model.boolDisplay[1];
+				}
+			}
+			return value;
+		}
+		
+		this.setTdCss = function(model, col){
+			if(model.hide) {
+				$(col).hide();
+			}
+			
+			if(model.textAlign != "center") {
+				$(col).css({
+					"text-align": model.textAlign
+				});
+			}
+		}
 	}
 	TableFactory.prototype = new Factory();
 
@@ -859,7 +920,10 @@
 			/*
 			 * 初始化House高度
 			 */
-			var height = $(dom).height();
+			var height = 200;
+			if(options.height != "auto") {
+				height = options.height;
+			}
 			if(!options.loadHead){
 				$(Frame).find(".FrichUI_Table_House").addClass("FrichUI_Table_No_Title");
 				height -= 2;
@@ -875,10 +939,10 @@
 			else {
 				height -= 32;
 			}
-			
-			$(Frame).find(".FrichUI_Table_House").height(height);
-			
 
+			if(options.height != "auto") {
+				$(Frame).find(".FrichUI_Table_House").height(height);
+			}
 			/*
 			 * 初始化Title宽度
 			 */
@@ -1278,22 +1342,27 @@
 		}
 		
 		this.defaul = $.extend(true, {}, this.defaul, {
+			offsetX: 0,
+			offsetY: -100,
 			type: "info",
+			frameId: "F_" + Math.random(),
+			frameWidth: 320,
+			frameHeight: 180,
 			enableCover: true,
 			closeClick: function(){
-				alert("点击了关闭");
+				
 			},
 			yesClick: function(){
-				alert("点击了是");
+				
 			},
 			noClick: function(){
-				alert("点击了否");
+				
 			},
 			confirmClick: function(){
-				alert("点击了确定");
+				
 			},
 			cancleClick: function(){
-				alert("点击了取消");
+				
 			}
 		});
 		
@@ -1335,6 +1404,13 @@
 			icon: "error",
 			message: "这是一个错误框",
 			control: ["confirm"]
+		});
+		
+		this.customerDefaul = $.extend(true, {}, this.defaul, {
+			title: "自定义窗口",
+			tools: ["close"],
+			url: "#",
+			control: ["confirm", "cancle"]		
 		});
 		
 		
@@ -1383,24 +1459,31 @@
 		}
 		
 		this.createContent = function(options){
-			var content;
-			if(options.enableCover){
-				content = this.createDiv("FrichUI_Dialog_Content");
+			var content = this.createDiv("FrichUI_Dialog_Content");
+			if(options.type != "customer") {
+				var item = this.createDiv("FrichUI_Dialog_Item");
+				for(var i in this.icons){
+					if(i == options.icon){
+						var icon = this.createI(this.icons[i]);
+						item.append(icon);
+					}
+				}
+
+				var a = this.createA(undefined, options.message);
+				item.append(a);
+				content.append(item);
 			}
 			else {
-				content = this.createDiv("FrichUI_Affair_Content");
+				var iFrame = this.createIframe("FrichUI_Dialog_IFrame", options.url, options.frameId);
+				
+				iFrame.css({
+					width: options.frameWidth,
+					height: options.frameHeight
+				})
+				
+				content.append(iFrame);
 			}
-
-			for(var i in this.icons){
-				if(i == options.icon){
-					var icon = this.createI(this.icons[i]);
-					content.append(icon);
-				}
-			}
-
-			var a = this.createA(undefined, options.message);
 			
-			content.append(a);
 			return content;
 		}
 
@@ -1431,7 +1514,7 @@
 					default: break;
 				}
 			}
-			
+
 			if(def.cancle){
 				var control = this.createA(this.control.cancle, "取消");
 				foot.append(control);
@@ -1475,6 +1558,8 @@
 			case "error":
 				options = $.extend(true, {}, this.errorDefaul, options);
 				break;
+			case "customer" :
+				options = $.extend(true, {}, this.customerDefaul, options);
 			default: break;
 		}
 		
@@ -1482,166 +1567,114 @@
 		var cover;
 		if(options.enableCover){
 			cover = this.createFrame("FrichUI_Cover");
-			
-			/* 创建基架 */
-			var frame = this.createFrame("FrichUI_Dialog_Frame");
-			if(options.isiFrame){
-				frame.append(this.createTitle(options));
-				
-				var iframe = this.createiFrame("FrichUI_Dialog_iFrame");
-				iframe.src="http://www.runoob.com"
-				frame.append(iframe);
-				
-				frame.append(this.createFoot(options));
-				
-			}else{
-				frame.append(this.createTitle(options));
-
-				frame.append(this.createContent(options));
-
-				frame.append(this.createFoot(options));
-			}
-			
-
-			frame.appendTo(cover);
-			cover.appendTo($(document).find("body").eq(0));
-			
-			$(frame).animate({
-				"width":"244px",
-				"height":"164px",
-				"opacity":"1"
-			},500);
-			
-			$(frame).find(".FrichUI_Dialog_Close").bind('click',function(event){
-				$(cover).remove();
-			});
-			
-			$(frame).find(".FrichUI_Dialog_Full").bind('click',function(event){
-				if($(frame).find(".FrichUI_Dialog_Full").hasClass("FrichUI_Dialog_FullDone")){
-					$(cover).css({
-						"left":"0",
-						"top":"0",
-						"width":"100%",
-						"height":"100%"
-					});
-					$(frame).animate({
-						"left":"30%",
-						"top":"30%",
-						"width":"244px",
-						"height":"164px"
-					},500);
-					$(frame).find(".FrichUI_Dialog_Content").css({
-						"height":"30px"
-					});
-					$(frame).find(".FrichUI_Dialog_Content").css({
-						"display":"block"
-					});
-					$(frame).find(".FrichUI_Dialog_Foot").css({
-						"display":"block"
-					});
-					$(frame).find(".FrichUI_Dialog_Full").removeClass("FrichUI_Dialog_FullDone");
-				}else{
-					$(cover).css({
-						"left":"0",
-						"top":"0",
-						"width":"100%",
-						"height":"100%"
-					});
-					$(frame).animate({
-						"left":"0",
-						"top":"0",
-						"width":"100%",
-						"height":"100%"
-					},500);
-					$(frame).find(".FrichUI_Dialog_Content").css({
-						"height":"80%"
-					});
-					$(frame).find(".FrichUI_Dialog_Content").css({
-						"display":"block"
-					});
-					$(frame).find(".FrichUI_Dialog_Foot").css({
-						"display":"block"
-					});
-					$(frame).find(".FrichUI_Dialog_Full").addClass("FrichUI_Dialog_FullDone");
-					$(frame).find(".FrichUI_Dialog_Min").removeClass("FrichUI_Dialog_MinDone");
-				}
-			});
-			
-			$(frame).find(".FrichUI_Dialog_Min").bind('click',function(event){
-				if($(frame).find(".FrichUI_Dialog_Min").hasClass("FrichUI_Dialog_MinDone")){
-					$(cover).animate({
-						"left":"0",
-						"top":"0",
-						"width":"100%",
-						"height":"100%"
-					},500);
-					$(frame).animate({
-						"left":"30%",
-						"top":"30%",
-						"width":"244px",
-						"height":"100px"
-					},500);
-					$(frame).find(".FrichUI_Dialog_Content").css({
-						"display":"block"
-					});
-					$(frame).find(".FrichUI_Dialog_Foot").css({
-						"display":"block"
-					});
-					$(frame).find(".FrichUI_Dialog_Min").removeClass("FrichUI_Dialog_MinDone");
-				}else{
-					$(cover).animate({
-						"left":"50%",
-						"top":"0",
-						"width":"150px",
-						"height":"40px"
-					},500);
-					$(frame).animate({
-						"left":"50%",
-						"top":"0",
-						"width":"150px",
-						"height":"40px"
-					},500);
-					$(frame).find(".FrichUI_Dialog_Content").css({
-						"display":"none"
-					});
-					$(frame).find(".FrichUI_Dialog_Foot").css({
-						"display":"none"
-					});
-					$(frame).find(".FrichUI_Dialog_Min").addClass("FrichUI_Dialog_MinDone");
-					$(frame).find(".FrichUI_Dialog_Full").removeClass("FrichUI_Dialog_FullDone");
-				}
-			});
-		}
-		else {
-			
-			/* 创建基架 */
-			var frame = this.createFrame("FrichUI_Dialog_Frame");
-
-			frame.append(this.createContent(options));
-
-			frame.appendTo($(document).find("body").eq(0));
-			
-			frame.css({
-				"min-width":"0"
-			});
-			
-			/* 注册事件 */
-			/* 1. 2000ms 消失 */
-			setTimeout(function(){
-				$(frame).fadeOut(500, function(){
-					$(frame).remove();
-				});
-			}, 2000); 
 		}
 		
+		/* 创建基架 */
+		var frame = this.createFrame("FrichUI_Dialog_Frame");
+		
+		frame.append(this.createTitle(options));
+
+		frame.append(this.createContent(options));
+
+		frame.append(this.createFoot(options));
+
+		/* 插入文档流 */
+		if(options.enableCover){
+			var body = $(top.document.body);
+			cover.appendTo(body);
+			frame.appendTo(body);
+		}
+		else {
+			if(frichUI.isEmpty(dom)) {
+				console.error("you must set a dom for create, or use enableCover")
+			}
+			else {
+				frame.appendTo(dom);
+			}
+		}
+		/*
+		 * 样式控制
+		 */
+		
+		/* 设置cover大小为浏览器宽度 */
+		var cWidth = $(body).width();
+		var cHeight = $(body).height();
+		
+		cover.css({
+			"width": cWidth,
+			"height": cHeight
+		});
+		
+		/* 设置长宽 */
+		var fWidth = $(frame).width();
+		var fHeight = $(frame).height();
+		frame.css({
+			"top": (cHeight + options.offsetY - fHeight - 4) / 2,
+			"left": (cWidth + options.offsetX - fWidth - 4) / 2
+		})
+		
 		/* 创建Dialog实体 */
+		if(options.enableCover){
+			var dialongEntity = new DialogEntity(frame, options, cover);
+		}
+		else {
+			var dialongEntity = new DialogEntity(dom, options, cover);
+		}
+		
+		frichUI.push(dialongEntity);
 		return 0;
 	};
 
 	FrichUI.prototype.Dialog = new DialogFactory();
-	
-	
-	
+
+	var DialogEntity = function(dom, options, cover){
+		this.dom = dom;
+		this.options = options;
+		this.cover = cover;
+		
+		this.clear = function() {
+			if(frichUI.istEmpty(this.cover)){
+				this.cover.remove();
+			}
+			this.dom.remove();
+		}
+		
+		var fa = this;
+
+		$(cover).click(function (){
+			fa.clear();
+		});
+		
+		$(dom).find(".FrichUI_Dialog_Close").click(function (){
+			options.closeClick();
+			fa.clear();
+		});
+
+		$(dom).find(".FrichUI_Dialog_Yes").click(function (){
+			options.yesClick();
+			fa.clear();
+		});
+		
+		$(dom).find(".FrichUI_Dialog_No").click(function (){
+			options.noClick();
+			fa.clear();
+		});
+		
+		$(dom).find(".FrichUI_Dialog_Confirm").click(function (){
+			var doc = $(fa.dom).find("iframe")[0];
+			if(doc.contentWindow.checkForm()) {
+				var form = $(doc).contents().find("form");
+				options.confirmClick(form, fa);
+			}
+		});
+		
+		$(dom).find(".FrichUI_Dialog_Cancle").click(function (){
+			options.cancleClick();
+			fa.clear();
+		});
+		
+		
+	}
 	/*
 	 * 3. 静态定义层
 	 */

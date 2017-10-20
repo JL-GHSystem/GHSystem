@@ -11,8 +11,8 @@ public class MenuService implements IService{
 		return menuApp.getMenu(userModel);
 	}
 
-	public MenuModel[] getTable(UserModel userModel) {
-		return menuApp.getTable(userModel);
+	public MenuModel[] getTable() {
+		return menuApp.getTable();
 	}
 	
 	

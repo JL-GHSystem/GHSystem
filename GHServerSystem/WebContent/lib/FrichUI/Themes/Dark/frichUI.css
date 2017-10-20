@@ -552,24 +552,22 @@
 .FrichUI_Cover
 {
 	position: absolute;
-	display: none;
 	/*
 	width: 100%;	自动设置为document宽高
 	height: 100%;
 	*/
 	top: 0;
 	z-index: 99999;
-	background-color: rgba(60, 60, 60, .5);
+	background-color: rgba(53, 53, 53, 0.7);
 }
 .FrichUI_Dialog_Frame
 {
 	position: fixed;
 	display: block;
-	top: 30%;
-	left: 30%;
-	min-width: 244px;
+	min-width: 234px;
+	max-width: 1000px;
 	z-index: 999999;
-	border: 2px solid #9CB26A;
+	border: 2px solid #3d4455;
 	border-radius: 5px 5px 5px 5px;
 	box-shadow: 0 0 30px #FFF;
 }
@@ -580,7 +578,12 @@
 	display: block;
 	width: 100%;
 	height: 30px;
-	background: #9CB26A;
+	background: #3d4455; /* Old browsers */
+	background: -webkit-linear-gradient(top, #606880, #3d4455); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(top, #606880, #3d4455); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(top, #606880, #3d4455); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to bottom,#606880, #3d4455); /* 标准的语法 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#606880', endColorstr='#3d4455',GradientType=0 ); /* IE6-9 */
 }
 .FrichUI_Dialog_Name
 {
@@ -599,18 +602,22 @@
 {
 	position: static;
 	display: block;
-	min-height: 40px;
-	padding: 30px 50px 30px 100px;
 	background-color: #FFF;
 }
-.FrichUI_Affair_Content
+.FrichUI_Dialog_Item
 {
 	position: static;
 	display: block;
-	max-width:150px;
 	min-height: 40px;
-	padding: 10px 20px 10px 83px;
-	background-color: #FFF;
+	padding: 30px 30px 27px 80px;
+}
+.FrichUI_Dialog_IFrame
+{
+	position: static;
+	display: block;
+	border: none;
+	padding: 0;
+	margin: 0;
 }
 /* 1.3 会话域 */
 .FrichUI_Dialog_Foot
@@ -619,7 +626,7 @@
 	display: block;
 	width: 100%;
 	height: 30px;	
-	background-color: #F1F1F1;
+	background-color: #EEE;
 }
 /* 1.4 事件器 */
 .FrichUI_Dialog_Close,
@@ -669,7 +676,7 @@
 	position: static;
 	display: block;
 	float: left;
-	margin: 0 0 0 -73px;
+	margin: 0 0 0 -58px;
 	width: 40px;
 	height: 40px;
 }
@@ -706,20 +713,42 @@
 	line-height: 21px;
 	font-size: 12px;
 	text-align: center;
-	border: 1px solid #CCC;
+	border: 1px solid #AFAFAF;
 	border-radius: 5px 5px 5px 5px;
 	margin: 3.5px 10px 3.5px 0;
-	background: #6fa5ff;
+	background: #e4e7ee; /* Old browsers */
+	background: -webkit-linear-gradient(top, #FFF 40%, #e4e7ee 60%); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(top, #FFF 40%, #e4e7ee 60%); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(top, #FFF 40%, #e4e7ee 60%); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to bottom,#FFF 40%, #e4e7ee 60%); /* 标准的语法 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#e4e7ee',GradientType=0 ); /* IE6-9 */
 	transition: background-color .4s ease-in-out;
-	color: #FFF;
+	color: #3d4456;
 	cursor: pointer;
 }
 .FrichUI_Dialog_Yes:hover,
-.FrichUI_Dialog_No:hover,
-.FrichUI_Dialog_Confirm:hover,
-.FrichUI_Dialog_Cancle:hover
+.FrichUI_Dialog_Confirm:hover
 {
-	background: #3481ff;
+	background: #d5ebff; /* Old browsers */
+	background: -webkit-linear-gradient(top, #FFF 40%, #d5ebff 60%); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(top, #FFF 40%, #d5ebff 60%); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(top, #FFF 40%, #d5ebff 60%); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to bottom,#FFF 40%, #d5ebff 60%); /* 标准的语法 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#d5ebff',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #6f9fa9;
+	box-shadow: 0 0 3px #a4d3ff;
+}
+.FrichUI_Dialog_Cancle:hover,
+.FrichUI_Dialog_No:hover
+{
+	background: #ffd1d1; /* Old browsers */
+	background: -webkit-linear-gradient(top, #FFF 40%, #ffd1d1 60%); /* Safari 5.1 - 6.0 */
+	background: -o-linear-gradient(top, #FFF 40%, #ffd1d1 60%); /* Opera 11.1 - 12.0 */
+	background: -moz-linear-gradient(top, #FFF 40%, #ffd1d1 60%); /* Firefox 3.6 - 15 */
+	background: linear-gradient(to bottom,#FFF 40%, #ffd1d1 60%); /* 标准的语法 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFF', endColorstr='#d5ebff',GradientType=0 ); /* IE6-9 */
+	border: 1px solid #9c8d8d;
+	box-shadow: 0 0 3px #ffdc7f;
 }
 
 /* 2. 滑动条 */
