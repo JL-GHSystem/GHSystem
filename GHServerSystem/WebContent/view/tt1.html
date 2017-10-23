@@ -6,6 +6,24 @@
 <script src="../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
 <title>Insert title here</title>
 <script type="text/javascript">
+$(function(){
+	$(".FrichUI_Tree_item_name > i").click(function(){  
+        $(this).parent().parent().toggleClass("unfold"); 
+        $(this).parent().parent().find("ul:first").slideToggle(500);  
+        $(this).toggleClass("unfold");  
+        $(this).parent().children(".FrichUI_Tree_filename").toggleClass("FrichUI_Tree_filename-open");  
+    }); 
+});
+$(function(){
+	$(".FrichUI_Tree_checkbox").click(function (){
+		$(this).parent().parent().parent().find(".FrichUI_Tree_checkbox").toggleClass("FrichUI_Tree_c-selected");   
+		});
+});
+
+
+
+
+
 
  $(document).ready(function(){
 		F.init("../lib/FrichUI/", F.FRICHUI_THEME_DARK);
@@ -42,7 +60,14 @@
 				pro.setProgress(1);
 			},100);
 		}); 
-			
+		
+	
+		$("#Tre").click(function(){
+			F.Tree.make("",{
+				id:"",
+				title:"一级目录",
+			});
+		}); 
 		
 		/*日期输入框*/
 		function today(){
@@ -157,6 +182,13 @@
 		</div>
 	</div>
 	
+	<div id="btn3">
+		<div style="height: 40px;">
+			<button id="Tree">弹出caidan</button>
+		</div>
+	</div>
+	
+	
 	<div id="inp" style="height: 40px;">
 		日期<input type="text" name="date"  id="today2">
 		日期<input onkeyup="value=value.replace(/[^\w&=]|_/ig,'')" onblur="value=value.replace(/[^\w&-]|_/ig,'')" id="today1"/> 
@@ -195,8 +227,59 @@
 				</div>
 			</div>
 		</div>  
+	</div>-->
+	 
+	 <br/>
+	<br/>
+	<br/>
+	
+	
+	<div class="FrichUI_Tree_Frame">
+		<div class="FrichUI_Tree_Content">
+			<div class="FrichUI_Tree_treenav">
+						<ul class="FrichUI_Tree_nav-trunk">
+							<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">一级目录名称</span></a>
+								<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+									<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f" title="二级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">二级目录名称好长好处好处</span></a>
+									<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+										<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f" title="三级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">三级目录名称</span></a>
+											<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+												<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f" title="四级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">四级目录名称</span></a>
+												<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+													<li><a class="FrichUI_Tree_item_name FrichUI_Tree_item_name-last FrichUI_Tree_c-f" title="五级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">五级目录名称</span></a>
+													<li><a class="FrichUI_Tree_item_name FrichUI_Tree_item_name-last FrichUI_Tree_c-f" title="五级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">五级目录名称</span></a>
+												</ul>
+											</ul>
+										</li>
+									</ul>
+								</ul>
+							</li>
+						</ul>
+					
+					
+						<ul class="FrichUI_Tree_nav-trunk">
+							<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">一级目录名称</span></a>
+								<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+									<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f" title="二级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">二级目录名称好长好处好处</span></a>
+									<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+										<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f" title="三级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">三级目录名称</span></a>
+											<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+												<li><a class="FrichUI_Tree_item_name FrichUI_Tree_c-f" title="四级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">四级目录名称</span></a>
+												<ul class="FrichUI_Tree_nav-trunk FrichUI_Tree_fold">
+													<li><a class="FrichUI_Tree_item_name FrichUI_Tree_item_name-last FrichUI_Tree_c-f" title="五级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">五级目录名称</span></a>
+													<li><a class="FrichUI_Tree_item_name FrichUI_Tree_item_name-last FrichUI_Tree_c-f" title="五级目录名称"><i></i><span class="FrichUI_Tree_pull-left"><div class="FrichUI_Tree_checkbox"><input type="checkbox"></div></span><span class="FrichUI_Tree_pull-left FrichUI_Tree_filename">五级目录名称</span></a>
+												</ul>
+											</ul>
+										</li>
+									</ul>
+								</ul>
+							</li>
+						</ul>
+			</div>
+		</div>
 	</div>
-	 -->
+	
+	
 	
 </body>
 </html>

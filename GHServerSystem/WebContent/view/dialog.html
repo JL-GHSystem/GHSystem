@@ -48,6 +48,17 @@ body, html
 			
 		});
 		
+		
+		
+		$("#Message3").click(function(){
+			F.Form.make("", {
+				id: "",
+				lilength:5,
+				message:["1","2","3","4","5"]
+			});
+			
+		});
+		
 	})
 	
 	/*
@@ -88,6 +99,8 @@ body, html
 		<button id="Message">弹出消息框</button>
 		<button id="Message1">弹出消息框</button>
 		<button id="Message2">弹出消息框</button>
+		
+		<button id="Message3">树形</button>
 	</div>
 	<!-- 判断有无遮罩层, body:overflow-y:hidden; -->
 	<!-- 

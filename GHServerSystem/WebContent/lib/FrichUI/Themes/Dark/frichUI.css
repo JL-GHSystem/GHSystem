@@ -454,6 +454,9 @@
 	border: 2px solid #9CB26A;
 	border-radius: 5px 5px 5px 5px;
 	box-shadow: 0 0 30px #FFF;
+	opacity:0;
+	transform:scale(0.7);
+	transition: all 0.4s ease-in-out;
 }
 /* 1.1 会话头 */
 .FrichUI_Dialog_Title
@@ -755,3 +758,170 @@
 	border-color: transparent transparent #7F7F7F transparent;
  	bottom:-6px;
  }
+ 
+ 
+ 
+ 
+ /*树形菜单*/
+ 
+ .FrichUI_Tree_Frame
+ {
+ 	width: 300px; 
+ 	height: 400px; 
+ 	overflow-x: scroll;
+ 	border: 1px solid #ccc;
+ 	margin: 0 auto;
+ }
+ 
+ .FrichUI_Tree_Content
+ {
+ 	
+ }
+ .FrichUI_Tree_Content ul,
+ .FrichUI_Tree_Content li,
+ .FrichUI_Tree_Content i
+ {
+ 	list-style:none; 
+ 	padding:0; 
+ 	margin:0; 
+ 	font-style:normal;
+ }
+ 
+ .FrichUI_Tree_fold
+ {
+ 	display:none;
+ }
+ 
+ 
+ .FrichUI_Tree_checkbox
+ {
+ 	width: 15px; 
+ 	height: 15px; 
+ 	border: 1px solid #dadada; 
+ 	border-radius: 2px; 
+ 	-webkit-border-radius: 2px; 
+ 	-moz-border-radius: 2px; 
+ 	margin:2px 5px 0 0;
+ 	cursor: pointer;
+ }
+ 
+ 
+ .FrichUI_Tree_c-selected
+ { 
+	 border: 1px solid #27b0f2; 
+	 position: relative;
+ }  
+ 
+ .FrichUI_Tree_c-selected:after
+ {
+ 	content:''; 
+ 	display:block; 
+ 	width:100%; 
+ 	height:100%; 
+ 	position: absolute; 
+ 	left: 0; 
+ 	top: 0; 
+ 	background:#27b0f2 url("image/ai_icon.png") no-repeat -36px -1px;
+ 	background-position: -1px -1px;
+ }
+ 
+ .FrichUI_Tree_checkbox > input
+ {
+ 	margin: 0; 
+ 	visibility: hidden;
+ }
+ 
+ .FrichUI_Tree_pull-left
+ {
+ 	float: left;
+ }
+ 
+ .FrichUI_Tree_c-f:after
+ {
+ 	content:".";
+ 	display:block;
+ 	height:0;
+ 	clear:both;
+ 	visibility:hidden
+ }
+ 
+ .FrichUI_Tree_treenav
+ {
+ 	width:100%;
+ }
+ 
+ .FrichUI_Tree_treenav ul
+ {
+ 	margin-left:20px;
+ }
+ 
+ .FrichUI_Tree_treenav i.unfold,
+ .FrichUI_Tree_item_name-last > i
+ {
+	 width:14px;
+	 height:14px;  
+	 background:url("image/ai_icon.png") no-repeat -24px -33px;
+ }
+ 
+ .FrichUI_Tree_item_name-last > i
+ {
+ 	visibility:hidden;
+ }
+ 
+ .FrichUI_Tree_treenav a
+ {
+ 	display:block; 
+ 	font-size:14px; 
+ 	height:22px; 
+ 	padding:3px 0; 
+ 	color:#666; 
+ 	overflow:hidden;
+ }
+ 
+ .FrichUI_Tree_nav-trunk
+ {
+ 	margin-left:20px;
+ }
+ 
+ .FrichUI_Tree_checkbox
+ {
+ 	margin-top: 0;
+ }
+ 
+ .FrichUI_Tree_filename,
+ .FrichUI_Tree_filename-open
+ {
+ 	background: url("image/ai_icon.png") no-repeat 0 -72px; 
+ 	padding-left: 25px; 
+ 	width: 50%;
+ 	white-space: nowrap; 
+ 	text-overflow: ellipsis; 
+ 	overflow: hidden;
+ }
+ 
+ .FrichUI_Tree_filename-open
+ {
+ 	background-position: 0 -52px;
+ }
+ 
+ .FrichUI_Tree_treenav li.unfold
+ {
+ 	min-width:250px;
+ }
+ 
+ .FrichUI_Tree_treenav li.unfold > ul li.FrichUI_Tree_filename
+ {
+ 	 width: 60%;
+ }
+ 
+.FrichUI_Tree_treenav i
+{
+	width: 14px;
+	height: 14px;
+	background: url("image/ai_icon.png") no-repeat -4px -33px;
+	margin: 2px 7px 0 0;
+	float: left;
+}
+ 
+ 
+ 

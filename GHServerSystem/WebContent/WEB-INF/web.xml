@@ -21,18 +21,6 @@
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <filter>
-    <filter-name>loginFilter</filter-name>
-    <filter-class>com.browser.filter.LoginFilter</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>loginFilter</filter-name>
-    <url-pattern>/main.html</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>loginFilter</filter-name>
-    <url-pattern>/view/*</url-pattern>
-  </filter-mapping>
   <servlet>
     <servlet-name>loginServlet</servlet-name>
     <servlet-class>com.browser.servlet.LoginServlet</servlet-class>

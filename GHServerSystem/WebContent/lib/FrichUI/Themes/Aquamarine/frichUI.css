@@ -396,6 +396,9 @@
 	border: 2px solid #9CB26A;
 	border-radius: 5px 5px 5px 5px;
 	box-shadow: 0 0 30px #FFF;
+	opacity:0;
+	transform:scale(0.7);
+	transition: all 0.4s ease-in-out;
 }
 /* 1.1 会话头 */
 .FrichUI_Dialog_Title
@@ -691,3 +694,55 @@
 	*width: 100%;
 	z-index: 99;
 }
+
+
+
+
+
+/*树形Form*/
+ui,li
+{
+	list-style:none;
+	padding:0 1px;
+}
+
+li i
+{
+	
+	height: 15px;
+	line-height: 15px;
+}
+i
+{
+	display: inline-block;
+	padding-top:2px;
+}
+i.checked
+{
+	width:16px;
+	height:12px;
+	background:url("../icon/reselect.png") no-repeat 0 0;
+}
+i.halfcheck
+{
+	width:16px;
+	height:12px;
+	background:url("../icon/reselect.png") no-repeat -46px 0;
+}
+i.nocheck
+{
+	width:16px;
+	height:12px;
+	background:url("../icon/reselect.png") no-repeat -23px 0;
+}
+
+
+
+
+
+
+
+
+
+
+

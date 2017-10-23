@@ -265,11 +265,12 @@
 	    	iF.append(value);
 	    	return iF;
 	    },
-	    createInput:function(frType,value,field){
+	    createInput:function(frType,value,id,field){
 	    	var input = $("<input></input>");
 	    	input.attr({
 	    		type:frType,
 	    		value:vlaue,
+	    		id:id
 	    	});
 	    	input.append(field);
 	    	return input;
@@ -280,6 +281,16 @@
 	    		class:frClass
 	    	});
 	    	return form;
+	    },
+	    createLabel:function(id,value,field){
+	    	var lab = $("<label></label>");
+	    	var input = $("<input></input");
+	    	lab.attr({
+	    		for:id,
+	    		title:value,
+	    	});
+	    	lab.append(fieeld);
+	    	return lab;
 	    },
 		initCreate: function(dom, customer){
 			options = $.extend(true, {}, this.defaul, customer);
@@ -680,6 +691,7 @@
 			
 			$(frame).find(".FrichUI_Dialog_Close").bind('click',function(event){
 				$(cover).remove();
+				$(frame).remove();
 			});
 			
 		}else{
@@ -689,6 +701,26 @@
 				$(frame).remove();
 			});
 		}
+		
+		var body = $(top.document.body);
+		frame.appendTo(body);
+		
+		var cWidth = body.width();
+		var cHeight = body.height();
+			
+		/* 设置长宽 */
+		var fWidth = $(frame).width();
+		var fHeight = $(frame).height();
+		frame.css({
+			"top": (cHeight + options.offsetY - fHeight - 4) / 2,
+			"left": (cWidth + options.offsetX - fWidth - 4) / 2,
+			"opacity": 1,
+			"transform": "scale(1)",
+			"z-index": options.zIndex + 10
+		})
+	
+		
+		
 		/*
 		$(frame).find(".FrichUI_Dialog_Full").bind('click',function(event){
 			if($(frame).find(".FrichUI_Dialog_Full").hasClass("FrichUI_Dialog_FullDone")){
@@ -863,6 +895,10 @@
 			
 			var c = $($(window).eq(0)[0].parent.document).find('body');
 			$(c).append(frame);
+			
+			
+			
+			
 			/* 注册事件 */
 			/* 1.  加载事件 */
 			
@@ -874,8 +910,6 @@
 			frame.appendTo(cover);
 			cover.appendTo($(document).find("body").eq(0));
 		}
-		
-		
 		
 		
 		return 0;
@@ -923,6 +957,9 @@
 		
 		this.defaul = $.extend(true, {}, this.defaul, {
 			type: "info",
+			offsetX: 0,
+			offsetY: -100,
+			zIndex: 1000,
 			enableCover: false
 		});
 		this.successDefaul = $.extend(true, {}, this.defaul, {
@@ -972,15 +1009,24 @@
 		var frame = this.createFrame("FrichUI_Dialog_Frame");
 
 		frame.append(this.createContent(options));
-
-		frame.appendTo($(document).find("body").eq(0));
 		
+		var body = $(top.document.body);
+		frame.appendTo(body);
+		
+		var cWidth = body.width();
+		var cHeight = body.height();
+			
+		/* 设置长宽 */
+		var fWidth = $(frame).width();
+		var fHeight = $(frame).height();
 		frame.css({
-			"min-width":"0"
-		});
-		
-	
-		
+			"top": (cHeight + options.offsetY - fHeight - 4) / 2,
+			"left": (cWidth + options.offsetX - fWidth - 4) / 2,
+			"opacity": 1,
+			"transform": "scale(1)",
+			"z-index": options.zIndex + 10
+		})
+			
 		
 		/* 注册事件 */
 		/*1. 2000ms 消失 */
@@ -1004,11 +1050,599 @@
 
 	var FormFactory = function(){
 		Factory.call(this);
+	
 		
 		this.defaul = $.extend(true,{},this.defaul,{
-			
+			type:"text",
+			showLable:false
 		});
+		
+		this.
+		
+		
+		this.createTitle = function(options){
+			var title = this.createDiv("FrichUI_Form_Title");
+			
+			var h5 = this.createH(5,"FrichUI_Form_Name",options,title);
+			
+			title.append(h5);
+			
+			var def = {
+					close: false,
+					min: false,
+					full: false
+				}
+				
+			for(var i=0; i<options.tools.length; i++){
+				switch(options.tools[i]){
+					case "close":
+						def.close = true;
+						break;
+					case "min":
+						def.min = true;
+						break;
+					case "full":
+						def.full = true;
+						break;
+					default: break;
+				}
+			}
+			
+			if(def.close){
+				var tool = this.createI(this.tools.close);
+				title.append(tool);
+			}
+			if(def.full){
+				var tool = this.createI(this.tools.full);
+				title.append(tool);
+			}
+			if(def.min){
+				var tool = this.createI(this.tools.min);
+				title.append(tool);
+			}
+			
+			return title;
+		}
+		
+		this.createContent = function(options){
+			var content = this.createForm("FrichUI_Form_Content");
+			var title = opntions.title;
+			if(options.showLabel){
+				var lab = this.createLabel("",title);
+				content.appennd(lab);
+			}
+			for(var i in this.types){
+				if(i == options.type){
+					var input = this.createInput(this.types[i],title);
+				}
+				if(options.hidden){
+					input.style.hidden = true;
+				}else if(opntions.disabled){
+					input.style.disabled = disabled;
+				}
+				content.append(input);
+			}
+		}
+	};
+	
+	
+	
+	/*form组件*/
+	var FormFactory = function(){
+		Factory.call(this);
+		
+		this.defaul = this.defaul = $.extend(true, {}, this.defaul, {
+			type: "text"
+		});
+		
+		this.pswdefaul = this.defaul = $.extend(true, {}, this.defaul, {
+			type: "passwpord"
+		});
+		
+		this.checkdefaul = this.defaul = $.extend(true, {}, this.defaul, {
+			type: "checkbox"
+		});
+		
+		this.filedefaul = this.defaul = $.extend(true, {}, this.defaul, {
+			type: "file"
+		});
+		
+		this.radiofaul = this.defaul = $.extend(true, {}, this.defaul, {
+			type: "radio"
+		});
+		
+		this.subfaul = this.defaul = $.extend(true, {}, this.defaul, {
+			type: "submit"
+		});
+		
+		this.resetfaul = this.defaul = $.extend(true, {}, this.defaul, {
+			type: "reset"
+		});
+
+		this.helpDefaul = $.extend(true, {}, this.defaul, {
+			title: "询问框",
+			tools: ["close"],
+			icon: "help",
+			message: "这是一个询问框",
+			control: ["yes", "no", "cancle"]
+		});
+		
+		this.warnningDefaul = $.extend(true, {}, this.defaul, {
+			title: "警告框",
+			tools: ["close"],
+			icon: "warnning",
+			message: "这是一个警告框",
+			control: ["confirm", "cancle"]
+		});
+		
+		this.successDefaul = $.extend(true, {}, this.defaul, {
+			title: "成功框",
+			tools: ["close"],
+			icon: "success",
+			message: "这是一个成功框",
+			control: ["confirm"]
+		});
+		
+		this.errorDefaul = $.extend(true, {}, this.defaul, {
+			title: "错误框",
+			tools: ["close"],
+			icon: "error",
+			message: "这是一个错误框",
+			control: ["confirm"]
+		});
+		
+		
+		this.createTitle = function(options){
+			var title = this.createDiv("FrichUI_Dialog_Title");
+			
+			var h5 = this.createH(5, "FrichUI_Dialog_Name", options.title);
+			
+			title.append(h5);
+			
+			var def = {
+				close: false,
+				min: false,
+				full: false
+			}
+			
+			for(var i=0; i<options.tools.length; i++){
+				switch(options.tools[i]){
+					case "close":
+						def.close = true;
+						break;
+					case "min":
+						def.min = true;
+						break;
+					case "full":
+						def.full = true;
+						break;
+					default: break;
+				}
+			}
+			
+			if(def.close){
+				var tool = this.createI(this.tools.close);
+				title.append(tool);
+			}
+			if(def.full){
+				var tool = this.createI(this.tools.full);
+				title.append(tool);
+			}
+			if(def.min){
+				var tool = this.createI(this.tools.min);
+				title.append(tool);
+			}
+			
+			return title;
+		}
+		
+		this.createContent = function(options){
+			var content;
+			if(options.enableCover){
+				content = this.createDiv("FrichUI_Dialog_Content");
+			}
+			else {
+				content = this.createDiv("FrichUI_Affair_Content");
+			}
+
+			for(var i in this.icons){
+				if(i == options.icon){
+					var icon = this.createI(this.icons[i]);
+					content.append(icon);
+				}
+			}
+
+			var a = this.createA(undefined, options.message);
+			
+			content.append(a);
+			return content;
+		}
+
+		this.createFoot = function(options){
+			var foot = this.createDiv("FrichUI_Dialog_Foot");
+			
+			var def = {
+				yes: false,
+				no: false,
+				confirm: false,
+				cancle: false,
+			}
+			
+			for(var i=0; i<options.control.length; i++){
+				switch(options.control[i]){
+					case "yes":
+						def.yes = true;
+						break;
+					case "no":
+						def.no = true;
+						break;
+					case "confirm":
+						def.confirm = true;
+						break;
+					case "cancle":
+						def.cancle = true;
+						break;
+					default: break;
+				}
+			}
+			
+			if(def.cancle){
+				var control = this.createA(this.control.cancle, "取消");
+				foot.append(control);
+			}
+			if(def.no){
+				var control = this.createA(this.control.no, "否");
+				foot.append(control);
+			}
+			if(def.yes){
+				var control = this.createA(this.control.yes, "是");
+				foot.append(control);
+			}
+			if(def.confirm){
+				var control = this.createA(this.control.confirm, "确定");
+				foot.append(control);
+			}
+			
+			return foot;
+		}
+		
 	}
+
+	DialogFactory.prototype = new Factory();
+	
+	DialogFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		switch(options.type){
+			case "info":
+				options = $.extend(true, {}, this.infoDefaul, options);
+				break;
+			case "help":
+				options = $.extend(true, {}, this.helpDefaul, options);
+				break;
+			case "warnning":
+				options = $.extend(true, {}, this.warnningDefaul, options);
+				break;
+			case "success":
+				options = $.extend(true, {}, this.successDefaul, options);
+				break;
+			case "error":
+				options = $.extend(true, {}, this.errorDefaul, options);
+				break;
+			default: break;
+		}
+		
+		/* 创建基架 */
+		var frame = this.createFrame("FrichUI_Dialog_Frame");
+		if(options.isiFrame){
+			frame.append(this.createTitle(options));
+			
+			var iframe = this.createiFrame("FrichUI_Dialog_iFrame");
+			frame.append(iframe);
+			
+			frame.append(this.createFoot(options));
+			
+		}else{
+			frame.append(this.createTitle(options));
+
+			frame.append(this.createContent(options));
+
+			frame.append(this.createFoot(options));
+		}
+		/* 添加遮罩层 */
+		var cover;
+		if(options.enableCover){
+			cover = this.createFrame("FrichUI_Cover");
+			frame.appendTo(cover);
+			cover.appendTo($(document).find("body").eq(0));
+			
+			$(frame).find(".FrichUI_Dialog_Close").bind('click',function(event){
+				$(cover).remove();
+				$(frame).remove();
+			});
+			
+		}else{
+			frame.appendTo($(document).find("body").eq(0));
+			
+			$(frame).find(".FrichUI_Dialog_Close").bind('click',function(event){
+				$(frame).remove();
+			});
+		}
+		
+		var body = $(top.document.body);
+		frame.appendTo(body);
+		
+		var cWidth = body.width();
+		var cHeight = body.height();
+			
+		/* 设置长宽 */
+		var fWidth = $(frame).width();
+		var fHeight = $(frame).height();
+		frame.css({
+			"top": (cHeight + options.offsetY - fHeight - 4) / 2,
+			"left": (cWidth + options.offsetX - fWidth - 4) / 2,
+			"opacity": 1,
+			"transform": "scale(1)",
+			"z-index": options.zIndex + 10
+		})
+
+		
+		/* 创建Dialog实体 */
+		return 0;
+	};
+
+	FrichUI.prototype.Dialog = new DialogFactory();
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*树形控件*/
+	/*var FormFactory = function(){
+		Factory.call(this);
+		
+		this.createContent = function(options){
+			var content = this.createUl("FrichUI_Form_Level1");
+			for(var n = 0;n < options.lilength ;n++){
+				var liB = this.createI("FrichUI_Form_Box");
+				var icheck = this.createLI("nocheck");
+				var a = this.createA(options.message[n]);
+				liB.append(icheck);
+				liB.append(a);
+			}
+			content.append(liB);
+			return content;
+		}
+
+	FormFactory.prototype = new Factory();
+	
+	FormFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		
+		 创建基架 
+		var frame = this.createFrame("FrichUI_Form_Frame");
+	
+		frame.append(this.createContent(options));
+		
+		formEntity = new FormEntity(frame, options);
+		frichUI.push(formEntity);
+		
+		return menuEntity;
+	};
+	
+		 创建Dialog实体 
+		var FormEntity = function(frame, options){
+			this.id = options.id;
+			this.frame = frame;
+			this.options = options;
+
+			$(frame).find("i").click(function(){
+				var className = $(this).attr("class");
+				
+				switch(className){
+				case "nocheck":
+					$(this).removeClass().addClass("checked"); //当前复选框添加check样式
+					$(this).parent("li").find("i").removeClass().addClass("checked"); //子目录下添加check样式
+					
+					var a = false;
+					$(this).parent("ul").find("i").each(function(i, item){   
+						if(!$(item).hasClass("checked")) {
+							a = true;   		//判断：如果有同级元素不存在check样式，把a置为true
+						}
+					});
+					if(a) {
+						$(this).parent("i").addClass("halfcheck"); //a真，则上一级的框为halfcheck
+					}
+					else {						//循环调用此方法
+						$(this).parent("li").parent("li").children("i").click();
+					}
+					break;
+				case "halfcheck":
+					$(this).removeClass().addClass("checked");   //把halfcheck样式改为check
+					$(this).parent("li").find("i").removeClass().addClass("checked"); //子目录下的都变成check
+					
+					var a = false;
+					$(this).parent("ul").find("i").each(function(i, item){
+						if(!$(item).hasClass("checked")) {		
+							a = true;		//判断：如果有同级元素不存在check样式，把a置为true
+						}
+					});
+					if(a) {
+						$(this).parent("i").addClass("halfcheck");  //a真，则父级变为halfcheck
+					}
+					else {
+						$(this).parent("li").parent("li").children("i").click();
+					}
+					break;
+				case "checked":
+					$(this).removeClass().addClass("nocheck");  //把check样式改为nocheck
+					$(this).parent("li").find("i").removeClass().addClass("nocheck"); //子目录都改为nocheck
+					
+					var a = false;
+					$(this).parent("ul").find("i").each(function(i, item){
+						if(!$(item).hasClass("nochecked")) {
+							a = true;   //有同级元素不存在nocheck，把a置为true
+						}
+					});
+					if(a) {
+						$(this).parent("i").addClass("halfcheck"); //a真，则父级添加halfcheck样式
+					}
+					else {
+						$(this).parent("li").parent("li").children("i").click();
+					}
+					break;
+				default:
+					break;
+				}
+				
+				
+			});
+		};
+	};
+
+	FrichUI.prototype.Form = new FormFactory();*/
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	/*
 	 * 3. 静态定义层
