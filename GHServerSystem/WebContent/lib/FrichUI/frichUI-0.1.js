@@ -328,6 +328,7 @@
 			boolDisplay: ["true", "false"],
 			width: ,				*enableWrap: true时此项必须
 			maxHeight: 				*enableWrap: true时此项必须
+			
 		}
 		*/
 		this.defaulModel = {
@@ -350,10 +351,12 @@
 			width: 30
 		}
 		
-		this.defaulPage = {
-			total: 500,
-			records: 10000,
-			current: 1
+		this.defaulPagination = {
+			total: 0,
+			pages: 1,					//当前页基础上显示几页 > 0
+			records: 0,
+			current: 1,
+			rows: 20
 		}
 		
 		this.defaul = $.extend(true, {}, this.defaul, {
@@ -368,14 +371,25 @@
 			selectModel: this.selectModel,
 			enableAutoSerial: false,
 			serialModel: this.serialModel,
+			enableAjax: false,
 			title: "FrichUI Simple",
 			models: [],							//列模型 [{},{}]
 			//data: null						//数据模型 {v:,c:},{v:,c:}
-			pagnition: {
-				pages: 1,						//必须大于0
-				rows: 20
-			},
-			page: this.defaulPage
+			pagination: this.defaulPagination,
+			ajax: {
+				type: "POST",
+			    url: null,
+			    data: null,
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data, options) {
+			    	
+			    },
+			    error: function (err) {
+			    	
+			    }
+			}
 		});
 		/*
 		this.runTime = {
@@ -681,36 +695,24 @@
 				
 			var tips = this.createDiv("FrichUI_Table_Pagination_Tips");
 			
-			tips.html("当前<a id=\"FrichUI_Table_Pagination_CurP\">"+ options.page.current +"</a>" +
-					"页/共<a id=\"FrichUI_Table_Pagination_TolP\">"+ options.page.total +"</a>页&nbsp;共" +
-							"<a id=\"FrichUI_Table_Pagination_TolR\">"+ options.page.records +"</a>记录");
+			tips.html("当前<a id=\"FrichUI_Table_Pagination_CurP\">"+ options.pagination.current +"</a>" +
+					"页/共<a id=\"FrichUI_Table_Pagination_TolP\">"+ options.pagination.total +"</a>页&nbsp;共" +
+							"<a id=\"FrichUI_Table_Pagination_TolR\">"+ options.pagination.records +"</a>记录");
 			
 			house.append(tips);
-			/*
-			pagnition: {
-				pages: 0,						//*未实现
-				rows: 20
-			},
-			Page: {
-				total: 500,
-				records: 10000,
-				current: 1
-			}
-			*/
-
-			if(options.pagnition.pages < 1) {
-				options.pagnition.pages = 1;
+			if(options.pagination.pages < 1) {
+				options.pagination.pages = 1;
 			}
 			
 			var skip = this.createDiv("FrichUI_Table_Pagination_Skip");
-			if(options.page.total > 1) {
+			if(options.pagination.total > 1) {
 				skip.append("至<input class=\"FrichUI_Table_Pagination_Skip_Input\" type=\"text\" />页"
 						+ "<a class=\"FrichUI_Table_Pagination_Skip_Submit\">跳转</a>");
 			}
 			house.append(skip);
 			
 			var select = this.createDiv("FrichUI_Table_Pagination_Select");
-			if(options.page.current == 1) {
+			if(options.pagination.current == 1) {
 				select.append("<a class=\"FrichUI_Table_Pagination_First_undown\"></a>"
 						+ "<a class=\"FrichUI_Table_Pagination_Previous_undown\"></a>");
 				
@@ -721,10 +723,10 @@
 				
 			}
 			
-			if(options.page.total > options.pagnition.pages*2 + 5) {
-				if(options.page.current <= options.pagnition.pages + 3){
-					for(var i=1; i<=options.pagnition.pages*2 + 3; i++){
-						if(i == options.page.current) {
+			if(options.pagination.total > options.pagination.pages*2 + 5) {
+				if(options.pagination.current <= options.pagination.pages + 3){
+					for(var i=1; i<=options.pagination.pages*2 + 3; i++){
+						if(i == options.pagination.current) {
 							select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
 						}
 						else {
@@ -732,18 +734,18 @@
 						}
 					}
 					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i=options.page.total - 1; i<=options.page.total; i++){
+					for(var i=options.pagination.total - 1; i<=options.pagination.total; i++){
 						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
 					}
 				}
-				else if(options.page.current >= (options.page.total - (options.pagnition.pages + 2))){
+				else if(options.pagination.current >= (options.pagination.total - (options.pagination.pages + 2))){
 					for(var i=1; i<=2; i++){
 						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
 					}
 					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i=(options.page.total - (options.pagnition.pages*2 + 2))
-							; i<= options.page.total; i++){
-						if(i == options.page.current) {
+					for(var i=(options.pagination.total - (options.pagination.pages*2 + 2))
+							; i<= options.pagination.total; i++){
+						if(i == options.pagination.current) {
 							select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
 						}
 						else {
@@ -756,8 +758,8 @@
 						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
 					}
 					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i = options.page.current-1; i<=options.page.current+1; i++){
-						if(i == options.page.current) {
+					for(var i = options.pagination.current-1; i<=options.pagination.current+1; i++){
+						if(i == options.pagination.current) {
 							select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
 						}
 						else {
@@ -765,19 +767,24 @@
 						}
 					}
 					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i=options.page.total - 1; i<=options.page.total; i++){
+					for(var i=options.pagination.total - 1; i<=options.pagination.total; i++){
 						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
 					}
 				}
 				
 			}
 			else {
-				for(var i=1; i<options.page.total; i++){
-					select.append("<a class=\"FrichUI_Table_Pagination_Page\">"+ i +"</a>");
+				for(var i=1; i<=options.pagination.total; i++){
+					if(i == options.pagination.current) {
+						select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
+					}
+					else {
+						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+					}
 				}
 			}
 
-			if(options.page.current == options.page.total) {
+			if(options.pagination.current == options.pagination.total) {
 				select.append("<a class=\"FrichUI_Table_Pagination_Next_undown\"></a>"
 						+ "<a class=\"FrichUI_Table_Pagination_Last_undown\"></a>");
 			}
@@ -817,9 +824,7 @@
 	}
 	TableFactory.prototype = new Factory();
 
-	TableFactory.prototype.make = function(dom, customer){
-		var options = this.initCreate(dom, customer);
-
+	TableFactory.prototype.load = function(dom, optoins){
 		/*
 		 * 创建标题基架
 		 */
@@ -943,6 +948,7 @@
 			if(options.height != "auto") {
 				$(Frame).find(".FrichUI_Table_House").height(height);
 			}
+			
 			/*
 			 * 初始化Title宽度
 			 */
@@ -957,7 +963,6 @@
 			/*
 			 * 初始化pagination
 			 */
-			
 			var fa = $(dom).find(".FrichUI_Table_Pagination_House");
 			
 			var width = $(dom).find(".FrichUI_Table_Pagination_House").width();
@@ -991,14 +996,43 @@
 				fa.find(".FrichUI_Table_Pagination_Tips").hide();
 				fa.find(".FrichUI_Table_Pagination_Select").hide();
 			}
-			/*
-			if(width > )
-			
-			*/
 		}, 300);
 		
 		tableEntity = new TableEntity(dom, options);
 		frichUI.push(tableEntity);
+	}
+	
+	TableFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		var fa = this;
+		if(options.enableAjax) {
+			$.ajax({
+				type: "POST",
+			    url: options.ajax.url,
+			    data: {
+			    	type: "table",
+			    	data: options.ajax.data,
+					current: options.pagination.current,
+					rows: options.pagination.rows
+			    },
+			    beforeSend: function(){
+			    	options.ajax.beforeSend();
+			    },
+			    success: function (data) {
+			    	options.ajax.success(data, options);
+			    	fa.load(dom, options);
+			    },
+			    error: function (err) {
+			    	options.ajax.error(err);
+			    }
+			});
+		}
+		else {
+			fa.load(dom, options);
+		}
+		
+		
 		//根据options设置contentHouse addClass no Pagnation
 	}
 
@@ -1006,6 +1040,8 @@
 	var TableEntity = function(dom, options){
 		this.id = options.id;
 		this.dom = dom;
+		this.data = options.data;
+		this.options = options;
 		this.openMuiltSelect = function(){};
 		this.closeMuiltSelect = function(){};
 		this.openSingleSelect = function(){};
@@ -1014,9 +1050,52 @@
 			return $(this.dom).find(".FrichUI_Table_r" + row + " .FrichUI_Table_c" + col).html();
 		}
 		this.getSingleValue = function(col) {
-			return $(this.dom).find("input[name='radioC']:checked").parents("tr").find(" .FrichUI_Table_c" + col).html();
+			return $(this.dom).find("input[name='radioC']:checked").parents("tr").find(".FrichUI_Table_c" + col).html();
 		}
-
+		this.getSingleRow = function() {
+			var c = $(this.dom).find("input[name='radioC']:checked").parents("tr");
+			if(c.length == 0)	{
+				return;
+			}
+			else {
+				var cl = $(c).attr("class").split(' ')[0].replace('FrichUI_Table_r', '');
+				return this.getRowValue(parseInt(cl) - 1);
+			}
+		}
+		this.getRowValue = function(row){
+			return this.data[row];
+		}
+		
+		this.getMuiltValue = function(col){
+			var c = $(this.dom).find("input[name='checkboxC']:checked").parents("tr");
+			if(c.length == 0)	{
+				return;
+			}
+			else {
+				var d = [];
+				$.each(c, function(i, item){
+					d.push($(item).find(".FrichUI_Table_c" + col).html());
+				});
+				return d;
+			}
+		}
+		this.getMuiltRow = function(){
+			var fa = this;
+			
+			var c = $(this.dom).find("input[name='checkboxC']:checked").parents("tr");
+			if(c.length == 0)	{
+				return;
+			}
+			else {
+				var d = [];
+				$.each(c, function(i, item){
+					var cl = $(item).attr("class").split(' ')[0].replace('FrichUI_Table_r', '');
+					d.push(fa.getRowValue(parseInt(cl) - 1));
+				});
+				return d;
+			}
+		}
+		
 		var te = this;
 
 		if(options.enableMuiltSelect && options.enableSingleSelect) {
@@ -1030,10 +1109,12 @@
 				if(options.enableSingleSelect) {
 					te.closeSingleSelect();
 				}
-				$(dom).find(".FrichUI_Table_CheckColumn").show();
+				$(dom).find("input[name=checkboxC]:checked").prop("checked", false);
+				$(dom).find(".FrichUI_Table_CheckColumn").fadeIn(500);
 				te.isShowedMuiltSelect = true;
 			}
 			te.closeMuiltSelect = function(){
+				$(dom).find(".FrichUI_Table_DataRow_Select").removeClass("FrichUI_Table_DataRow_Select");
 				$(dom).find(".FrichUI_Table_CheckColumn").hide();
 				te.isShowedMuiltSelect = false;
 			}
@@ -1051,10 +1132,12 @@
 				if(options.enableMuiltSelect) {
 					te.closeMuiltSelect();
 				}
-				$(dom).find(".FrichUI_Table_RadioColumn").show();
+				$(dom).find("input[name=radioC]:checked").prop("checked", false);
+				$(dom).find(".FrichUI_Table_RadioColumn").fadeIn(500);
 				te.isShowedSingleSelect = true;
 			}
 			te.closeSingleSelect = function(){
+				$(dom).find(".FrichUI_Table_DataRow_Select").removeClass("FrichUI_Table_DataRow_Select");
 				$(dom).find(".FrichUI_Table_RadioColumn").hide();
 				te.isShowedSingleSelect = false;
 			}
@@ -1066,15 +1149,6 @@
 				te.closeSingleSelect();
 			}
 		}
-		
-		if(options.showSingleSelect) {
-			$(dom).find("input[type=checkbox]").hide();
-			options.showMuiltSelect = false;
-		}
-		else if(options.showMuiltSelect){
-			$(dom).find("input[type=radio]").hide();
-		}
-		
 		
 		$(dom).find(".FrichUI_Table_House").scroll(function(){
 			var fa = $(this);
@@ -1183,6 +1257,32 @@
 				}
 			})
 		}
+		
+		$(".FrichUI_Table_Pagination_Next").click(function(){
+			options.pagination.current++;
+			frichUI.Table.make(dom, options);
+		})
+		
+		$(".FrichUI_Table_Pagination_Last").click(function(){
+			options.pagination.current = options.pagination.total;
+			frichUI.Table.make(dom, options);
+		})
+		
+		$(".FrichUI_Table_Pagination_Page").click(function(){
+			options.pagination.current = $(this).html();
+			frichUI.Table.make(dom, options);
+		})
+		
+		$(".FrichUI_Table_Pagination_First").click(function(){
+			options.pagination.current = 1;
+			frichUI.Table.make(dom, options);
+		})
+		
+		$(".FrichUI_Table_Pagination_Previous").click(function(){
+			options.pagination.current--;
+			frichUI.Table.make(dom, options);
+		})	
+		
 	}
 	
 	
@@ -1657,7 +1757,32 @@
 				}
 				$(fa.dom).remove();
 			}, 400);
-
+			
+		}
+		
+		if(options.type = "customer") {
+			if(frichUI.istEmpty(options.data)) {
+				$(top.window.frames[options.frameId]).load(function(){
+					$(top.window.frames[options.frameId].contentDocument).find("input")
+						.each(function(i, item){
+						for(var key in options.data) {
+							if(key == $(item).attr("name")) {
+								switch($(item).attr("type")) {
+									case "text": 
+										$(item).val(options.data[key]);
+										break;
+									case "radio":
+										if($(item).val() == options.data[key]) {
+											$(item).prop("checked", true);
+										}
+										break;
+									default: break;
+								}
+							}
+						}
+					})
+				})
+			}
 		}
 		
 		$(cover).click(function (){
@@ -1681,7 +1806,7 @@
 		
 		$(dom).find(".FrichUI_Dialog_Confirm").click(function (){
 			var doc = $(fa.dom).find("iframe")[0];
-			if(doc.contentWindow.checkForm != null) {
+			if(frichUI.istEmpty(doc) && doc.contentWindow.checkForm != null) {
 				if(doc.contentWindow.checkForm()) {
 					options.confirmClick(doc, fa);
 				}
@@ -1788,6 +1913,9 @@
 		setTimeout(function(){
 			$(frame).fadeOut(500, function(){
 				$(frame).remove();
+				if(options.reload) {
+					window.location.reload();
+				}
 			});
 		}, 2000);
 
@@ -1800,6 +1928,8 @@
 	/*
 	 * 3. 静态定义层
 	 */
+	
+	
 	
 	/*
 	 * 4. 开放接口

@@ -17,7 +17,7 @@ input.error
 	border: 1px solid #F88;
 	box-shadow: 0 0 3px #F88;
 }
-input.Hided
+input.hide
 {
 	display: none;
 }

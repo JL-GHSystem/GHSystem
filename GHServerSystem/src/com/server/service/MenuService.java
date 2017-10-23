@@ -19,7 +19,15 @@ public class MenuService implements IService{
 		// TODO Auto-generated method stub
 		return menuApp.addMenu(menuModel, userModel);
 	}
-	
-	
+
+	public boolean deleteMenu(MenuModel menuModel) {
+		// TODO Auto-generated method stub
+		return menuApp.deleteMenu(menuModel);
+	}
+
+	public boolean updateMenu(MenuModel menuModel) {
+		// TODO Auto-generated method stub
+		return menuApp.updateMenu(menuModel);
+	}
 	
 }

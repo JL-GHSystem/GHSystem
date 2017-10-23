@@ -14,7 +14,7 @@
 			<tbody>
 				<tr>
 					<td>
-						<input id="O_MENUPREVID" name="O_MENUPREVID" type="text" class="Hided">
+						<input id="O_MENUPEVID" name="O_MENUPEVID" type="text" class="hide">
 					</td>
 				</tr>
 				<tr>
@@ -26,7 +26,7 @@
 				<tr>
 					<td>
 						<label for="F_MENUPREVNAME">父级菜单</label>
-						<input id="F_MENUPREVNAME" name="O_MENUPREVID" type="text">
+						<input id="F_MENUPREVNAME" name="O_MENUPEVID" type="text">
 					</td>
 					<td>
 						<label for="O_MENULEVEL">菜单级别</label>
@@ -81,7 +81,7 @@
 					},
 					confirmClick: function(doc, fa){
 						var rs = doc.contentWindow.select();
-						$("#O_MENUPREVID").val(rs.id);
+						$("#O_MENUPEVID").val(rs.id);
 						$("#O_MENULEVEL").val(rs.level);
 						$("#F_MENUPREVNAME").val(rs.name);
 						fa.clear();

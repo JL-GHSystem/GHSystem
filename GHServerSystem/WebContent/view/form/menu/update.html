@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../../../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="../../../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+<script src="../../../content/js/form.js" type="text/javascript"></script>
+<link href="../../../content/css/form.css" rel="stylesheet" />
+</head>
+
+<body>
+	<form id="add">
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<input id="O_MENUPEVID" name="O_MENUPEVID" type="text" class="hide">
+					</td>
+					<td>
+						<input id="O_MENUID" name="O_MENUID" type="text" class="hide">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="O_MENUNAME">菜单名*</label>
+						<input id="O_MENUNAME" name="O_MENUNAME" type="text" class="NoEmpty">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="F_MENUPREVNAME">父级菜单</label>
+						<input id="F_MENUPREVNAME" name="F_MENUPREVNAME" type="text">
+					</td>
+					<td>
+						<label for="O_MENULEVEL">菜单级别</label>
+						<input id="O_MENULEVEL" name="O_MENULEVEL" type="text" readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="O_MENUSORTID">菜单排序</label>
+						<input id="O_MENUSORTID" name="O_MENUSORTID" type="text">
+					</td>
+					<td>
+						<label for="O_MENUURL">菜单映射</label>
+						<input id="O_MENUURL" name="O_MENUURL" type="text">
+					</td>
+					<td>
+						<label for="O_MENUENABLED">菜单状态</label>
+						<input id="O_MENUENABLED" name="O_MENUENABLED" type="radio" value="1">启用
+						<input id="O_MENUENABLED" name="O_MENUENABLED" type="radio" value="0">禁用
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<tr>
+					<td>
+						<p class="info"></p>
+					</td>
+				</tr>
+			</tfoot>
+		</table>
+	</form>
+	<script type="text/javascript">
+	
+		var a = true;
+		$("#F_MENUPREVNAME").focus(function(){
+			if(a) {
+				F.Dialog.make(undefined, {
+					title: "选择父节点",
+					type: "customer",
+					url: "view/form/menu/select.html",
+					frameId: "menuSelect",
+					frameWidth: 510,
+					frameHeight: 290,
+					zIndex: 1500,
+					data: {},
+					enableCover: true,
+					clear: function(){
+						a = true;
+					},
+					closeClick: function(){
+						
+					},
+					confirmClick: function(doc, fa){
+						var rs = doc.contentWindow.select();
+						$("#O_MENUPEVID").val(rs.id);
+						$("#O_MENULEVEL").val(rs.level);
+						$("#F_MENUPREVNAME").val(rs.name);
+						fa.clear();
+					},
+					cancleClick: function(){
+						
+					}
+				});
+				a = false;
+			}
+		});
+	</script>
+</body>
+</html>

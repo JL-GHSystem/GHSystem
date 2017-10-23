@@ -58,6 +58,14 @@
     <url-pattern>/json/menu.do</url-pattern>
   </servlet-mapping>
   <servlet>
+    <servlet-name>roleServlet</servlet-name>
+    <servlet-class>com.browser.servlet.RoleServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>roleServlet</servlet-name>
+    <url-pattern>/json/role.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>userServlet</servlet-name>
     <servlet-class>com.browser.servlet.UserServlet</servlet-class>
   </servlet>
@@ -72,6 +80,22 @@
   <servlet-mapping>
     <servlet-name>departmentServlet</servlet-name>
     <url-pattern>/json/department.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>lineServlet</servlet-name>
+    <servlet-class>com.browser.servlet.LineServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>lineServlet</servlet-name>
+    <url-pattern>/json/line.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>fenceServlet</servlet-name>
+    <servlet-class>com.browser.servlet.FenceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fenceServlet</servlet-name>
+    <url-pattern>/json/fence.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>vehicleServlet</servlet-name>

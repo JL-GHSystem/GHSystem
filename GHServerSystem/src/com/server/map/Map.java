@@ -21,5 +21,9 @@ public class Map {
 	
 	public static final String DICT_MAP = "TBL_CORE_DICT";
 	public static final String DICTITEM_MAP = "TBL_CORE_DICTITEM";
+
+
+	public static final String FENCE_MAP = "TBL_NEW_CORE_ELEFENCE";
+	public static final String FENCE_NODE_MAP = "TBL_NEW_CORE_ELEFENCENODE";
 	
 }

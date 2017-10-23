@@ -15,6 +15,8 @@ public class Dao {
 	public static ConnPool[] connPools;
 	public static boolean isInit = false;
 	
+	public DaoEx ex = new DaoEx();
+	
 	public static void init(String path){
 		if(!Dao.isInit){
 			XmlHelper.setPath(path);
@@ -61,7 +63,6 @@ public class Dao {
 				System.out.println("Dao：读取xml文件出错，可能是数据库连接配置有问题");
 			}
 		}
-		
 	}
 
 	public static ConnBean getConn(){

@@ -12,7 +12,7 @@ import com.server.model.VehicleModel;
 import com.server.support.ConnBean;
 import com.server.support.Dao;
 
-public class VehicleDao implements IVehicleDao {
+public class VehicleDao extends Dao implements IVehicleDao {
 
 	@Override
 	public VehicleModel[] selectAll() {

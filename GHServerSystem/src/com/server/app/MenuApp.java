@@ -17,7 +17,6 @@ import com.server.model.UserModel;
 public class MenuApp {
 	
 	private IMenuDao menuDao = new MenuDao();
-	private IUserDao userDao = new UserDao();
 	private IUserGroupDao userGroupDao = new UserGroupDao();
 	
 	public MenuModel[] getMenu (UserModel userModel) {
@@ -45,7 +44,7 @@ public class MenuApp {
 	public MenuModel[] getTable () {
 		// TODO Auto-generated method stub
 		
-		MenuModel[] menuModels = menuDao.selectByGroupInTable();
+		MenuModel[] menuModels = menuDao.selectAllInTable();
 		
 		return menuModels;
 	}
@@ -61,8 +60,22 @@ public class MenuApp {
 		
 		return a;
 	}
-	
-	
-	
+
+	public boolean deleteMenu(MenuModel menuModel) {
+		// TODO Auto-generated method stub
+		boolean a = false;
+		a = menuDao.deleteByUser(menuModel.getO_MENUID());
+		
+		a = menuDao.deleteByUserGroup(menuModel.getO_MENUID());
+		
+		a = menuDao.delete(menuModel.getO_MENUID());
+		
+		return a;
+	}
+
+	public boolean updateMenu(MenuModel menuModel) {
+		// TODO Auto-generated method stub
+		return menuDao.update(menuModel);
+	}
 	
 }

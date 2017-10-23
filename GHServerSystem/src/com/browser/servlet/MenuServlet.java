@@ -51,6 +51,7 @@ public class MenuServlet extends HttpServlet implements IServlet {
 		UserModel userModel = (UserModel) session.getAttribute("P_User");
 
 		MenuModel[] menuModels;
+		MenuModel menuModel = new MenuModel();
 		switch(type) {
 			case "tree":
 				menuModels = menuService.getMenu(userModel);
@@ -65,6 +66,7 @@ public class MenuServlet extends HttpServlet implements IServlet {
 				for(int i=0; i<menuModels.length; i++) {
 					JSONObject jo = new JSONObject();
 					jo.put("O_MENUID", menuModels[i].getO_MENUID());
+					jo.put("O_MENUPEVID", menuModels[i].getO_MENUPEVID());
 					jo.put("O_MENUNAME", menuModels[i].getO_MENUNAME());
 					jo.put("F_MENUPREVNAME", menuModels[i].getF_MENUPREVNAME());
 					jo.put("O_MENULEVEL", menuModels[i].getO_MENULEVEL());
@@ -78,10 +80,8 @@ public class MenuServlet extends HttpServlet implements IServlet {
 				response.getWriter().write(content(ja));
 				break;
 			case "add":
-				MenuModel menuModel = new MenuModel();
-				
-				if(Lib.istEmpty(request.getParameter("O_MENUPREVID"))) {
-					menuModel.setO_MENUPREVID(request.getParameter("O_MENUPREVID"));
+				if(Lib.istEmpty(request.getParameter("O_MENUPEVID"))) {
+					menuModel.setO_MENUPEVID(request.getParameter("O_MENUPEVID"));
 				}
 				if(Lib.istEmpty(request.getParameter("O_MENUNAME"))) {
 					menuModel.setO_MENUNAME(request.getParameter("O_MENUNAME"));
@@ -89,16 +89,76 @@ public class MenuServlet extends HttpServlet implements IServlet {
 				if(Lib.istEmpty(request.getParameter("O_MENUURL"))) {
 					menuModel.setO_MENUURL(request.getParameter("O_MENUURL"));
 				}
-				if(request.getParameter("O_MENULEVEL")!= null) {
+				if(Lib.istEmpty(request.getParameter("O_MENULEVEL"))) {
 					menuModel.setO_MENULEVEL(Integer.parseInt(request.getParameter("O_MENULEVEL")));
 				}
-				if(request.getParameter("O_MENUSORTID")!= null) {
+				if(Lib.istEmpty(request.getParameter("O_MENUSORTID"))) {
 					menuModel.setO_MENUSORTID(Integer.parseInt(request.getParameter("O_MENUSORTID")));
 				}
-				if(request.getParameter("O_MENUENABLED")!= null) {
-					menuModel.setO_MENUENABLED(Boolean.parseBoolean(request.getParameter("O_MENUENABLED")));
+				if("0".equals(request.getParameter("O_MENUENABLED"))) {
+					menuModel.setO_MENUENABLED(false);
+				}
+				else {
+					menuModel.setO_MENUENABLED(true);
 				}
 				boolean a = menuService.addMenu(menuModel, userModel);
+				if(a) {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(success("创建成功"));
+				} 
+				else {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(error(2, "创建失败"));
+				}
+				break;
+			case "update":
+				if(Lib.istEmpty(request.getParameter("O_MENUID"))) {
+					menuModel.setO_MENUID(request.getParameter("O_MENUID"));
+				}
+				if(Lib.istEmpty(request.getParameter("O_MENUPEVID"))) {
+					menuModel.setO_MENUPEVID(request.getParameter("O_MENUPEVID"));
+				}
+				if(Lib.istEmpty(request.getParameter("O_MENUNAME"))) {
+					menuModel.setO_MENUNAME(request.getParameter("O_MENUNAME"));
+				}
+				if(Lib.istEmpty(request.getParameter("O_MENUURL"))) {
+					menuModel.setO_MENUURL(request.getParameter("O_MENUURL"));
+				}
+				if(Lib.istEmpty(request.getParameter("O_MENULEVEL"))) {
+					menuModel.setO_MENULEVEL(Integer.parseInt(request.getParameter("O_MENULEVEL")));
+				}
+				if(Lib.istEmpty(request.getParameter("O_MENUSORTID"))) {
+					menuModel.setO_MENUSORTID(Integer.parseInt(request.getParameter("O_MENUSORTID")));
+				}
+				if("0".equals(request.getParameter("O_MENUENABLED"))) {
+					menuModel.setO_MENUENABLED(false);
+				}
+				else {
+					menuModel.setO_MENUENABLED(true);
+				}
+				boolean u = menuService.updateMenu(menuModel);
+				if(u) {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(success("创建成功"));
+				} 
+				else {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(error(2, "创建失败"));
+				}
+				break;
+			case "delete":				
+				if(Lib.istEmpty(request.getParameter("O_MENUID"))) {
+					menuModel.setO_MENUID(request.getParameter("O_MENUID"));
+					boolean a1 = menuService.deleteMenu(menuModel);
+					if(a1) {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(success("删除成功"));
+					} 
+					else {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(error(2, "删除失败"));
+					}
+				}
 				break;
 			default: break;
 		}

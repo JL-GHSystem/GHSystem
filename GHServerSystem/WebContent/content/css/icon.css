@@ -82,3 +82,11 @@
 	background: url(../../icon/tools.png) no-repeat  -3px -30px;
 }
 
+.save
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/tools.png) no-repeat -3px -30px;	
+}

@@ -8,7 +8,7 @@ import com.common.lib.Lib;
 public class MenuModel {
 	
 	private String O_MENUID;
-	private String O_MENUPREVID;
+	private String O_MENUPEVID;
 	private String O_MENUNAME;
 	private int O_MENULEVEL;
 	private int O_MENUSORTID;
@@ -25,11 +25,11 @@ public class MenuModel {
 	public void setO_MENUID(String o_MENUID) {
 		O_MENUID = o_MENUID;
 	}
-	public String getO_MENUPREVID() {
-		return O_MENUPREVID;
+	public String getO_MENUPEVID() {
+		return O_MENUPEVID;
 	}
-	public void setO_MENUPREVID(String o_MENUPREVID) {
-		O_MENUPREVID = o_MENUPREVID;
+	public void setO_MENUPEVID(String o_MENUPEVID) {
+		O_MENUPEVID = o_MENUPEVID;
 	}
 	public String getO_MENUNAME() {
 		return O_MENUNAME;
@@ -132,7 +132,7 @@ public class MenuModel {
 				if(menuI == menuJ) {
 					
 				}
-				else if(menuI.getO_MENUPREVID().equals(menuJ.getO_MENUID())) {
+				else if(menuI.getO_MENUPEVID().equals(menuJ.getO_MENUID())) {
 					a = false;
 					break;
 				}
@@ -152,10 +152,10 @@ public class MenuModel {
 					if(menuI == menuJ) {
 						
 					}
-					else if(menuI.getO_MENUPREVID().equals(menuJ.getO_MENUID())) {
+					else if(menuI.getO_MENUPEVID().equals(menuJ.getO_MENUID())) {
 						menuJ.setO_CHILD(menuI);
 					}
-					else if(menuJ.getO_MENUPREVID().equals(menuJ.getO_MENUID())) {
+					else if(menuJ.getO_MENUPEVID().equals(menuJ.getO_MENUID())) {
 						menuI.setO_CHILD(menuJ);
 					}
 				}

@@ -83,7 +83,7 @@ public class MenuDao extends Dao implements IMenuDao {
 				{
 					MenuModel menuModel = new MenuModel();
 					menuModel.setO_MENUID(rs.getString(1));
-					menuModel.setO_MENUPREVID(rs.getString(2));
+					menuModel.setO_MENUPEVID(rs.getString(2));
 					menuModel.setO_MENUNAME(rs.getString(3));
 					menuModel.setO_MENULEVEL(rs.getInt(4));
 					menuModel.setO_MENUSORTID(rs.getInt(5));
@@ -125,16 +125,16 @@ public class MenuDao extends Dao implements IMenuDao {
 						Map.MENU_MAP + ".O_MENUSORTID, " + 
 						Map.MENU_MAP + ".O_MENUURL, " + 
 						Map.MENU_MAP + ".O_MENUENABLED " + 
-						"from "+ Map.MENU_USER_MAP + " " + 
-						"LEFT JOIN "+ Map.MENU_MAP +" on "+ Map.MENU_USER_MAP +".O_MENUID = "+ Map.MENU_MAP +".O_MENUID " + 
-						"where O_USERID = ? ");
+						"from "+ Map.MENU_MAP + " " + 
+						"LEFT JOIN "+ Map.MENU_USER_MAP +" on "+ Map.MENU_USER_MAP +".O_MENUID = "+ Map.MENU_MAP +".O_MENUID " + 
+						"where O_USERID = ? and O_MENUENABLED = 1");
 				pst.setString(1, o_USERID);
 				ResultSet rs = pst.executeQuery();
 				while(rs.next()) 
 				{
 					MenuModel menuModel = new MenuModel();
 					menuModel.setO_MENUID(rs.getString(1));
-					menuModel.setO_MENUPREVID(rs.getString(2));
+					menuModel.setO_MENUPEVID(rs.getString(2));
 					menuModel.setO_MENUNAME(rs.getString(3));
 					menuModel.setO_MENULEVEL(rs.getInt(4));
 					menuModel.setO_MENUSORTID(rs.getInt(5));
@@ -160,7 +160,7 @@ public class MenuDao extends Dao implements IMenuDao {
 	}
 	
 	@Override
-	public MenuModel[] selectByGroupInTable() {
+	public MenuModel[] selectAllInTable() {
 		// TODO Auto-generated method stub
 		ArrayList<MenuModel> menuModels = new ArrayList<MenuModel>();
 		ConnBean cb = Dao.getConn();
@@ -168,21 +168,22 @@ public class MenuDao extends Dao implements IMenuDao {
 			Connection cn = cb.getConn();
 			try {
 				//DTO操作
-				PreparedStatement pst = cn.prepareStatement("select T1.O_MENUID, T1.O_MENUNAME, T2.O_MENUNAME, " + 
+				PreparedStatement pst = cn.prepareStatement("select T1.O_MENUID, T1.O_MENUPEVID, T1.O_MENUNAME, T2.O_MENUNAME, " + 
 						"T1.O_MENULEVEL, T1.O_MENUSORTID, T1.O_MENUURL, T1.O_MENUENABLED " + 
-						"from "+ Map.MENU_MAP +" t1 LEFT JOIN "+ Map.MENU_MAP +" t2 on t1.O_MENUPEVID = t2.O_MENUID " + 
+						"from "+ Map.MENU_MAP +" T1 LEFT JOIN "+ Map.MENU_MAP +" T2 on T1.O_MENUPEVID = T2.O_MENUID " +
 						"ORDER BY T1.O_MENULEVEL, T1.O_MENUSORTID ");
 				ResultSet rs = pst.executeQuery();
 				while(rs.next()) 
 				{
 					MenuModel menuModel = new MenuModel();
 					menuModel.setO_MENUID(rs.getString(1));
-					menuModel.setO_MENUNAME(rs.getString(2));
-					menuModel.setF_MENUPREVNAME(rs.getString(3));
-					menuModel.setO_MENULEVEL(rs.getInt(4));
-					menuModel.setO_MENUSORTID(rs.getInt(5));
-					menuModel.setO_MENUURL(rs.getString(6));
-					menuModel.setO_MENUENABLED(rs.getBoolean(7));
+					menuModel.setO_MENUPEVID(rs.getString(2));
+					menuModel.setO_MENUNAME(rs.getString(3));
+					menuModel.setF_MENUPREVNAME(rs.getString(4));
+					menuModel.setO_MENULEVEL(rs.getInt(5));
+					menuModel.setO_MENUSORTID(rs.getInt(6));
+					menuModel.setO_MENUURL(rs.getString(7));
+					menuModel.setO_MENUENABLED(rs.getBoolean(8));
 					menuModels.add(menuModel);
 				}
 				rs.close();
@@ -201,6 +202,50 @@ public class MenuDao extends Dao implements IMenuDao {
 		return menu;
 	}
 
+	@Override
+	public MenuModel[] selectAllInTree() {
+		// TODO Auto-generated method stub
+		ArrayList<MenuModel> menuModels = new ArrayList<MenuModel>();
+		ConnBean cb = Dao.getConn();
+		if(cb != null){
+			Connection cn = cb.getConn();
+			try {
+				//DTO操作
+				PreparedStatement pst = cn.prepareStatement("select T1.O_MENUID, T1.O_MENUPEVID, T1.O_MENUNAME, T2.O_MENUNAME, " + 
+						"T1.O_MENULEVEL, T1.O_MENUSORTID, T1.O_MENUURL, T1.O_MENUENABLED " + 
+						"from "+ Map.MENU_MAP +" T1 LEFT JOIN "+ Map.MENU_MAP +" T2 on T1.O_MENUPEVID = T2.O_MENUID " +
+						"where T1.O_MENUENABLED = 1" + 
+						"ORDER BY T1.O_MENULEVEL, T1.O_MENUSORTID ");
+				ResultSet rs = pst.executeQuery();
+				while(rs.next()) 
+				{
+					MenuModel menuModel = new MenuModel();
+					menuModel.setO_MENUID(rs.getString(1));
+					menuModel.setO_MENUPEVID(rs.getString(2));
+					menuModel.setO_MENUNAME(rs.getString(3));
+					menuModel.setF_MENUPREVNAME(rs.getString(4));
+					menuModel.setO_MENULEVEL(rs.getInt(5));
+					menuModel.setO_MENUSORTID(rs.getInt(6));
+					menuModel.setO_MENUURL(rs.getString(7));
+					menuModel.setO_MENUENABLED(rs.getBoolean(8));
+					menuModels.add(menuModel);
+				}
+				rs.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Dao.freeConn(cb);
+		}
+		if(menuModels.isEmpty()) {
+			return null;
+		}
+		MenuModel[] menu = new MenuModel[menuModels.size()];
+		menuModels.toArray(menu);
+		return menu;
+	}
+	
 	@Override
 	public boolean insert(MenuModel menuModel) {
 		// TODO Auto-generated method stub
@@ -221,15 +266,11 @@ public class MenuDao extends Dao implements IMenuDao {
 							+ "O_MENUURL, O_MENUENABLED) values("
 							+ "?, ?, ?, ?, ?, ?)");
 					
-					System.out.println("Insert into "+ Map.MENU_MAP +"("
-							+ "O_MENUPREVID, O_MENUNAME, O_MENULEVEL, O_MENUSORTID, "
-							+ "O_MENUURL, O_MENUENABLED) values("
-							+ "?, ?, ?, ?, ?, ?)");
-					if(Lib.isEmpty(menuModel.getO_MENUPREVID())) {
+					if(Lib.isEmpty(menuModel.getO_MENUPEVID())) {
 						pst.setString(1, "-1");
 					}
 					else {
-						pst.setString(1, menuModel.getO_MENUPREVID());
+						pst.setString(1, menuModel.getO_MENUPEVID());
 					}
 	
 					pst.setString(2, menuModel.getO_MENUNAME());
@@ -294,5 +335,198 @@ public class MenuDao extends Dao implements IMenuDao {
 			return isSuccess;
 		}
 	}
+
+	@Override
+	public boolean insertByGroup(String o_USERGROUPID, String[] ids) {
+		// TODO Auto-generated method stub
+		if(Lib.isEmpty(o_USERGROUPID) || Lib.isEmpty(ids)) {
+			System.out.println("MenuDao： id不能为空，无法插入数据");
+			return false;
+		}
+		else {
+			boolean isSuccess = false;
+			ConnBean cb = Dao.getConn();
+			if(cb != null){
+				Connection cn = cb.getConn();
+				try {
+					//DTO操作
+					PreparedStatement pst = cn.prepareStatement(
+							ex.insert(Map.MENU_USERGROUP_MAP, "O_MENUID", "O_USERGROUPID")
+							.values(2).end());
+					
+					for(String id: ids) {
+						pst.setString(1, id);
+						pst.setString(2, o_USERGROUPID);
+						pst.addBatch();
+					}
+					
+					int is[] = pst.executeBatch();
+					isSuccess = true;
+					for(int i: is) {
+						if(i <=0 && i !=-2) {
+							isSuccess = false;
+							break;
+						}
+					}
+					pst.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Dao.freeConn(cb);
+			}
+			return isSuccess;
+		}
+	}
+	
+	@Override
+	public boolean deleteByUser(String o_MENUID) {
+		// TODO Auto-generated method stub
+		if(Lib.isEmpty(o_MENUID)) {
+			System.out.println("MenuDao： id不能为空，无法删除数据");
+			return false;
+		}
+		else {
+			boolean isSuccess = false;
+			ConnBean cb = Dao.getConn();
+			if(cb != null){
+				Connection cn = cb.getConn();
+				try {
+					//DTO操作
+					PreparedStatement pst = cn.prepareStatement("delete from "+ Map.MENU_USER_MAP +" "
+							+ "where O_MENUID = ?");
+					
+					pst.setString(1, o_MENUID);
+					
+					int i=pst.executeUpdate();
+					if(i > 0) {
+						isSuccess = true;
+					}
+					pst.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Dao.freeConn(cb);
+			}
+			return isSuccess;
+		}
+	}
+
+	@Override
+	public boolean deleteByUserGroup(String o_MENUID) {
+		// TODO Auto-generated method stub
+		if(Lib.isEmpty(o_MENUID)) {
+			System.out.println("MenuDao： id不能为空，无法删除数据");
+			return false;
+		}
+		else {
+			boolean isSuccess = false;
+			ConnBean cb = Dao.getConn();
+			if(cb != null){
+				Connection cn = cb.getConn();
+				try {
+					//DTO操作
+					PreparedStatement pst = cn.prepareStatement("delete from "+ Map.MENU_USERGROUP_MAP +" "
+							+ "where O_MENUID = ?");
+					
+					pst.setString(1, o_MENUID);
+					
+					int i=pst.executeUpdate();
+					if(i > 0) {
+						isSuccess = true;
+					}
+					pst.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Dao.freeConn(cb);
+			}
+			return isSuccess;
+		}
+	}
+
+	@Override
+	public boolean delete(String o_MENUID) {
+		// TODO Auto-generated method stub
+		if(Lib.isEmpty(o_MENUID)) {
+			System.out.println("MenuDao： id不能为空，无法删除数据");
+			return false;
+		}
+		else {
+			boolean isSuccess = false;
+			ConnBean cb = Dao.getConn();
+			if(cb != null){
+				Connection cn = cb.getConn();
+				try {
+					//DTO操作
+					PreparedStatement pst = cn.prepareStatement("delete from "+ Map.MENU_MAP +" "
+							+ "where O_MENUID = ?");
+					
+					pst.setString(1, o_MENUID);
+					
+					int i=pst.executeUpdate();
+					if(i > 0) {
+						isSuccess = true;
+					}
+					pst.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Dao.freeConn(cb);
+			}
+			return isSuccess;
+		}
+	}
+
+	@Override
+	public boolean update(MenuModel menuModel) {
+		// TODO Auto-generated method stub
+		if(Lib.isEmpty(menuModel.getO_MENUID())) {
+			System.out.println("MenuDao： id不能为空，无法删除数据");
+			return false;
+		}
+		else {
+			boolean isSuccess = false;
+			ConnBean cb = Dao.getConn();
+			if(cb != null){
+				Connection cn = cb.getConn();
+				try {
+					//DTO操作
+					PreparedStatement pst = cn.prepareStatement("update "+ Map.MENU_MAP + " "
+							+ "set O_MENUPEVID = ?, "
+							+ "O_MENUNAME = ?, "
+							+ "O_MENULEVEL = ?, "
+							+ "O_MENUSORTID = ?, "
+							+ "O_MENUURL = ?, "
+							+ "O_MENUENABLED = ? "
+							+ "where O_MENUID = ?");
+					
+					pst.setString(1, menuModel.getO_MENUPEVID());
+					pst.setString(2, menuModel.getO_MENUNAME());
+					pst.setInt(3, menuModel.getO_MENULEVEL());
+					pst.setInt(4, menuModel.getO_MENUSORTID());
+					pst.setString(5, menuModel.getO_MENUURL());
+					pst.setBoolean(6, menuModel.isO_MENUENABLED());
+					pst.setString(7, menuModel.getO_MENUID());
+					
+					int i=pst.executeUpdate();
+					if(i > 0) {
+						isSuccess = true;
+					}
+					pst.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Dao.freeConn(cb);
+			}
+			return isSuccess;
+		}
+	}
+
+
 
 }

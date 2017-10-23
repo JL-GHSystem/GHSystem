@@ -25,15 +25,25 @@ function add(){
 			    	
 			    },
 			    success: function (data) {
-			    	F.Affair.make({
-			    		type: "success",
-			    		message: "创建成功"
-			    	})
+			    	if(data.r == "1") {
+				    	F.Affair.make(undefined, {
+				    		type: "success",
+				    		message: data.m,
+				    		reload: true
+				    	})
+			    	}
+			    	else {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: data.m,
+				    		reload: false
+				    	})
+			    	}
 			    },
 			    error: function (err) {
-			    	F.Affair.make({
+			    	F.Affair.make(undefined, {
 			    		type: "error",
-			    		message: "连接失败"
+			    		message: "连接服务器失败"
 			    	})
 			    }
 			});
@@ -46,24 +56,69 @@ function add(){
 }
 
 function update(){
-	F.Dialog.make(undefined, {
-		title: "更新菜单",
-		type: "customer",
-		url: "view/form/menu/add.html",
-		frameWidth: 640,
-		frameHeight: 360,
-		data: {},
-		enableCover: true,
-		closeClick: function(){
-			alert("点击了关闭");
-		},
-		confirmClick: function(){
-			alert("点击了确定");
-		},
-		cancleClick: function(){
-			alert("点击了取消");
-		}
-	});
+	var pack = F.entitys("table").getSingleRow();
+	if(F.isEmpty(pack)) {
+		F.Affair.make(undefined, {
+    		type: "error",
+    		message: "必须选择一条数据",
+    		reload: false
+    	});
+	}
+	else {
+		F.Dialog.make(undefined, {
+			title: "更新菜单",
+			type: "customer",
+			url: "view/form/menu/update.html",
+			frameId: "menuUpdate",
+			frameWidth: 640,
+			frameHeight: 360,
+			data: pack,
+			enableCover: true,
+			closeClick: function(){
+				return 0;
+			},
+			confirmClick: function(doc, fa){
+				var form = $(doc).contents().find("form");
+				var a = form.serialize();
+				$.ajax({
+					type: "POST",
+				    url: "../json/menu.do",
+				    data: a + "&type=update",
+				    beforeSend: function(){
+				    	
+				    },
+				    success: function (data) {
+				    	if(data.r == "1") {
+					    	F.Affair.make(undefined, {
+					    		type: "success",
+					    		message: data.m,
+					    		reload: true
+					    	})
+				    	}
+				    	else {
+					    	F.Affair.make(undefined, {
+					    		type: "error",
+					    		message: data.m,
+					    		reload: false
+					    	})
+				    	}
+				    },
+				    error: function (err) {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: "连接服务器失败",
+				    		reload: false
+				    	})
+				    }
+				});
+				fa.clear();
+			},
+			cancleClick: function(){
+				return 0;
+			}
+		});
+	}
+	
 }
 
 function deleted(){
@@ -75,7 +130,7 @@ function deleted(){
 		closeClick: function(){
 			
 		},
-		confirmClick: function(){
+		confirmClick: function(doc, fa){
 			$.ajax({
 				type: "POST",
 			    url: "../json/menu.do",
@@ -87,12 +142,26 @@ function deleted(){
 			    	
 			    },
 			    success: function (data) {
-			    	console.log(data);
+			    	if(data.r == "1") {
+				    	F.Affair.make(undefined, {
+				    		type: "success",
+				    		message: data.m,
+				    		reload: true
+				    	})
+			    	}
+			    	else {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: data.m,
+				    		reload: false
+				    	})
+			    	}
 			    },
 			    error: function (err) {
-			    	
+
 			    }
 			});
+			fa.clear();
 		},
 		cancleClick: function(){
 			
@@ -119,8 +188,12 @@ function ajax(){
 	    		enableAutoSerial: true,
 	    		enableSingleSelect: true,
 	    		showSingleSelect: true,
+	    		title: "菜单管理",
 	    		models: [{
 	    			name: "id",
+	    			hide: true
+	    		},{
+	    			name: "fid",
 	    			hide: true
 	    		}, {
 	    			name: "菜单名"
@@ -136,7 +209,7 @@ function ajax(){
 	    			textAlign: "left"
 	    		}, {
 	    			name: "菜单状态",
-	    			boolDisplay: ["已启用", "未启用"]
+	    			boolDisplay: ["已启用", "已禁用"]
 	    		}],
 	    		data: data.o
 	    	});

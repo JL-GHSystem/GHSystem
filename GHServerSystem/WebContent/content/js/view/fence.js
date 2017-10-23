@@ -40,7 +40,7 @@ var fenceOverlay = {
 function dataToPoint(data) {
     var pointArray = new Array();
     $.each(data, function (idx, obj) {
-        pointArray[idx] = new BMap.Point(obj.longitude, obj.latitude);
+        pointArray.push(new BMap.Point(obj.O_LONGITUDE, obj.O_LATITUDE));
     });
     return pointArray;
 }
@@ -51,8 +51,8 @@ function calCenterPoint(data) {
         sum_lat: 0
     }
     $.each(data, function (idx, obj) {
-        center.sum_lng += obj.longitude;
-        center.sum_lat += obj.latitude;
+        center.sum_lng += obj.O_LONGITUDE;
+        center.sum_lat += obj.O_LATITUDE;
     });
 
     center.sum_lng /= data.length;
@@ -75,15 +75,15 @@ function add_polygon(polygonData) {
     var pointArray = dataToPoint(polygonData);
     var polygon = new BMap.Polygon(pointArray, stylePolygonCSS);   //创建多边形
     map.addOverlay(polygon);   //增加多边形
-
+/*
     var centerPoint = calCenterPoint(polygonData);
     map.panTo(new BMap.Point(centerPoint.sum_lng, centerPoint.sum_lat));
-
+*/
     fenceOverlay.overlay = polygon;
 }
 
 function add_circle(circleData, range) {
-    var focusPoint = new BMap.Point(circleData.lng, circleData.lat);
+    var focusPoint = new BMap.Point(circleData.O_LONGITUDE, circleData.O_LATITUDE);
     var circle = new BMap.Circle(focusPoint, range, styleCircleCSS);
     map.addOverlay(circle);   //增加圆
     map.panTo(focusPoint);
@@ -169,12 +169,16 @@ function endDraw() {
 }
 
 //保存绘图
-function save(name, description) {
+function save(name) {
     if (typeof (currentOverlay) == "undefined" || currentOverlay == null || currentOverlay.type == "") {
-        $.modalMsg("未绘制图形或绘图未完成", "error", 2500);
+    	F.Affair.make(undefined, {
+    		type: "error",
+    		message: "未绘制图形或绘图未完成",
+    		reload: false
+    	})
     }
     else if (isChange) {
-        btn_update(name, description);
+        btn_update(name);
     }
     else {
         btn_add();
@@ -182,56 +186,251 @@ function save(name, description) {
 }
 
 function btn_delete(id) {
+	F.Dialog.make(undefined, {
+		title: "删除围栏",
+		message: "确定删除围栏吗？",
+		type: "warnning",
+		enableCover: true,
+		closeClick: function(){
+			
+		},
+		confirmClick: function(doc, fa){
+			$.ajax({
+				type: "POST",
+			    url: "../json/fence.do",
+			    data: {
+			    	type: "delete",
+			    	O_FENCEID: fenceOverlay.id
+			    },
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data) {
+			    	if(data.r == "1") {
+				    	F.Affair.make(undefined, {
+				    		type: "success",
+				    		message: data.m,
+				    		reload: true
+				    	})
+			    	}
+			    	else {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: data.m,
+				    		reload: false
+				    	})
+			    	}
+			    },
+			    error: function (err) {
 
-    $.deleteForm({
-        prompt: "注：您确定要【删除】该项围栏吗？",
-        loading: "正在删除...",
-        url: "/Transport/EIFence/DeleteForm",
-        param: { id: fenceOverlay.id },
-        success: function () {
-            $(".FenceContent.Select").remove();
-            clearAll();
-            fenceOverlay = {
-                id: "",
-                type: "",
-                overlay: ""
-            };
-        }
-    })
+			    }
+			});
+			fa.clear();
+		},
+		cancleClick: function(){
+			
+		}
+	});
 }
 
 function btn_add() {
-
-    $.modalOpen({
-        id: "NameForm",
-        title: "新建围栏",
-        url: "/Transport/EIFence/SaveFence",
-        width: "500px",
-        height: "auto",
-        callBack: function (iframeId) {
-            top.frames[iframeId].submitForm(currentOverlay);
-        }
-    });
+	
+	F.Dialog.make(undefined, {
+		title: "新建围栏",
+		type: "customer",
+		url: "view/form/fence/add.html",
+		frameId: "fenceAdd",
+		frameWidth: 400,
+		frameHeight: 100,
+		data: {},
+		enableCover: true,
+		closeClick: function(){
+			return 0;
+		},
+		confirmClick: function(doc, fa){
+			var form = $(doc).contents().find("form");
+			var name = form.find("input[name=O_FENCENAME]").val();
+	    	var laPoints = [];
+	    	var loPoints = [];
+	    	var ftype;
+			var radius;
+			switch(currentOverlay.type) {
+			case "circle":
+				laPoints.push(currentOverlay.overlay.point.lat);
+				loPoints.push(currentOverlay.overlay.point.lng);
+            	radius = currentOverlay.overlay.xa;
+            	ftype = 2;
+				break;
+			case "actangle":
+	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
+					laPoints.push(currentOverlay.overlay.po[i].lat);
+					loPoints.push(currentOverlay.overlay.po[i].lng);
+	            }
+            	ftype = 1;
+				break;
+			case "polygon":
+	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
+					laPoints.push(currentOverlay.overlay.po[i].lat);
+					loPoints.push(currentOverlay.overlay.po[i].lng);
+	            }
+            	ftype = 3;
+				break;
+			case "polyline":
+	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
+					laPoints.push(currentOverlay.overlay.po[i].lat);
+					loPoints.push(currentOverlay.overlay.po[i].lng);
+	            }
+            	ftype = 0;
+				break;
+			}
+			
+			$.ajax({
+				type: "POST",
+			    url: "../json/fence.do",
+			    data: {
+			    	type: "add",
+			    	ftype: ftype,
+			    	name: name,
+			    	laPoints: laPoints,
+			    	loPoints: loPoints,
+			    	radius: radius
+			    },
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data) {
+			    	if(data.r == "1") {
+				    	F.Affair.make(undefined, {
+				    		type: "success",
+				    		message: data.m,
+				    		reload: true
+				    	})
+			    	}
+			    	else {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: data.m,
+				    		reload: false
+				    	})
+			    	}
+			    },
+			    error: function (err) {
+			    	F.Affair.make(undefined, {
+			    		type: "error",
+			    		message: "连接服务器失败",
+			    		reload: false
+			    	})
+			    }
+			});
+			fa.clear();
+		},
+		cancleClick: function(){
+			return 0;
+		}
+	});
+	
 }
 
 //修改后保存围栏
-function btn_update(name, description) {
-
-    $.modalOpen({
-        id: "NameForm",
-        title: "更新围栏",
-        url: "/Transport/EIFence/SaveFence?name=" + name + "&description=" + description,
-        width: "500px",
-        height: "auto",
-        callBack: function (iframeId) {
-            top.frames[iframeId].updateForm(currentOverlay);
-            $(".FenceContent.Select").children("span.FenceOperation").hide();
-            $(".FenceContent.Select").children("span.FenceDoing").show();
-            $(".FenceDrawHead #New").removeClass("Select");
-            isChange = false;
-            currentOverlay.overlay.disableEditing();
-        }
-    });
+function btn_update(name) {
+	
+	F.Dialog.make(undefined, {
+		title: "更新围栏",
+		type: "customer",
+		url: "view/form/fence/update.html",
+		frameId: "fenceUpdate",
+		frameWidth: 400,
+		frameHeight: 100,
+		data: {
+			O_FENCENAME: name,
+		},
+		enableCover: true,
+		closeClick: function(){
+			return 0;
+		},
+		confirmClick: function(doc, fa){
+			var form = $(doc).contents().find("form");
+			var name = form.find("input[name=O_FENCENAME]").val();
+	    	var laPoints = [];
+	    	var loPoints = [];
+	    	var ftype;
+			var radius;
+			switch(currentOverlay.type) {
+			case "circle":
+				laPoints.push(currentOverlay.overlay.point.lat);
+				loPoints.push(currentOverlay.overlay.point.lng);
+            	radius = currentOverlay.overlay.xa;
+            	ftype = 2;
+				break;
+			case "actangle":
+	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
+					laPoints.push(currentOverlay.overlay.po[i].lat);
+					loPoints.push(currentOverlay.overlay.po[i].lng);
+	            }
+            	ftype = 1;
+				break;
+			case "polygon":
+	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
+					laPoints.push(currentOverlay.overlay.po[i].lat);
+					loPoints.push(currentOverlay.overlay.po[i].lng);
+	            }
+            	ftype = 3;
+				break;
+			case "polyline":
+	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
+					laPoints.push(currentOverlay.overlay.po[i].lat);
+					loPoints.push(currentOverlay.overlay.po[i].lng);
+	            }
+            	ftype = 0;
+				break;
+			}cas
+			
+			$.ajax({
+				type: "POST",
+			    url: "../json/fence.do",
+			    data: {
+			    	type: "update",
+			    	id: currentOverlay.id,
+			    	ftype: ftype,
+			    	name: name,
+			    	laPoints: laPoints,
+			    	loPoints: loPoints,
+			    	radius: radius
+			    },
+			    beforeSend: function(){
+			    	
+			    },
+			    success: function (data) {
+			    	if(data.r == "1") {
+				    	F.Affair.make(undefined, {
+				    		type: "success",
+				    		message: data.m,
+				    		reload: true
+				    	})
+			    	}
+			    	else {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: data.m,
+				    		reload: false
+				    	})
+			    	}
+			    },
+			    error: function (err) {
+			    	F.Affair.make(undefined, {
+			    		type: "error",
+			    		message: "连接服务器失败",
+			    		reload: false
+			    	})
+			    }
+			});
+			fa.clear();
+		},
+		cancleClick: function(){
+			return 0;
+		}
+	});
+	
 }
 
 function clear() {
@@ -248,7 +447,8 @@ function clear() {
  */
 var pagnation = {
     total: 1,
-    page: 1,
+    records: 0,
+    current: 1,
     rows: 20
 }
 
@@ -256,24 +456,31 @@ var pagnation = {
 function load_fence() {
 
     $.ajax({
-        url: "/Transport/EIFence/GetEIFenceAll",
-        data: pagnation,
+        url: "../json/fence.do",
+        data: {
+        	type: "table",
+            current: pagnation.current,
+            rows: pagnation.rows
+        },
         type: "post",
-        dataType: "json",
         success: function (data) {
             $("dd").remove();
-            if (typeof (data.eIFence) != undefined && data.eIFence != null) {
-                add_fence_all(data.eIFence);
-                pagnation.total = data.total;
-                pagnation.page = data.page;
-                $(".FencePageBox .Page").val(data.page);
+            if (typeof (data.o) != undefined && data.o != null) {
+            	if(data.o.data.length == 0) {
+                    $("#FenceDL").append("<dd class='Error'>暂无数据</dd>");
+            	}
+            	else {
+                    add_fence_all(data.o.data);
+                    pagnation = data.o.pagination;
+                    $(".FencePageBox .Page").val(pagnation.current);
+            	}
             }
             else {
                 $("#FenceDL").append("<dd class='Error'>请求数据失败</dd>");
             }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            $("dd").remove(".Error")
+            $("dd.Load").remove()
             $("#FenceDL").append("<dd class='Error'>网络未连接</dd>");
         },
         beforeSend: function () {
@@ -284,10 +491,11 @@ function load_fence() {
 }
 
 //往列表中添加一个围栏对象
-function add_fence(id, name, type, description) {
+function add_fence(serial, id, name, type, description) {
     var dd = $("<dd class='FenceContent'></dd>");
 
-    $("<span class='FenceSerial'>" + id + "</span>").appendTo(dd);
+    $("<span class='FenceSerial'>" + serial + "</span>").appendTo(dd);
+    $("<span class='FenceId'>" + id + "</span>").appendTo(dd);
     $("<span class='FenceName' title='" + name + "'>" + name + "</span>").appendTo(dd);
     $("<span class='FenceType'>" + type + "</span>").appendTo(dd);
     $("<span class='FenceDoing'></span>")
@@ -307,13 +515,7 @@ function add_fence(id, name, type, description) {
 function add_fence_all(data) {
     for(var i = 0; i<data.length; i++)
     {
-        switch(data[i].fenceType)
-        {
-            case 0: add_fence(data[i].id, data[i].name, "圆形", data[i].description); break;
-            case 1: add_fence(data[i].id, data[i].name, "线型", data[i].description); break;
-            case 2: add_fence(data[i].id, data[i].name, "多边形", data[i].description); break;
-            default: break;
-        }
+    	add_fence(i+1, data[i].O_FENCEID, data[i].O_FENCENAME, data[i].O_FENCETYPE, "");
     }
 }
 
@@ -344,12 +546,16 @@ function change_fence() {
 }
 
 //选择围栏时请求围栏图形数据，并显示围栏
-function click_fence(id) {
+function click_fence(id, type) {
+
     $.ajax({
-        url: "/Transport/EIFence/GetEIFenceDetail",
-        data: { Id: id},
         type: "post",
-        dataType: "json",
+        url: "../json/fence.do",
+        data: {
+        	type: "detail",
+        	id: id,
+        	o: type
+        },
         success: function (data) {
             if(drawStart)
             {
@@ -359,30 +565,43 @@ function click_fence(id) {
             {
                 clearAll();
             }
-            show_fence(data);
+            $("dd.Load").remove();
+            if (typeof (data.o) != undefined && data.o != null) {
+            	show_fence(data.o);
+            }
+            else {
+                $("#FenceDL").append("<dd class='Error'>暂无数据</dd>");
+            }
         },
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("请求数据失败");
+            $("dd.Load").remove()
+            $("#FenceDL").append("<dd class='Error'>网络未连接</dd>");
+        },
+        beforeSend: function () {
+            $("#FenceDL").append("<dd class='Load'><a class='Loading'></a><div>请求数据中……</div></dd>");
         }
     });
 }
 
 function show_fence(data) {
-    fenceOverlay.id = data.eIFence.id;
-    switch (data.eIFence.fenceType)
+    fenceOverlay.id = data.O_FENCEID;
+    switch (data.O_FENCETYPE)
     {
-        case 0:
-            add_circle({ lng: data.eIFence.circleLongitude, lat: data.eIFence.circleLatitude },
-                data.eIFence.circleRange);
+        case "圆形":
+            add_circle(data.F_FENCENODES[0], data.O_RADIUS);
             fenceOverlay.type = "circle";
             break;
-        case 2:
-            add_polygon(data.eIFenceNodes);
+        case "线形":
+            add_polyline(data.F_FENCENODES);
+            fenceOverlay.type = "polyline";
+            break;
+        case "多边形":
+            add_polygon(data.F_FENCENODES);
             fenceOverlay.type = "polygon";
             break;
-        case 1:
-            add_polyline(data.eIFenceNodes);
-            fenceOverlay.type = "polyline";
+        case "矩形":
+        	add_polygon(data.F_FENCENODES);
+            fenceOverlay.type = "polygon";
             break;
         default: break;
     }
@@ -391,7 +610,7 @@ function show_fence(data) {
 
 $(document).ready(function () {
 
-    //load_fence();
+    load_fence();
 
     //设置窗口悬浮事件
     //1. 非固定时，滑入时浮入窗口，滑出时浮出窗口
@@ -475,7 +694,7 @@ $(document).ready(function () {
     $(document).on("click", ".FenceContent", function () {
         if ($(this).hasClass("Select")) {
 
-            click_fence($(this).children(".FenceSerial").html());
+            click_fence($(this).children(".FenceId").html(), $(this).children(".FenceType").html());
         }
         else {
             $(".FenceContent.Select").children(".FenceDescription").hide();
@@ -485,7 +704,7 @@ $(document).ready(function () {
             $(this).addClass("Select");
             $(this).children(".FenceDescription").show();
 
-            click_fence($(this).children(".FenceSerial").html());
+            click_fence($(this).children(".FenceId").html(), $(this).children(".FenceType").html());
 
 
         }
@@ -520,7 +739,7 @@ $(document).ready(function () {
             var name = $(tag).children("span.FenceName").html();
             var description = $(tag).children("span.FenceDescription").html();
 
-            save(name, description);
+            save(name);
 
             event.stopPropagation();
         }
@@ -537,34 +756,34 @@ $(document).ready(function () {
     });
 
     $("#First").click(function () {
-        pagnation.page = 1;
-        load_fence(pagnation);
+        pagnation.current = 1;
+        load_fence();
     });
 
     $("#Last").click(function () {
-        pagnation.page = pagnation.total;
-        load_fence(pagnation);
+        pagnation.current = pagnation.total;
+        load_fence();
     });
 
     $("#Previous").click(function () {
-        if (pagnation.page > 1) {
-            pagnation.page--;
-            load_fence(pagnation);
+        if (pagnation.current > 1) {
+            pagnation.current--;
+            load_fence();
         }
     });
 
     $("#Next").click(function () {
-        if (pagnation.page < pagnation.total) {
-            pagnation.page++;
-            load_fence(pagnation);
+        if (pagnation.current < pagnation.total) {
+            pagnation.current++;
+            load_fence();
         }
     });
 
     $("#PageSubmit").click(function () {
         var value = parseInt($(this).prev().val());
         if (value <= pagnation.total && value >= 1) {
-            pagnation.page = value;
-            load_fence(pagnation);
+            pagnation.current = value;
+            load_fence();
         }
     });
 
@@ -614,18 +833,18 @@ $(document).ready(function () {
             startDraw(type);
         }
         else if (drawStart) {
-            F.Dialog.make("", {
-            	type: "error",
-            	enableCover: false,
-            	message: "一次只能绘制一种形状的一个围栏，必须清除当前围栏才能继续绘图"
-            });
+	    	F.Affair.make(undefined, {
+	    		type: "error",
+	    		message: "一次只能绘制一种形状的一个围栏，必须清除当前围栏才能继续绘图",
+	    		reload: false
+	    	})
         }
         else {
-            F.Dialog.make("", {
-            	type: "error",
-            	enableCover: false,
-            	message: "必须新建一个围栏才能开始绘图"
-            });
+	    	F.Affair.make(undefined, {
+	    		type: "error",
+	    		message: "必须新建一个围栏才能开始绘图",
+	    		reload: false
+	    	})
         }
     }
 
@@ -661,9 +880,8 @@ $(document).ready(function () {
             if (isChange)
             {
                 var name = $(".FenceContent.Select").children("span.FenceName").html();
-                var description = $(".FenceContent.Select").children("span.FenceDescription").html();
-
-                save(name, description);
+                
+                save(name);
 
                 $(".FenceDrawTools a.Tools").removeClass("Select");
             }
@@ -675,7 +893,11 @@ $(document).ready(function () {
         }
         else
         {
-            $.modalMsg("必须新建一个围栏才能保存绘图", "error", 2500);
+	    	F.Affair.make(undefined, {
+	    		type: "error",
+	    		message: "必须新建一个围栏才能保存绘图",
+	    		reload: false
+	    	})
         }
     });
     /** 围栏绘图控件 END **/

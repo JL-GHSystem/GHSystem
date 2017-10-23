@@ -500,11 +500,11 @@
 {
 	background: url(image/UI.png) 0px -95px no-repeat ;
 }
-.frichUI_Dialog_Success
+.frichUI_Dialog_Error
 {
 	background: url(image/UI.png) 0px -144px no-repeat ;
 }
-.frichUI_Dialog_Error
+.frichUI_Dialog_Success
 {
 	background: url(image/UI.png) 0px -192px no-repeat ;
 }

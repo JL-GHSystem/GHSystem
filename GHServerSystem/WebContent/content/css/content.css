@@ -45,6 +45,8 @@
 .tool i
 {
 	display: inline-block;
+	width: 20px;
+	height: 20px;
 	margin-right: 5px;
 	cursor: pointer;
 	vertical-align: middle;
@@ -56,7 +58,9 @@
 }
 #search,
 #update,
-#add
+#add,
+#complete,
+#cancle
 {
 	float: left;
 	margin: 5px 8px 5px 0;
@@ -78,6 +82,11 @@
 	float: left;
 	margin: 5px 0 5px 20px;
 }
+#complete,
+#cancle
+{
+	display: none;
+}
 .selectBox
 {
 	width: 100%;
@@ -94,4 +103,9 @@
 {
 	width: 100%;
 }
+
+
+
+
+
 
