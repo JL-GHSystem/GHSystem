@@ -400,6 +400,23 @@
 	transform:scale(0.7);
 	transition: all 0.4s ease-in-out;
 }
+
+.FrichUI_Affair_Frame
+{
+	position: fixed;
+	display: block;
+	top: 30%;
+	left: 30%;
+	min-width: 184px;
+	max-width: 700px;
+	z-index: 999999;
+	border: 2px solid #9CB26A;
+	border-radius: 5px 5px 5px 5px;
+	box-shadow: 0 0 30px #FFF;
+	opacity:0;
+	transform:scale(0.7);
+	transition: all 0.4s ease-in-out;
+}
 /* 1.1 会话头 */
 .FrichUI_Dialog_Title
 {
@@ -700,42 +717,85 @@
 
 
 /*树形Form*/
-ui,li
+#tree
 {
-	list-style:none;
-	padding:0 1px;
+	display: block;
+	width: 200px;
+	height: 400px;
 }
-
-li i
+.FrichUI_Form_Frame
+{
+	display: block;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	font-family: Helvetica, monospace, Arial, sans-serif;
+}
+.FrichUI_Form_House
+{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+.FrichUI_Form_Room
 {
 	
-	height: 15px;
-	line-height: 15px;
 }
-i
+.FrichUI_Form_Content
 {
-	display: inline-block;
-	padding-top:2px;
+	display: block;
+	width: 100%;
+	height: 20px;
+	line-height: 20px;
 }
-i.checked
+.FrichUI_Form_Level1
 {
-	width:16px;
-	height:12px;
+	font-size: 14px;
+}
+.FrichUI_Form_Level2,
+.FrichUI_Form_Level3,
+.FrichUI_Form_Level4
+{
+	font-size: 12px;
+}
+.FrichUI_Form_Level1 .FrichUI_Form_Room
+{
+	padding-left: 0px;
+	margin-bottom: 5px;
+}
+.FrichUI_Form_Level2 .FrichUI_Form_Room
+{
+	padding-left: 20px;
+	margin-bottom: 3px;
+}
+.FrichUI_Form_Level3 .FrichUI_Form_Room
+{
+	padding-left: 30px;
+}
+.FrichUI_Form_Level4 .FrichUI_Form_Room
+{
+	padding-left: 40px;
+}
+.FrichUI_Form_checkBox
+{
+	display: block;
+	float: left;
+	margin: 3px 5px 3px 0;
+	width:14px;
+	height:14px;
+}
+.FrichUI_Form_checkBox.FrichUI_Form_checkBox_checked
+{
 	background:url("../icon/reselect.png") no-repeat 0 0;
 }
-i.halfcheck
+.FrichUI_Form_checkBox.FrichUI_Form_checkBox_halfcheck
 {
-	width:16px;
-	height:12px;
-	background:url("../icon/reselect.png") no-repeat -46px 0;
+	background:url("../icon/reselect.png") no-repeat -47px 0;
 }
-i.nocheck
+.FrichUI_Form_checkBox.FrichUI_Form_checkBox_nocheck
 {
-	width:16px;
-	height:12px;
-	background:url("../icon/reselect.png") no-repeat -23px 0;
+	background:url("../icon/reselect.png") no-repeat -24px 0;
 }
-
 
 
 
