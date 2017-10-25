@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <script src="../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
 <script src="../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+
+<script src="../lib/Convertor.js" type="text/javascript"></script>
 <title>Insert title here</title>
 <script type="text/javascript">
 /* $(function(){
@@ -116,6 +118,18 @@ function loadPro2(){
 				}]
 			});
 		}); 
+		
+		
+		var c = new Convertor();
+		var r1 = c.WGS2BD09({ lng: 123, lat: 38 });
+		console.log(r1);
+		
+		var r2 = c.BD092WGS({ lng: 124, lat: 38 });
+		console.log(r2); 
+		/* var r2 = c.GCJ2WGS({lng:,lat:}); */
+		
+		
+		
  });	
 		/* 日期输入框
 		function today(){

@@ -1,0 +1,40 @@
+@charset "UTF-8";
+.caseList
+{
+	width:25%;
+	float:left;
+	border:1px solid #6f9fa9;
+}
+
+.caseList-Title
+{
+	width:100%;
+	display:inline-block;
+}
+.caseList-Title .tool
+{
+	margin:0;
+	padding:0;
+}
+.selt
+{
+	margin:8px 3px 0 0;
+	float:left;
+}
+
+.diTitle .toolBox
+{
+	width:30%;
+	float:right;
+}
+
+.diTitle #add
+{
+	float:left;
+	
+}
+
+#dArea
+{
+	width:100px;
+}

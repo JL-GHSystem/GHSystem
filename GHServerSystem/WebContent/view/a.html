@@ -1,0 +1,130 @@
+
+	/*
+	 * 2.3.8 form组件
+	 */	
+	var FormFactory = function(){
+		Factory.call(this);
+		
+		/*	
+		this.checks = {
+			checked: "FrichUI_Form_checkBox.FrichUI_Form_checkBox_checked",
+			halfcheck: "FrichUI_Form_checkBox.FrichUI_Form_checkBox_halfcheck",
+			nocheck: "FrichUI_Form_checkBox.FrichUI_Form_checkBox_nocheck"
+		}*/
+		
+		
+		this.createContent = function(options){	
+			this.options=options;
+			
+			var level=1;
+			
+			function makeC(options){
+				for(var m = 0; m<options.llength;m++){
+					var house = this.createUl("FrichUI_Form_Level"+level+ " FrichUI_Form_House");
+					var room = this.createLi("FrichUI_Form_Room");
+					house.append(room);
+					var content = this.createDiv("FrichUI_Form_Content");
+					var i=this.createI("FrichUI_Form_checkBox FrichUI_Form_checkBox_nocheck");
+					var a=this.createA(options.messages[m]);
+					content.append(i);
+					content.append(a);
+					room.append(content);
+					if(options.u){
+						level++;
+						makeC(options.u);
+					}
+					house.append(room);
+				}
+			};
+			return  house;
+		}
+
+	FormFactory.prototype = new Factory();
+	
+	FormFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		/* 创建基架 */
+		var frame = this.createFrame("FrichUI_Form_Frame");
+		
+		frame.append(this.createContent(options));
+
+	}
+		/* 注册事件 */
+	$(".FrichUI_Form_checkBox").click(function() {
+		iterator($(this));
+	});
+	
+	function iterator(i){
+		if(i.hasClass("FrichUI_Form_checkBox_checked")) {
+			i.parent(".FrichUI_Form_Content").parent(".FrichUI_Form_Room").find(".FrichUI_Form_checkBox")
+			.removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_nocheck");
+			CheckTree($(".FrichUI_Form_Frame"), 1);
+		}
+		else if (i.hasClass("FrichUI_Form_checkBox_halfcheck")) {
+			i.parent(".FrichUI_Form_Content").parent(".FrichUI_Form_Room").find(".FrichUI_Form_checkBox")
+			.removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_checked");
+			
+			CheckTree($(".FrichUI_Form_Frame"), 1);
+		}
+		else if (i.hasClass("FrichUI_Form_checkBox_nocheck")){
+			i.parent(".FrichUI_Form_Content").parent(".FrichUI_Form_Room").find(".FrichUI_Form_checkBox")
+			.removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_checked");
+			
+			CheckTree($(".FrichUI_Form_Frame"), 1);
+		}
+	}
+	
+	function CheckTree(i, level){
+		var rooms = $(i).children(".FrichUI_Form_Level" + level).children(".FrichUI_Form_Room");
+		
+		if(rooms.length > 0) {
+			var total = 0;
+			var must = false;
+			for(var k=0; k<rooms.length; k++) {
+				var count = CheckTree(rooms[k], level + 1);
+				if(count == "half") {
+					must = true;
+				}
+				else {
+					total += count;
+				}
+			}
+			if(must) {
+				$(i).children(".FrichUI_Form_Content")
+				.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_halfcheck");
+				return "half";
+			}
+			else if(total == 0) {
+				$(i).children(".FrichUI_Form_Content")
+				.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_nocheck");
+				return 0;
+			}
+			else if(total == rooms.length) {
+				$(i).children(".FrichUI_Form_Content")
+				.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_checked");
+				return 1;
+			}
+			else if(total < rooms.length) {
+				$(i).children(".FrichUI_Form_Content")
+				.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_halfcheck");
+				return "half";
+			}
+		}
+		else {
+			if($(i).children(".FrichUI_Form_Content")
+					.children("i")
+					.hasClass("FrichUI_Form_checkBox_checked")){
+				return 1;
+			}
+			else {
+				return 0;
+			}
+		}
+	}
+		/* 创建Dialog实体 */
+		return 0;
+
+	}
+	FrichUI.prototype.Form = new FormFactory();
+	
