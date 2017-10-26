@@ -5,7 +5,7 @@ function add(){
 	F.Dialog.make(undefined, {
 		title: "新建线路",
 		type: "customer",
-		url: "view/form/line/line.html",
+		url: "view/form/line/add.html",
 		frameId: "lineAdd",
 		frameWidth: 640,
 		frameHeight: 360,
@@ -15,16 +15,12 @@ function add(){
 			return 0;
 		},
 		confirmClick: function(doc, fa){
-			var rs = doc.contentWindow.select();
-			var data = {
-		    	type: "add",
-		    	O_USERGROUPNAME: rs.name,
-		    	O_USERGROUPIDS: rs.id
-		    };
+			var form = $(doc).contents().find("form");
+			var a = form.serialize();
 			$.ajax({
 				type: "POST",
 			    url: "../json/line.do",
-			    data: data,
+			    data: a + "&type=add",
 			    beforeSend: function(){
 			    	
 			    },
@@ -60,7 +56,7 @@ function add(){
 }
 
 function update(){
-	var pack = F.entitys("table").getSingleRow();
+/*	var pack = F.entitys("table").getSingleRow();
 	if(F.isEmpty(pack)) {
 		F.Affair.make(undefined, {
     		type: "error",
@@ -70,10 +66,10 @@ function update(){
 	}
 	else {
 		F.Dialog.make(undefined, {
-			title: "修改线路",
+			title: "修改角色",
 			type: "customer",
-			url: "view/form/line/update.html",
-			frameId: "lineUpdate",
+			url: "view/form/role/update.html",
+			frameId: "roleUpdate",
 			frameWidth: 640,
 			frameHeight: 360,
 			data: {
@@ -89,7 +85,7 @@ function update(){
 				var a = form.serialize();
 				$.ajax({
 					type: "POST",
-				    url: "../json/line.do",
+				    url: "../json/role.do",
 				    data: a + "&type=update",
 				    beforeSend: function(){
 				    	
@@ -125,7 +121,7 @@ function update(){
 			}
 		});
 	}
-	
+	*/
 }
 
 function deleted(){
@@ -135,8 +131,8 @@ function deleted(){
 function complete(){
 	var d = F.entitys("table").getMuiltValue(3);
 	F.Dialog.make(undefined, {
-		title: "删除线路",
-		message: "此操作将会影响当前该角色组的用户，确定删除？",
+		title: "删除部门",
+		message: "此操作将会影响所有该部门的用户，确定删除？",
 		type: "warnning",
 		enableCover: true,
 		closeClick: function(){
@@ -202,11 +198,11 @@ function ajax(){
 		},{
 			name: "线路名"
 		},{
-			name: "上级线路名"
+			name: "所属部门名"
 		},{
-			name: "线路类型"
+			name: "部门类型"
 		},{
-			name: "线路路径",
+			name: "部门路径",
 			textAlign: "left"
 		}],
 		ajax: {

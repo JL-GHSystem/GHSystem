@@ -19,4 +19,19 @@ public class LineApp {
 		return lineModelss;
 	}
 
+	public LineModel[] getTable() {
+		// TODO Auto-generated method stub
+		ArrayList<LineModel> lineModels = lineDao.selectAllInTable();
+		LineModel[] lineModelss = new LineModel[lineModels.size()];
+		lineModels.toArray(lineModelss);
+		return lineModelss;
+	}
+
+	public boolean addLine(LineModel lineModel) {
+		// TODO Auto-generated method stub
+		boolean a = false;
+		a = lineDao.insert(lineModel);
+		return a;
+	}
+
 }

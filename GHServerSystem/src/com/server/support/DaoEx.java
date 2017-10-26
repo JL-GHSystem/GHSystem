@@ -97,6 +97,15 @@ public class DaoEx {
 		return this;
 	}
 	
+	public DaoEx from(String tableName, String displayName) {
+		sql.append("from ");
+		sql.append(tableName);
+        sql.append(" ");
+		sql.append(displayName);
+        sql.append(" ");
+		return this;
+	}
+	
 	public DaoEx leftJoin(String tableName) {
 		sql.append("left join ");
 		sql.append(tableName);
@@ -123,6 +132,11 @@ public class DaoEx {
 		return this;
 	}
 	
+	public DaoEx where() {
+		sql.append("where ");
+		return this;
+	}
+	
 	public DaoEx where(String options) {
 		sql.append("where ");
     	sql.append(options);
@@ -130,6 +144,11 @@ public class DaoEx {
 		return this;
 	}
 
+	public DaoEx and() {
+		sql.append("and ");
+		return this;
+	}
+	
 	public DaoEx and(String options) {
 		sql.append("and ");
     	sql.append(options);
@@ -160,6 +179,20 @@ public class DaoEx {
         for (int i = 0; i < options.length; i++) {
     		sql.append(" and " + options[i]);
         }
+		return this;
+	}
+
+	public DaoEx exists (String ex) {
+		sql.append("exists (");
+		sql.append(ex);
+		sql.append(") ");
+		return this;
+	}
+
+	public DaoEx like(String colName, String search) {
+		// TODO Auto-generated method stub
+		sql.append(colName);
+		sql.append(" like '%"+ search +"%' ");
 		return this;
 	}
 	

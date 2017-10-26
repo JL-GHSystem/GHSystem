@@ -52,6 +52,7 @@ public class DepartmentServlet extends HttpServlet implements IServlet {
 		UserModel userModel = (UserModel) session.getAttribute("P_User");
 
 		DepartmentModel[] departmentModels;
+		DepartmentModel departmentModel;
 		Pagination page = new Pagination();
 		switch(type) {
 			case "table":
@@ -99,7 +100,21 @@ public class DepartmentServlet extends HttpServlet implements IServlet {
 				response.getWriter().write(content(jo));
 				break;
 			case "add":
-				
+				departmentModel = new DepartmentModel();
+				departmentModel.setO_PARENTID(request.getParameter("O_PARENTID"));
+				departmentModel.setO_DEPARTTYPE(request.getParameter("O_DEPARTTYPE"));
+				departmentModel.setO_DEPARTNAME(request.getParameter("O_DEPARTNAME"));
+				departmentModel.setO_PARENTNAME(request.getParameter("O_PARENTNAME"));
+
+				boolean a = departmentService.addDepartment(departmentModel);
+				if(a) {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(success("创建成功"));
+				} 
+				else {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(error(2, "创建失败"));
+				}
 				break;
 			case "update":
 				

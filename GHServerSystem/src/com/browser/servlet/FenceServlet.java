@@ -97,6 +97,7 @@ public class FenceServlet extends HttpServlet implements IServlet {
 			case "table":
 				String current = request.getParameter("current");
 				String rows = request.getParameter("rows");
+				String search = request.getParameter("search");
 				if(Lib.istEmpty(current)) {
 					page.setCurrent(Integer.parseInt(current));
 				}
@@ -110,7 +111,7 @@ public class FenceServlet extends HttpServlet implements IServlet {
 					page.setRows(20);
 				}
 				
-				fenceModels = fenceService.getTable(page);
+				fenceModels = fenceService.getTable(page, search);
 
 				
 				JSONObject jo = new JSONObject();
@@ -126,6 +127,7 @@ public class FenceServlet extends HttpServlet implements IServlet {
 					jd.put("O_FENCEID", fenceModels[i].getO_FENCEID());
 					jd.put("O_FENCENAME", fenceModels[i].getO_FENCENAME());
 					jd.put("O_FENCETYPE", fenceModels[i].getO_FENCETYPE());
+					jd.put("O_COMMIT", fenceModels[i].getO_COMMIT());
 					jds.add(jd);
 				}
 				
@@ -139,6 +141,7 @@ public class FenceServlet extends HttpServlet implements IServlet {
 				String name = request.getParameter("name");
 				String radius = request.getParameter("radius");
 				String fetype = request.getParameter("ftype");
+				String commit = request.getParameter("commit");
 				String[] laPoints = request.getParameterValues("laPoints[]");
 				String[] loPoints = request.getParameterValues("loPoints[]");
 				
@@ -152,6 +155,7 @@ public class FenceServlet extends HttpServlet implements IServlet {
 						fenceModel.setO_RADIUS(new BigDecimal("-1"));
 					}
 					fenceModel.setO_FENCETYPE(Fence.parseInt(Integer.parseInt(fetype)));
+					fenceModel.setO_COMMIT(commit);
 					for(int i=0; i<laPoints.length; i++) {
 						FenceNodeModel fenceNodeModel = new FenceNodeModel();
 						fenceNodeModel.setO_POINTNO(i);
@@ -223,6 +227,204 @@ public class FenceServlet extends HttpServlet implements IServlet {
 					else {
 						response.setContentType("application/json; charset=utf-8");
 						response.getWriter().write(error(2, "É¾³ýÊ§°Ü"));
+					}
+				}
+				break;
+			case "fenceInLine":
+				String currents = request.getParameter("current");
+				String rowss = request.getParameter("rows");
+				if(Lib.istEmpty(currents)) {
+					page.setCurrent(Integer.parseInt(currents));
+				}
+				else {
+					page.setCurrent(1);
+				}
+				if(Lib.istEmpty(rowss)) {
+					page.setRows(Integer.parseInt(rowss));
+				}
+				else {
+					page.setRows(20);
+				}
+				
+				String o_LineId = request.getParameter("id");
+				if(Lib.istEmpty(o_LineId)) {
+					fenceModels = fenceService.getTableInLine(page, o_LineId);
+				}
+				else {
+					fenceModels = fenceService.getTableInLine(page);
+				}
+				
+				JSONObject jol = new JSONObject();
+				JSONObject jpl = new JSONObject();
+				JSONArray jdsl = new JSONArray();
+				jpl.put("total", page.getTotal());
+				jpl.put("records", page.getRecords());
+				jpl.put("rows", page.getRows());
+				jpl.put("current", page.getCurrent());
+
+				for(int i=0; i<fenceModels.length; i++) {
+					JSONObject jd = new JSONObject();
+					jd.put("O_FENCEID", fenceModels[i].getO_FENCEID());
+					jd.put("F_DEPARTID", fenceModels[i].getF_DEPARTID());
+					jd.put("O_FENCENAME", fenceModels[i].getO_FENCENAME());
+					jd.put("F_DEPARTNAME", fenceModels[i].getF_DEPARTNAME());
+					jd.put("O_FENCETYPE", fenceModels[i].getO_FENCETYPE());
+					jdsl.add(jd);
+				}
+				
+				jol.put("data", jdsl);
+				jol.put("pagination", jpl);
+				
+				response.setContentType("application/json; charset=utf-8");
+				response.getWriter().write(content(jol));
+				break;
+			case "fenceInLineDetail":
+				fenceModel = new FenceModel();
+				fenceModel.setO_FENCEID(request.getParameter("id"));
+				fenceModel.setF_DEPARTID(request.getParameter("fid"));
+				
+				fenceModel = fenceService.getFenceInLine(fenceModel);
+
+				JSONObject jdr = new JSONObject();
+				jdr.put("O_FENCEID", fenceModel.getO_FENCEID());
+				jdr.put("O_DEPARTID", fenceModel.getF_DEPARTID());
+				jdr.put("O_FENCENO", fenceModel.getF_FENCENO());
+				jdr.put("O_AREANAME", fenceModel.getF_AREANAME());
+				jdr.put("O_STATUS", fenceModel.getF_STATUS());
+				jdr.put("O_PHBJ", fenceModel.getF_PHBJ());
+				jdr.put("O_STAYTIME", fenceModel.getF_STAYTIME());
+				jdr.put("O_SPEEDLIMT", fenceModel.getF_SPEEDLIMT());
+				jdr.put("O_TIMEINTERVAL", fenceModel.getF_TIMEINTERVAL());
+				jdr.put("O_TIMECOST", fenceModel.getF_TIMECOST());
+				
+				response.setContentType("application/json; charset=utf-8");
+				response.getWriter().write(content(jdr));
+				break;
+			case "fenceNotInLine":
+				String currentss = request.getParameter("current");
+				String rowsss = request.getParameter("rows");
+				if(Lib.istEmpty(currentss)) {
+					page.setCurrent(Integer.parseInt(currentss));
+				}
+				else {
+					page.setCurrent(1);
+				}
+				if(Lib.istEmpty(rowsss)) {
+					page.setRows(Integer.parseInt(rowsss));
+				}
+				else {
+					page.setRows(20);
+				}
+				
+				String o_LineIds = request.getParameter("id");
+				String o_Fencename = request.getParameter("name");
+				if(Lib.istEmpty(o_LineIds)) {
+					fenceModels = fenceService.getTableNotInLine(page, o_LineIds, o_Fencename);
+					
+					JSONObject jols = new JSONObject();
+					JSONObject jpls = new JSONObject();
+					JSONArray jdsls = new JSONArray();
+					jpls.put("total", page.getTotal());
+					jpls.put("records", page.getRecords());
+					jpls.put("rows", page.getRows());
+					jpls.put("current", page.getCurrent());
+
+					for(int i=0; i<fenceModels.length; i++) {
+						JSONObject jd = new JSONObject();
+						jd.put("O_FENCEID", fenceModels[i].getO_FENCEID());
+						jd.put("O_FENCENAME", fenceModels[i].getO_FENCENAME());
+						jd.put("O_FENCETYPE", fenceModels[i].getO_FENCETYPE());
+						jdsls.add(jd);
+					}
+					
+					jols.put("data", jdsls);
+					jols.put("pagination", jpls);
+					
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(content(jols));
+				}
+				else {
+					
+				}
+				break;
+			case "bind":
+				fenceModel = new FenceModel();
+				fenceModel.setO_FENCEID(request.getParameter("O_FENCEID"));
+				fenceModel.setF_DEPARTID(request.getParameter("O_DEPARTID"));
+				if(Lib.istEmpty(request.getParameter("O_FENCENO"))) {
+					fenceModel.setF_FENCENO(Integer.parseInt(request.getParameter("O_FENCENO")));
+				}
+				fenceModel.setF_AREANAME(request.getParameter("O_AREANAME"));
+				if(Lib.istEmpty(request.getParameter("O_FENCENO"))) {
+					fenceModel.setF_STATUS(Integer.parseInt(request.getParameter("O_STATUS")));
+				}
+				if(Lib.istEmpty(request.getParameter("O_PHBJ"))) {
+					fenceModel.setF_PHBJ(Integer.parseInt(request.getParameter("O_PHBJ")));
+				}
+				fenceModel.setF_STAYTIME(request.getParameter("O_STAYTIME"));
+				if(Lib.istEmpty(request.getParameter("O_SPEEDLIMT"))) {
+					fenceModel.setF_SPEEDLIMT(Integer.parseInt(request.getParameter("O_SPEEDLIMT")));
+				}
+				fenceModel.setF_TIMEINTERVAL(request.getParameter("O_TIMEINTERVAL"));
+				fenceModel.setF_TIMECOST(request.getParameter("O_TIMECOST"));				
+				
+				if(Lib.istEmpty(fenceModel.getO_FENCEID()) && Lib.istEmpty(fenceModel.getF_DEPARTID())) {
+					boolean a1 = fenceService.bindFence(fenceModel);
+					if(a1) {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(success("°ó¶¨³É¹¦"));
+					} 
+					else {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(error(2, "°ó¶¨Ê§°Ü"));
+					}
+				}
+				break;
+			case "unbind":
+				String ids = request.getParameter("id");
+				String fid = request.getParameter("fid");
+				if(Lib.istEmpty(ids) && Lib.istEmpty(fid)) {
+					boolean a1 = fenceService.unbindFence(ids, fid);
+					if(a1) {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(success("É¾³ý³É¹¦"));
+					} 
+					else {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(error(2, "É¾³ýÊ§°Ü"));
+					}
+				}
+				break;
+			case "updateBind":
+				fenceModel = new FenceModel();
+				fenceModel.setO_FENCEID(request.getParameter("O_FENCEID"));
+				fenceModel.setF_DEPARTID(request.getParameter("O_DEPARTID"));
+				if(Lib.istEmpty(request.getParameter("O_FENCENO"))) {
+					fenceModel.setF_FENCENO(Integer.parseInt(request.getParameter("O_FENCENO")));
+				}
+				fenceModel.setF_AREANAME(request.getParameter("O_AREANAME"));
+				if(Lib.istEmpty(request.getParameter("O_FENCENO"))) {
+					fenceModel.setF_STATUS(Integer.parseInt(request.getParameter("O_STATUS")));
+				}
+				if(Lib.istEmpty(request.getParameter("O_PHBJ"))) {
+					fenceModel.setF_PHBJ(Integer.parseInt(request.getParameter("O_PHBJ")));
+				}
+				fenceModel.setF_STAYTIME(request.getParameter("O_STAYTIME"));
+				if(Lib.istEmpty(request.getParameter("O_SPEEDLIMT"))) {
+					fenceModel.setF_SPEEDLIMT(Integer.parseInt(request.getParameter("O_SPEEDLIMT")));
+				}
+				fenceModel.setF_TIMEINTERVAL(request.getParameter("O_TIMEINTERVAL"));
+				fenceModel.setF_TIMECOST(request.getParameter("O_TIMECOST"));				
+				
+				if(Lib.istEmpty(fenceModel.getO_FENCEID()) && Lib.istEmpty(fenceModel.getF_DEPARTID())) {
+					boolean a1 = fenceService.updateFenceInLine(fenceModel);
+					if(a1) {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(success("ÐÞ¸Ä³É¹¦"));
+					} 
+					else {
+						response.setContentType("application/json; charset=utf-8");
+						response.getWriter().write(error(2, "ÐÞ¸ÄÊ§°Ü"));
 					}
 				}
 				break;

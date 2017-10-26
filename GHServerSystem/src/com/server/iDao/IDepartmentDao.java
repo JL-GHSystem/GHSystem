@@ -7,8 +7,10 @@ import com.server.model.DepartmentModel;
 
 public interface IDepartmentDao {
 
-	public DepartmentModel[] selectAll();
+	public DepartmentModel[] selectAllInTree();
 
 	public ArrayList<DepartmentModel> select(Pagination page);
+
+	public boolean insert(DepartmentModel departmentModel);
 
 }

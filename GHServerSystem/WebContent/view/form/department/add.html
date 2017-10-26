@@ -14,73 +14,56 @@
 			<tbody>
 				<tr>
 					<td>
-						<label for="O_USERGROUPNAME">角色名*</label>
-						<input id="O_USERGROUPNAME" name="O_USERGROUPNAME" type="text" class="NoEmpty">
+						<input id="O_PARENTID" name="O_PARENTID" type="text" class="hide">
+						<input id="O_DEPARTTYPE" name="O_DEPARTTYPE" type="text" value='bd877733-1a30-4bc1-bf12-9a3efe1ce932' class="hide">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="O_DEPARTNAME">部门名*</label>
+						<input id="O_DEPARTNAME" name="O_DEPARTNAME" type="text" class="NoEmpty">
+					</td>
+					<td>
+						<label for="O_PARENTNAME">上级部门*</label>
+						<input id="O_PARENTNAME" name="O_PARENTNAME" type="text" class="NoEmpty">
 					</td>
 				</tr>
 			</tbody>
 		</table>
-		<h4>权限设置</h4>
-		<div id="table">
-			
-		</div>
-		<div>
-			<p class="info"></p>
-		</div>
 	</form>
 	<script type="text/javascript">
-	function ajax(){
-
-		var data = {
-			type: "tree"
-		}
-		
-		$.ajax({
-			type: "POST",
-		    url: "../../../json/role.do",
-		    data: data,
-		    beforeSend: function(){
-		    	
-		    },
-		    success: function (data) {
-	    		F.Table.make($("#table"), {
-	    			loadHead: false,
-					loadPagination: false,
-		    		enableAutoSerial: true,
-		    		enableMuiltSelect: true,
-		    		showMuiltSelect: true,
-		    		models: [{
-		    			name: "菜单ID",
-		    			hide: true
-		    		}, {
-		    			name: "菜单名"
-		    		}, {
-		    			name: "上级菜单"
-		    		}, {
-		    			name: "菜单级别"
-		    		}, {
-		    			name: "菜单地址"
-		    		}],
-		    		data: data.o
-		    	});
-		    },
-		    error: function (err) {
-		    	
-		    }
+		var a = true;
+		$("#O_PARENTNAME").focus(function(){
+			if(a) {
+				F.Dialog.make(undefined, {
+					title: "选择父节点",
+					type: "customer",
+					url: "view/form/department/select.html",
+					frameId: "departmentSelect",
+					frameWidth: 510,
+					frameHeight: 290,
+					zIndex: 1500,
+					data: {},
+					enableCover: true,
+					clear: function(){
+						a = true;
+					},
+					closeClick: function(){
+						
+					},
+					confirmClick: function(doc, fa){
+						var rs = doc.contentWindow.select();
+						$("#O_PARENTID").val(rs.id);
+						$("#O_PARENTNAME").val(rs.name);
+						fa.clear();
+					},
+					cancleClick: function(){
+						
+					}
+				});
+				a = false;
+			}
 		});
-	}
-	
-	$(document).ready(function(){
-		ajax();
-		
-	})
-	
-	var select = function(){
-		return {
-			id: F.entitys("table").getMuiltValue(2),
-			name: $("#O_USERGROUPNAME").val()
-		}
-	}
 	</script>
 </body>
 </html>

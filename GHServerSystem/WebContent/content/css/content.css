@@ -63,24 +63,26 @@
 #cancle
 {
 	float: left;
-	margin: 5px 8px 5px 0;
+	margin: 0px 8px 5px 0;
 }
 #delete,
-#hide
+#hide,
+#unbind,
+#bind
 {
 	float: right;
-	margin: 5px 0 5px 8px;
+	margin: 0px 0 5px 8px;
 }
 #output,
 #download
 {
 	float: left;
-	margin: 5px 0 5px 8px;
+	margin: 0px 0 5px 8px;
 }
 #input
 {
 	float: left;
-	margin: 5px 0 5px 20px;
+	margin: 0px 0 5px 20px;
 }
 #complete,
 #cancle
@@ -103,7 +105,6 @@
 {
 	width: 100%;
 }
-
 
 
 

@@ -9,29 +9,54 @@
 .caseList-Title
 {
 	width:100%;
-	display:inline-block;
-}
-.caseList-Title .tool
-{
-	margin:0;
-	padding:0;
-}
-.selt
-{
-	margin:8px 3px 0 0;
-	float:left;
+	display:inline;
 }
 
-.diTitle .toolBox
+.case
 {
 	width:30%;
-	float:right;
+	float:left;
+	height:100px;
+	border:1px solid #6f9fa9;
 }
+.selt
+{ 
+	height:44px;
+	line-height:44px;
+	float:left;
+	padding:0;
+}
+
+#save
+{
+	margin: 5px 8px 5px 0;
+	float:left;
+}
+#complete
+{
+	display:block;
+}
+.rTitle
+{
+	border:1px solid #6f9fa9;
+	height:44px;
+}
+.diTitle .toolBox
+{
+	width:300px;
+	float:left;
+	display:inline;
+}
+
 
 .diTitle #add
 {
 	float:left;
 	
+}
+.diTitle #delete
+{
+	float:left;
 }
 
 #dArea

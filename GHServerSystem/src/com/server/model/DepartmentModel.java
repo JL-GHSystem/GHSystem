@@ -1,5 +1,7 @@
 package com.server.model;
 
+import java.util.ArrayList;
+
 public class DepartmentModel {
 	private String O_DEPARTID;
 	private String O_DEPARTNAME;
@@ -13,6 +15,7 @@ public class DepartmentModel {
 	private String O_DEPARTBRIEFCODE;
 	
 	private String F_DEPARTMENTTYPE;
+	private ArrayList<LineModel> F_LINE = new ArrayList<LineModel>();
 	
 	public String getO_DEPARTID() {
 		return O_DEPARTID;
@@ -79,6 +82,12 @@ public class DepartmentModel {
 	}
 	public void setF_DEPARTMENTTYPE(String f_DEPARTMENTTYPE) {
 		F_DEPARTMENTTYPE = f_DEPARTMENTTYPE;
+	}
+	public ArrayList<LineModel> getF_LINE() {
+		return F_LINE;
+	}
+	public void setF_LINE(ArrayList<LineModel> f_LINE) {
+		F_LINE = f_LINE;
 	}
 
 }

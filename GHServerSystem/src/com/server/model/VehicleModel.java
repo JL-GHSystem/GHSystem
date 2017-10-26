@@ -14,7 +14,7 @@ public class VehicleModel {
 	private String O_VEHICLEREGCODE;
 	private int O_DEVICEID;
 	
-	
+	private String F_DEPARTNAME;
 	
 	public String getO_VEHICLEID() {
 		return O_VEHICLEID;
@@ -82,4 +82,11 @@ public class VehicleModel {
 	public void setO_DEVICEID(int o_DEVICEID) {
 		O_DEVICEID = o_DEVICEID;
 	}
+	public String getF_DEPARTNAME() {
+		return F_DEPARTNAME;
+	}
+	public void setF_DEPARTNAME(String f_DEPARTNAME) {
+		F_DEPARTNAME = f_DEPARTNAME;
+	}
+	
 }

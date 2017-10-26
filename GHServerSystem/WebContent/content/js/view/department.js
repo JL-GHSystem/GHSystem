@@ -3,10 +3,10 @@
  */
 function add(){
 	F.Dialog.make(undefined, {
-		title: "新建角色",
+		title: "新建部门",
 		type: "customer",
-		url: "view/form/role/add.html",
-		frameId: "roleAdd",
+		url: "view/form/department/add.html",
+		frameId: "departmentAdd",
 		frameWidth: 640,
 		frameHeight: 360,
 		data: {},
@@ -15,16 +15,12 @@ function add(){
 			return 0;
 		},
 		confirmClick: function(doc, fa){
-			var rs = doc.contentWindow.select();
-			var data = {
-		    	type: "add",
-		    	O_USERGROUPNAME: rs.name,
-		    	O_USERGROUPIDS: rs.id
-		    };
+			var form = $(doc).contents().find("form");
+			var a = form.serialize();
 			$.ajax({
 				type: "POST",
-			    url: "../json/role.do",
-			    data: data,
+			    url: "../json/department.do",
+			    data: a + "&type=add",
 			    beforeSend: function(){
 			    	
 			    },
@@ -60,7 +56,7 @@ function add(){
 }
 
 function update(){
-	var pack = F.entitys("table").getSingleRow();
+/*	var pack = F.entitys("table").getSingleRow();
 	if(F.isEmpty(pack)) {
 		F.Affair.make(undefined, {
     		type: "error",
@@ -125,7 +121,7 @@ function update(){
 			}
 		});
 	}
-	
+	*/
 }
 
 function deleted(){
@@ -135,8 +131,8 @@ function deleted(){
 function complete(){
 	var d = F.entitys("table").getMuiltValue(3);
 	F.Dialog.make(undefined, {
-		title: "删除角色",
-		message: "此操作将会影响当前该角色组的用户，确定删除？",
+		title: "删除部门",
+		message: "此操作将会影响所有该部门的用户，确定删除？",
 		type: "warnning",
 		enableCover: true,
 		closeClick: function(){
@@ -145,7 +141,7 @@ function complete(){
 		confirmClick: function(doc, fa){
 			$.ajax({
 				type: "POST",
-			    url: "../json/role.do",
+			    url: "../json/department.do",
 			    data: {
 			    	type: "delete",
 			    	O_USERGROUPIDS: d

@@ -9,4 +9,8 @@ public interface ILineDao {
 
 	public ArrayList<LineModel> select(Pagination page);
 
+	public ArrayList<LineModel> selectAllInTable();
+
+	public boolean insert(LineModel lineModel);
+
 }

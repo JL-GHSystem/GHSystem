@@ -10,9 +10,9 @@ import com.server.model.DepartmentModel;
 public class DepartmentApp {
 	private IDepartmentDao departmentDao = new DepartmentDao();
 	
-	public DepartmentModel[] getDepartment() {
+	public DepartmentModel[] getTree() {
 		// TODO Auto-generated method stub
-		return departmentDao.selectAll();
+		return departmentDao.selectAllInTree();
 	}
 
 	public DepartmentModel[] getTable(Pagination page) {
@@ -21,6 +21,13 @@ public class DepartmentApp {
 		DepartmentModel[] departmentModelss = new DepartmentModel[departmentModels.size()];
 		departmentModels.toArray(departmentModelss);
 		return departmentModelss;
+	}
+
+	public boolean addDepartment(DepartmentModel departmentModel) {
+		// TODO Auto-generated method stub
+		boolean a = false;
+		a = departmentDao.insert(departmentModel);
+		return a;
 	}
 	
 }

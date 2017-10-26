@@ -40,7 +40,7 @@ var fenceOverlay = {
 function dataToPoint(data) {
     var pointArray = new Array();
     $.each(data, function (idx, obj) {
-        pointArray.push(new BMap.Point(obj.O_LONGITUDE, obj.O_LATITUDE));
+        pointArray.push(new BMap.Point(obj.lng, obj.lat));
     });
     return pointArray;
 }
@@ -51,8 +51,8 @@ function calCenterPoint(data) {
         sum_lat: 0
     }
     $.each(data, function (idx, obj) {
-        center.sum_lng += obj.O_LONGITUDE;
-        center.sum_lat += obj.O_LATITUDE;
+        center.sum_lng += obj.lng;
+        center.sum_lat += obj.lat;
     });
 
     center.sum_lng /= data.length;
@@ -75,15 +75,15 @@ function add_polygon(polygonData) {
     var pointArray = dataToPoint(polygonData);
     var polygon = new BMap.Polygon(pointArray, stylePolygonCSS);   //创建多边形
     map.addOverlay(polygon);   //增加多边形
-/*
+
     var centerPoint = calCenterPoint(polygonData);
     map.panTo(new BMap.Point(centerPoint.sum_lng, centerPoint.sum_lat));
-*/
+
     fenceOverlay.overlay = polygon;
 }
 
 function add_circle(circleData, range) {
-    var focusPoint = new BMap.Point(circleData.O_LONGITUDE, circleData.O_LATITUDE);
+    var focusPoint = new BMap.Point(circleData.lng, circleData.lat);
     var circle = new BMap.Circle(focusPoint, range, styleCircleCSS);
     map.addOverlay(circle);   //增加圆
     map.panTo(focusPoint);
@@ -169,7 +169,7 @@ function endDraw() {
 }
 
 //保存绘图
-function save(name) {
+function save(name, descirption) {
     if (typeof (currentOverlay) == "undefined" || currentOverlay == null || currentOverlay.type == "") {
     	F.Affair.make(undefined, {
     		type: "error",
@@ -178,7 +178,7 @@ function save(name) {
     	})
     }
     else if (isChange) {
-        btn_update(name);
+        btn_update(name, descirption);
     }
     else {
         btn_add();
@@ -250,39 +250,45 @@ function btn_add() {
 		confirmClick: function(doc, fa){
 			var form = $(doc).contents().find("form");
 			var name = form.find("input[name=O_FENCENAME]").val();
-	    	var laPoints = [];
-	    	var loPoints = [];
+			var commit = form.find("textarea[name=O_COMMIT]").val();
+	    	var points = [];
 	    	var ftype;
 			var radius;
+			
 			switch(currentOverlay.type) {
 			case "circle":
-				laPoints.push(currentOverlay.overlay.point.lat);
-				loPoints.push(currentOverlay.overlay.point.lng);
+				points[0] = currentOverlay.overlay.point;
             	radius = currentOverlay.overlay.xa;
             	ftype = 2;
 				break;
 			case "actangle":
 	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
-					laPoints.push(currentOverlay.overlay.po[i].lat);
-					loPoints.push(currentOverlay.overlay.po[i].lng);
+					points.push(currentOverlay.overlay.po[i]);
 	            }
             	ftype = 1;
 				break;
 			case "polygon":
 	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
-					laPoints.push(currentOverlay.overlay.po[i].lat);
-					loPoints.push(currentOverlay.overlay.po[i].lng);
+					points.push(currentOverlay.overlay.po[i]);
 	            }
             	ftype = 3;
 				break;
 			case "polyline":
 	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
-					laPoints.push(currentOverlay.overlay.po[i].lat);
-					loPoints.push(currentOverlay.overlay.po[i].lng);
+					points.push(currentOverlay.overlay.po[i]);
 	            }
             	ftype = 0;
 				break;
 			}
+			
+			points = convert.BD2WGSArr(points);
+	    	var laPoints = [];
+	    	var loPoints = [];
+			for(var i=0; i<points.length; i++) {
+				laPoints.push(points[i].lat);
+				loPoints.push(points[i].lng);
+			}
+			
 			
 			$.ajax({
 				type: "POST",
@@ -291,6 +297,7 @@ function btn_add() {
 			    	type: "add",
 			    	ftype: ftype,
 			    	name: name,
+			    	commit: commit,
 			    	laPoints: laPoints,
 			    	loPoints: loPoints,
 			    	radius: radius
@@ -332,7 +339,7 @@ function btn_add() {
 }
 
 //修改后保存围栏
-function btn_update(name) {
+function btn_update(name, descirption) {
 	
 	F.Dialog.make(undefined, {
 		title: "更新围栏",
@@ -343,6 +350,7 @@ function btn_update(name) {
 		frameHeight: 100,
 		data: {
 			O_FENCENAME: name,
+			O_COMMIT: descirption
 		},
 		enableCover: true,
 		closeClick: function(){
@@ -351,39 +359,45 @@ function btn_update(name) {
 		confirmClick: function(doc, fa){
 			var form = $(doc).contents().find("form");
 			var name = form.find("input[name=O_FENCENAME]").val();
-	    	var laPoints = [];
-	    	var loPoints = [];
+			var commit = form.find("textarea[name=O_COMMIT]").val();
+	    	var points = [];
 	    	var ftype;
 			var radius;
+			
 			switch(currentOverlay.type) {
 			case "circle":
-				laPoints.push(currentOverlay.overlay.point.lat);
-				loPoints.push(currentOverlay.overlay.point.lng);
+				points[0] = currentOverlay.overlay.point;
             	radius = currentOverlay.overlay.xa;
             	ftype = 2;
 				break;
 			case "actangle":
 	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
-					laPoints.push(currentOverlay.overlay.po[i].lat);
-					loPoints.push(currentOverlay.overlay.po[i].lng);
+					points.push(currentOverlay.overlay.po[i]);
 	            }
             	ftype = 1;
 				break;
 			case "polygon":
 	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
-					laPoints.push(currentOverlay.overlay.po[i].lat);
-					loPoints.push(currentOverlay.overlay.po[i].lng);
+					points.push(currentOverlay.overlay.po[i]);
 	            }
             	ftype = 3;
 				break;
 			case "polyline":
 	            for (i = 0; i < currentOverlay.overlay.po.length; i++) {
-					laPoints.push(currentOverlay.overlay.po[i].lat);
-					loPoints.push(currentOverlay.overlay.po[i].lng);
+					points.push(currentOverlay.overlay.po[i]);
 	            }
             	ftype = 0;
 				break;
-			}cas
+			}
+			
+			points = convert.BD2WGSArr(points);
+	    	var laPoints = [];
+	    	var loPoints = [];
+			for(var i=0; i<points.length; i++) {
+				laPoints.push(points[i].lat);
+				loPoints.push(points[i].lng);
+			}
+			
 			
 			$.ajax({
 				type: "POST",
@@ -393,6 +407,7 @@ function btn_update(name) {
 			    	id: currentOverlay.id,
 			    	ftype: ftype,
 			    	name: name,
+			    	commit: commit,
 			    	laPoints: laPoints,
 			    	loPoints: loPoints,
 			    	radius: radius
@@ -453,14 +468,15 @@ var pagnation = {
 }
 
 //加载围栏数据
-function load_fence() {
-
+function load_fence(searchWords) {
+	
     $.ajax({
         url: "../json/fence.do",
         data: {
         	type: "table",
             current: pagnation.current,
-            rows: pagnation.rows
+            rows: pagnation.rows,
+            search: searchWords
         },
         type: "post",
         success: function (data) {
@@ -506,7 +522,12 @@ function add_fence(serial, id, name, type, description) {
         .append("<a href='javaScript:void(0)' class='FenceCancle'>取消</a>")
         .append("<a href='javaScript:void(0)' class='FenceSave'>保存</a>")
         .appendTo(dd);
-    $("<span class='FenceDescription' title='" + description + "'>" + description + "</span>").appendTo(dd);
+    if(typeof(description) == "undefined" && !description) {
+        $("<span class='FenceDescription'>&nbsp;</span>").appendTo(dd);
+    }
+    else {
+        $("<span class='FenceDescription' title='" + description + "'>" + description + "</span>").appendTo(dd);
+    }
 
     $("#FenceDL").append(dd);
 
@@ -515,7 +536,7 @@ function add_fence(serial, id, name, type, description) {
 function add_fence_all(data) {
     for(var i = 0; i<data.length; i++)
     {
-    	add_fence(i+1, data[i].O_FENCEID, data[i].O_FENCENAME, data[i].O_FENCETYPE, "");
+    	add_fence(i+1, data[i].O_FENCEID, data[i].O_FENCENAME, data[i].O_FENCETYPE, data[i].O_COMMIT);
     }
 }
 
@@ -585,22 +606,30 @@ function click_fence(id, type) {
 
 function show_fence(data) {
     fenceOverlay.id = data.O_FENCEID;
+    var points = [];
+    for(var i=0; i<data.F_FENCENODES.length; i++) {
+    	points.push({
+    		lng: data.F_FENCENODES[i].O_LONGITUDE,
+    		lat: data.F_FENCENODES[i].O_LATITUDE
+    	})
+    }
+    
     switch (data.O_FENCETYPE)
     {
         case "圆形":
-            add_circle(data.F_FENCENODES[0], data.O_RADIUS);
+            add_circle(convert.WGS2BD(points[0]), data.O_RADIUS);
             fenceOverlay.type = "circle";
             break;
         case "线形":
-            add_polyline(data.F_FENCENODES);
+        	add_line(convert.WGS2BDArr(points));
             fenceOverlay.type = "polyline";
             break;
         case "多边形":
-            add_polygon(data.F_FENCENODES);
+            add_polygon(convert.WGS2BDArr(points));
             fenceOverlay.type = "polygon";
             break;
         case "矩形":
-        	add_polygon(data.F_FENCENODES);
+        	add_polygon(convert.WGS2BDArr(points));
             fenceOverlay.type = "polygon";
             break;
         default: break;
@@ -679,6 +708,15 @@ $(document).ready(function () {
             $("#Search").blur();
         }
     });
+    
+    $("#SearchSubmit").click(function(){
+        if ($("#Search").val() != "" && $("#Search").val() != undefined) {
+        	load_fence($("#Search").val());
+        }
+        else {
+        	load_fence();
+        }
+    })
 
     $("#Search").blur(function () {
         if ($("#Search").val() == "" | $("#Search").val() == undefined) {
@@ -687,7 +725,6 @@ $(document).ready(function () {
                 $("#Search").hide();
             });
         }
-
     });
 
     //设置列表点击事件
@@ -739,7 +776,7 @@ $(document).ready(function () {
             var name = $(tag).children("span.FenceName").html();
             var description = $(tag).children("span.FenceDescription").html();
 
-            save(name);
+            save(name, description);
 
             event.stopPropagation();
         }
@@ -757,25 +794,25 @@ $(document).ready(function () {
 
     $("#First").click(function () {
         pagnation.current = 1;
-        load_fence();
+        $("#SearchSubmit").click();
     });
 
     $("#Last").click(function () {
         pagnation.current = pagnation.total;
-        load_fence();
+        $("#SearchSubmit").click();
     });
 
     $("#Previous").click(function () {
         if (pagnation.current > 1) {
             pagnation.current--;
-            load_fence();
+            $("#SearchSubmit").click();
         }
     });
 
     $("#Next").click(function () {
         if (pagnation.current < pagnation.total) {
             pagnation.current++;
-            load_fence();
+            $("#SearchSubmit").click();
         }
     });
 
@@ -783,7 +820,7 @@ $(document).ready(function () {
         var value = parseInt($(this).prev().val());
         if (value <= pagnation.total && value >= 1) {
             pagnation.current = value;
-            load_fence();
+            $("#SearchSubmit").click();
         }
     });
 
@@ -880,8 +917,9 @@ $(document).ready(function () {
             if (isChange)
             {
                 var name = $(".FenceContent.Select").children("span.FenceName").html();
-                
-                save(name);
+                var description = $(".FenceContent.Select").children("span.FenceDescription").html();
+
+                save(name, description);
 
                 $(".FenceDrawTools a.Tools").removeClass("Select");
             }

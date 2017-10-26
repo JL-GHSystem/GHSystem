@@ -376,10 +376,11 @@
 			models: [],							//列模型 [{},{}]
 			//data: null						//数据模型 {v:,c:},{v:,c:}
 			pagination: this.defaulPagination,
+	    	ajaxType: "table",
 			ajax: {
 				type: "POST",
 			    url: null,
-			    data: null,
+			    data: {},
 			    beforeSend: function(){
 			    	
 			    },
@@ -824,7 +825,7 @@
 	}
 	TableFactory.prototype = new Factory();
 
-	TableFactory.prototype.load = function(dom, optoins){
+	TableFactory.prototype.load = function(dom, options){
 		/*
 		 * 创建标题基架
 		 */
@@ -904,7 +905,11 @@
 			dom.append(Frame);
 		}
 		else {
-			console.error(" you must set data in options ");
+			Frame = this.createFrame("FrichUI_Table_Frame");
+			var house = this.createDiv("FrichUI_Table_House");
+			house.append("<a style='display: block; text-align: center; height: 60px; line-height: 60px; font-size: 12px;'>暂无记录</a>");
+			Frame.append(house);
+			dom.append(Frame);
 		}
 
 		/*
@@ -1007,15 +1012,16 @@
 		
 		var fa = this;
 		if(options.enableAjax) {
+			var data = $.extend(true, { 
+				type: options.ajaxType,
+				current: options.pagination.current,
+				rows: options.pagination.rows
+			}, options.ajax.data);
+			
 			$.ajax({
 				type: "POST",
 			    url: options.ajax.url,
-			    data: {
-			    	type: "table",
-			    	data: options.ajax.data,
-					current: options.pagination.current,
-					rows: options.pagination.rows
-			    },
+			    data: data,
 			    beforeSend: function(){
 			    	options.ajax.beforeSend();
 			    },
@@ -1257,30 +1263,30 @@
 				}
 			})
 		}
-		
-		$(".FrichUI_Table_Pagination_Next").click(function(){
-			options.pagination.current++;
-			frichUI.Table.make(dom, options);
+		var fo = this.options;
+		$(dom).find(".FrichUI_Table_Pagination_Next").click(function(){
+			fo.pagination.current++;
+			frichUI.Table.make(dom, fo);
 		})
 		
-		$(".FrichUI_Table_Pagination_Last").click(function(){
-			options.pagination.current = options.pagination.total;
-			frichUI.Table.make(dom, options);
+		$(dom).find(".FrichUI_Table_Pagination_Last").click(function(){
+			fo.pagination.current = options.pagination.total;
+			frichUI.Table.make(dom, fo);
 		})
 		
-		$(".FrichUI_Table_Pagination_Page").click(function(){
-			options.pagination.current = $(this).html();
-			frichUI.Table.make(dom, options);
+		$(dom).find(".FrichUI_Table_Pagination_Page").click(function(){
+			fo.pagination.current = $(this).html();
+			frichUI.Table.make(dom, fo);
 		})
 		
-		$(".FrichUI_Table_Pagination_First").click(function(){
-			options.pagination.current = 1;
-			frichUI.Table.make(dom, options);
+		$(dom).find(".FrichUI_Table_Pagination_First").click(function(){
+			fo.pagination.current = 1;
+			frichUI.Table.make(dom, fo);
 		})
 		
-		$(".FrichUI_Table_Pagination_Previous").click(function(){
-			options.pagination.current--;
-			frichUI.Table.make(dom, options);
+		$(dom).find(".FrichUI_Table_Pagination_Previous").click(function(){
+			fo.pagination.current--;
+			frichUI.Table.make(dom, fo);
 		})	
 		
 	}
@@ -1781,7 +1787,17 @@
 							}
 						}
 					})
-				})
+				});
+				$(top.window.frames[options.frameId]).load(function(){
+					$(top.window.frames[options.frameId].contentDocument).find("textarea")
+						.each(function(i, item){
+						for(var key in options.data) {
+							if(key == $(item).attr("name")) {
+								$(item).append(options.data[key]);
+							}
+						}
+					})
+				});
 			}
 		}
 		

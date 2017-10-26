@@ -73,6 +73,22 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat  -3px -30px;
 }
+.bind
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/tools.png) no-repeat  -3px -30px;
+}
+.unbind
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/tools.png) no-repeat  -3px -30px;
+}
 .hide
 {
 	position: static;

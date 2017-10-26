@@ -5,8 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import com.common.enums.Pagination;
+import com.common.lib.Lib;
 import com.server.iDao.IDepartmentDao;
 import com.server.map.Map;
 import com.server.model.DepartmentModel;
@@ -16,7 +18,7 @@ import com.server.support.Dao;
 public class DepartmentDao extends Dao implements IDepartmentDao {
 
 	@Override
-	public DepartmentModel[] selectAll() {
+	public DepartmentModel[] selectAllInTree() {
 		// TODO Auto-generated method stub
 		DepartmentModel[] departments = null;
 		ArrayList<DepartmentModel> departmentModels = new ArrayList<DepartmentModel>();
@@ -96,6 +98,47 @@ public class DepartmentDao extends Dao implements IDepartmentDao {
 			Dao.freeConn(cb);
 		}
 		return departmentModels;
+	}
+
+	@Override
+	public boolean insert(DepartmentModel departmentModel) {
+		// TODO Auto-generated method stub
+		if(Lib.isEmpty(departmentModel.getO_DEPARTNAME())) {
+			System.out.println("DepartmentDao： 部门名不能为空，无法插入数据");
+			return false;
+		}
+		else {
+			boolean isSuccess = false;
+			String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+			departmentModel.setO_DEPARTID(uuid);
+			ConnBean cb = Dao.getConn();
+			if(cb != null){
+				Connection cn = cb.getConn();
+				try {
+					//DTO操作
+					PreparedStatement pst = cn.prepareStatement(
+						ex.insert(Map.DEPARTMENT_MAP, "O_DEPARTID", "O_PARENTID", "O_DEPARTTYPE", "O_DEPARTNAME", "O_PARENTNAME")
+						.values(5).end());
+					
+					pst.setString(1, departmentModel.getO_DEPARTID());
+					pst.setString(2, departmentModel.getO_PARENTID());
+					pst.setString(3, departmentModel.getO_DEPARTTYPE());
+					pst.setString(4, departmentModel.getO_DEPARTNAME());
+					pst.setString(5, departmentModel.getO_PARENTNAME());
+					
+					int i=pst.executeUpdate();
+					if(i > 0) {
+						isSuccess = true;
+					}
+					pst.close();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				Dao.freeConn(cb);
+			}
+			return isSuccess;
+		}
 	}
 	
 }

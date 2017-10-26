@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import com.common.enums.Pagination;
 import com.common.lib.Lib;
+import com.server.model.DepartmentModel;
 import com.server.model.LineModel;
 import com.server.model.UserGroupModel;
 import com.server.model.UserModel;
@@ -54,8 +55,15 @@ public class LineServlet extends HttpServlet implements IServlet {
 		UserModel userModel = (UserModel) session.getAttribute("P_User");
 
 		LineModel[] lineModels;
+		LineModel lineModel;
 		Pagination page = new Pagination();
 		switch(type) {
+			case "tree":
+				lineModels = lineService.getTable();
+				
+				response.setContentType("application/json; charset=utf-8");
+				response.getWriter().write(content(JSONArray.fromObject(lineModels)));
+				break;
 			case "table":
 				String current = request.getParameter("current");
 				String rows = request.getParameter("rows");
@@ -101,7 +109,21 @@ public class LineServlet extends HttpServlet implements IServlet {
 				response.getWriter().write(content(jo));
 				break;
 			case "add":
-				
+				lineModel = new LineModel();
+				lineModel.setO_PARENTID(request.getParameter("O_PARENTID"));
+				lineModel.setO_DEPARTTYPE(request.getParameter("O_DEPARTTYPE"));
+				lineModel.setO_DEPARTNAME(request.getParameter("O_DEPARTNAME"));
+				lineModel.setO_PARENTNAME(request.getParameter("O_PARENTNAME"));
+
+				boolean a = lineService.addLine(lineModel);
+				if(a) {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(success("创建成功"));
+				} 
+				else {
+					response.setContentType("application/json; charset=utf-8");
+					response.getWriter().write(error(2, "创建失败"));
+				}
 				break;
 			case "update":
 				
