@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../../../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="../../../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+<script src="../../../content/js/form.js" type="text/javascript"></script>
+<link href="../../../content/css/form.css" rel="stylesheet" />
+</head>
+<body>
+	<form>
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<input id="O_DEPARTCODE" name="O_DEPARTCODE" type="text" class="hide">
+						<input id="O_PROGRAMID" name="O_PROGRAMID" type="text" class="hide">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="O_PROGRAMNAME">方案名*</label>
+						<input id="O_PROGRAMNAME" name="O_PROGRAMNAME" type="text" readonly="readonly">
+					</td>
+					<td>
+						<label for="O_PROGRAMNOTE">调度区域*</label>
+						<input id="O_PROGRAMNOTE" name="O_PROGRAMNOTE" type="text" readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a id="add" href="javaScript:void(0)">添加</a>
+						<a id="clear" href="javaScript:void(0)">清除</a>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div id="table" style="width: 100%;"></div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	<script type="text/javascript">
+		window.setTimeout(function() {
+			F.init("../../../lib/FrichUI/", F.FRICHUI_THEME_DARK);
+			var id = $("input[name='O_DEPARTCODE']").val();
+			
+			var data = {
+				type: "tableInLine"
+			}
+			
+			F.Table.make($("#table"), {
+				loadPagination: false,
+				enableSingleSelect: true,
+				showSingleSelect: true,
+				enableAjax: true,
+				title: "调度管理",
+				models: [{
+					name: "调度序号"
+				},{
+					name: "调度名"
+				},{
+					name: "围栏名"
+				},{
+					name: "围栏类型"
+				}],
+				ajaxType: "fenceInLine",
+				ajax: {
+					url: "../../../json/scheme.do",
+					data: {
+						code: id
+					},
+				    success: function (data, options) {
+				    	options.data = data.o.data;
+				    },
+				    error: function (err) {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: "连接服务器失败",
+				    		reload: false
+				    	})
+				    }
+				}
+			});
+			
+			var isFirst = true;
+			var num = [];
+			$("#add").click(function() {
+				var no = F.entitys("table").getSingleValue(1);
+				var name = F.entitys("table").getSingleValue(2);
+				if(F.isEmpty(name)) {
+					name = F.entitys("table").getSingleValue(3);
+				}
+				if( F.isEmpty(name) || F.isEmpty(no)) {
+			    	F.Affair.make(undefined, {
+			    		type: "error",
+			    		message: "请选择一项"
+			    	})
+				}
+				else {
+					var not = $.inArray(no, num);
+					if(not == -1) {
+						if(isFirst) {
+							$("input[name='O_PROGRAMID']").val(no);
+							$("input[name='O_PROGRAMNOTE']").val(name);
+							isFirst = false;
+						}
+						else {
+							$("input[name='O_PROGRAMID']").val($("input[name='O_PROGRAMID']").val() + "_" + no);
+							$("input[name='O_PROGRAMNOTE']").val($("input[name='O_PROGRAMNOTE']").val() + "-" + name);
+						}
+						num.push(no);
+					}
+					else {
+				    	F.Affair.make(undefined, {
+				    		type: "error",
+				    		message: "该项已添加"
+				    	})
+					}
+				}
+			});
+	
+			$("#clear").click(function() {
+				$("input[name='O_PROGRAMNOTE']").val("");
+				$("input[name='O_PROGRAMID']").val("");
+				isFirst = true;
+				num = [];
+			});
+			
+		}, 300)
+	</script>
+</body>
+</html>

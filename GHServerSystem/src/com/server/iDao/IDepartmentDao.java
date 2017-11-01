@@ -9,8 +9,14 @@ public interface IDepartmentDao {
 
 	public DepartmentModel[] selectAllInTree();
 
-	public ArrayList<DepartmentModel> select(Pagination page);
+	public ArrayList<DepartmentModel> select(Pagination page, DepartmentModel departmentModel);
+	public ArrayList<DepartmentModel> select();
 
 	public boolean insert(DepartmentModel departmentModel);
+
+	public boolean delete(String[] ids);
+
+	public boolean update(DepartmentModel departmentModel);
+
 
 }

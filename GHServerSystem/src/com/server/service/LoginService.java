@@ -6,7 +6,11 @@ import java.util.Date;
 
 import com.common.lib.Lib;
 import com.server.app.LoginApp;
+import com.server.model.IModel;
 import com.server.model.UserModel;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 public class LoginService implements IService{
 	private LoginApp loginApp = new LoginApp();
@@ -43,5 +47,17 @@ public class LoginService implements IService{
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public IModel jTB(JSONObject jo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IModel[] jTB(JSONArray ja) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -7,8 +7,8 @@ function add(){
 		type: "customer",
 		url: "view/form/department/add.html",
 		frameId: "departmentAdd",
-		frameWidth: 640,
-		frameHeight: 360,
+		frameWidth: 560,
+		frameHeight: 150,
 		data: {},
 		enableCover: true,
 		closeClick: function(){
@@ -43,7 +43,8 @@ function add(){
 			    error: function (err) {
 			    	F.Affair.make(undefined, {
 			    		type: "error",
-			    		message: "连接服务器失败"
+			    		message: "连接服务器失败",
+			    		reload: false
 			    	})
 			    }
 			});
@@ -56,7 +57,7 @@ function add(){
 }
 
 function update(){
-/*	var pack = F.entitys("table").getSingleRow();
+	var pack = F.entitys("table").getSingleRow();
 	if(F.isEmpty(pack)) {
 		F.Affair.make(undefined, {
     		type: "error",
@@ -68,14 +69,11 @@ function update(){
 		F.Dialog.make(undefined, {
 			title: "修改角色",
 			type: "customer",
-			url: "view/form/role/update.html",
-			frameId: "roleUpdate",
-			frameWidth: 640,
-			frameHeight: 360,
-			data: {
-				O_USERGROUPID: pack.o_USERGROUPID,
-				O_USERGROUPNAME: pack.o_USERGROUPNAME 
-			},
+			url: "view/form/department/update.html",
+			frameId: "departmentUpdate",
+			frameWidth: 560,
+			frameHeight: 150,
+			data: pack,
 			enableCover: true,
 			closeClick: function(){
 				return 0;
@@ -85,7 +83,7 @@ function update(){
 				var a = form.serialize();
 				$.ajax({
 					type: "POST",
-				    url: "../json/role.do",
+				    url: "../json/department.do",
 				    data: a + "&type=update",
 				    beforeSend: function(){
 				    	
@@ -121,7 +119,6 @@ function update(){
 			}
 		});
 	}
-	*/
 }
 
 function deleted(){
@@ -132,7 +129,7 @@ function complete(){
 	var d = F.entitys("table").getMuiltValue(3);
 	F.Dialog.make(undefined, {
 		title: "删除部门",
-		message: "此操作将会影响所有该部门的用户，确定删除？",
+		message: "此操作将会删除该部门下所有的车辆和人员数据，确定删除？",
 		type: "warnning",
 		enableCover: true,
 		closeClick: function(){
@@ -144,7 +141,7 @@ function complete(){
 			    url: "../json/department.do",
 			    data: {
 			    	type: "delete",
-			    	O_USERGROUPIDS: d
+			    	ids: d
 			    },
 			    beforeSend: function(){
 			    	
@@ -176,11 +173,17 @@ function complete(){
 		}
 	});
 }
+
 function cancle(){
 	F.entitys("table").openSingleSelect();
 }
 
-function ajax(){
+function search() {
+	var data = {
+		type: "search",
+		ODEPARTNAME: $("#ODEPARTNAME").val(),
+		OPARENTNAME: $("#OPARENTNAME").val()
+	}
 	
 	F.Table.make($("#table"), {
 		enableAutoSerial: true,
@@ -202,25 +205,23 @@ function ajax(){
 		},{
 			name: "部门类型"
 		},{
+			name: "部门编号"
+		},{
 			name: "部门路径",
 			textAlign: "left"
 		}],
+		pagination: {
+			rows: 12
+		},
 		ajax: {
 			url: "../json/department.do",
-			data: null,
+			data: data,
 			beforeSend: function() {
 				
 			},
 		    success: function (data, options) {
 		    	options.data = data.o.data;
-		    	var pages = options.pagination.pages;
-		    	options.pagination = {
-					total: data.o.pagination.total,
-					pages: pages,					//当前页基础上显示几页 > 0
-					records: data.o.pagination.records,
-					current: data.o.pagination.current,
-					rows: data.o.pagination.rows
-				}
+		    	options.pagination = $.extend(true, {}, options.pagination, data.o.pagination);
 		    },
 		    error: function (err) {
 		    	F.Affair.make(undefined, {
@@ -233,40 +234,23 @@ function ajax(){
 	});
 }
 
+function load(){
+	search();
+}
+
 $(document).ready(function(){
-	ajax();
+	load();
 	
 	$("#add").click(add);
 
+	$("#search").click(search);
+	
 	$("#update").click(update);
 
-	$("#delete").click(function(){
-		$("#complete").fadeIn(500);
-		$("#cancle").fadeIn(500);
-		$("#add").hide();
-		$("#update").hide();
-		$("#delete").hide();
-		deleted();
-	});
+	$("#delete").click(deleted);
 	
-	$("#complete").click(function(){
-		$("#complete").hide();
-		$("#cancle").hide();
-		$("#add").fadeIn(500);
-		$("#update").fadeIn(500);
-		$("#delete").fadeIn(500);
-		complete();
-	});
+	$("#complete").click(complete);
 	
-	$("#cancle").click(function(){
-		$("#complete").hide();
-		$("#cancle").hide();
-		$("#add").fadeIn(500);
-		$("#update").fadeIn(500);
-		$("#delete").fadeIn(500);
-		cancle();
-	});
-/*
-	$("#select").click(select);
-	*/
+	$("#cancle").click(cancle);
+	
 });

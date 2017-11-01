@@ -2,7 +2,8 @@ package com.server.map;
 
 public class Map {
 	public static final String DEPARTMENT_MAP = "TBL_CORE_DEPARTINFO";
-	
+
+	public static final String LINE_MAP = "TBL_CORE_DEPARTINFO";
 	
 	public static final String USER_MAP = "TBL_CORE_USERINFO";
 
@@ -30,5 +31,9 @@ public class Map {
 	public static final String FENCE_MAP = "TBL_NEW_CORE_ELEFENCE";
 	public static final String FENCENODE_MAP = "TBL_NEW_CORE_ELEFENCENODE";
 	public static final String FENCE_LINE_MAP = "TBL_NEW_CORE_ELEFENCE_LINE";
+	
+	public static final String SCHEME_MAP = "TBL_CORE_SCHEPROGRAM";
+	
+	public static final String RUN_MAP = "TBL_PB_OPERPLAN";
 	
 }

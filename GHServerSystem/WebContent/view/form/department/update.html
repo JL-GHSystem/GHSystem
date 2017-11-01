@@ -8,87 +8,105 @@
 <link href="../../../content/css/form.css" rel="stylesheet" />
 </head>
 
-<body>
-	<form id="update">
+<body><form id="add">
 		<table>
 			<tbody>
 				<tr>
 					<td>
-						<input id="O_USERGROUPID" name="O_USERGROUPID" type="text" class="hide">
+						<input id="ODEPARTID" name="ODEPARTID" type="text" class="hide" readonly="readonly">
+						<input id="OPARENTID" name="OPARENTID" type="text" class="hide" readonly="readonly">
+						<input id="ODEPARTTYPE" name="ODEPARTTYPE" type="text" value='bd877733-1a30-4bc1-bf12-9a3efe1ce932' class="hide NoEmpty" readonly="readonly">
+						<input id="OPARENTPATH" name="OPARENTPATH" type="text" class="hide" readonly="readonly">
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<label for="O_USERGROUPNAME">角色名*</label>
-						<input id="O_USERGROUPNAME" name="O_USERGROUPNAME" type="text" class="NoEmpty">
+						<label for="OPARENTNAME">上级部门</label>
+					</td>
+					<td>
+						<input id="OPARENTNAME" name="OPARENTNAME" type="text">
 					</td>
 				</tr>
+				<tr>
+					<td>
+						<label for="ODEPARTNAME">部门名*</label>
+					</td>
+					<td>
+						<input id="ODEPARTNAME" name="ODEPARTNAME" type="text" class="NoEmpty">
+					</td>
+					<td>
+						<label for="ODEPARTCODE">部门编号*</label>
+					</td>
+					<td>
+						<input id="ODEPARTCODE" name="ODEPARTCODE" type="text" value="1001" class="NoEmpty">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ODEPARTNAMEPATH">部门路径*</label>
+					</td>
+					<td>
+						<input id="ODEPARTNAMEPATH" name="ODEPARTNAMEPATH" type="text" class="NoEmpty" placeholder="自动同步..." readonly="readonly">
+					</td>
+				</tr>
+			</tbody>
 		</table>
-		<h4>权限设置</h4>
-		<div id="table">
-			
-		</div>
-		<div>
-			<p class="info"></p>
-		</div>
 	</form>
+	<p class="info"></p>
 	<script type="text/javascript">
-	function ajax(){
-
-		var data = {
-			type: "table"
+		function link() {
+			var v = $("#ODEPARTNAME").val();
+			var p = $("#OPARENTPATH").val();
+			$("#ODEPARTNAMEPATH").val(p + "/" + v);
 		}
-		
-		$.ajax({
-			type: "POST",
-		    url: "../../../json/menu.do",
-		    data: data,
-		    beforeSend: function(){
-		    	
-		    },
-		    success: function (data) {
-		    	F.Table.make($("#table"), {
-	    			loadHead: false,
-					loadPagination: false,
-		    		enableAutoSerial: true,
-		    		enableMuiltSelect: true,
-		    		showMuiltSelect: true,
-		    		models: [{
-		    			name: "id",
-		    			hide: true
-		    		},{
-		    			name: "fid",
-		    			hide: true
-		    		}, {
-		    			name: "菜单名"
-		    		}, {
-		    			name: "上级菜单"
-		    		}, {
-		    			name: "菜单级别"
-		    		}, {
-		    			name: "菜单排序",
-		    			hide: true
-		    		}, {
-		    			name: "菜单映射",
-		    			hide: true
-		    		}, {
-		    			name: "菜单状态",
-		    			boolDisplay: ["已启用", "已禁用"],
-		    			hide: true
-		    		}],
-		    		data: data.o
-		    	});
-		    },
-		    error: function (err) {
-		    	
-		    }
-		});
-	}
 	
-	$(document).ready(function(){
-		ajax();
+		$("#ODEPARTNAME").blur(function() {
+			link();
+		});
+
+		var b = true;
+		$("#ODEPARTNAME").focus(function() {
+			if(b) {
+				$("#ODEPARTNAMEPATH").val("");
+				$("#OPARENTNAME").val("");
+				b=false;
+			}
+		});
 		
-	})
+		var a = true;
+		$("#OPARENTNAME").focus(function(){
+			if(a) {
+				F.Dialog.make(undefined, {
+					title: "选择父节点",
+					type: "customer",
+					url: "view/form/department/select.html",
+					frameId: "departmentSelect",
+					frameWidth: 510,
+					frameHeight: 290,
+					zIndex: 1500,
+					data: {},
+					enableCover: true,
+					clear: function(){
+						a = true;
+					},
+					closeClick: function(){
+						
+					},
+					confirmClick: function(doc, fa){
+						var rs = doc.contentWindow.select();
+						$("#OPARENTID").val(rs.id);
+						$("#OPARENTNAME").val(rs.name);
+						$("#OPARENTPATH").val(rs.path);
+						link();
+						fa.clear();
+					},
+					cancleClick: function(){
+						
+					}
+				});
+				a = false;
+			}
+		});
 	</script>
 </body>
 </html>

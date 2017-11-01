@@ -20,7 +20,7 @@ import net.sf.json.JSONObject;
  * Servlet implementation class MenuServlet
  */
 
-public class VehicleServlet extends HttpServlet implements IServlet {
+public class VehicleServlet extends ServletBase implements IServlet {
 	private static final long serialVersionUID = 1L;
 	private VehicleService vehicleService = new VehicleService();
 

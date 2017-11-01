@@ -20,7 +20,7 @@ import net.sf.json.JSONObject;
  * Servlet implementation class MenuServlet
  */
 
-public class DepartmentServlet extends HttpServlet implements IServlet {
+public class DepartmentServlet extends ServletBase implements IServlet {
 	private static final long serialVersionUID = 1L;
 	private DepartmentService departmentService = new DepartmentService();
 
@@ -33,14 +33,6 @@ public class DepartmentServlet extends HttpServlet implements IServlet {
     }
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doPost(request, response);
-	}
-
-	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -49,82 +41,142 @@ public class DepartmentServlet extends HttpServlet implements IServlet {
 		String type = request.getParameter("type");
 
 		HttpSession session = request.getSession();
-		UserModel userModel = (UserModel) session.getAttribute("P_User");
+		UserModel userModel = (UserModel) session.getAttribute("PUser");
 
-		DepartmentModel[] departmentModels;
-		DepartmentModel departmentModel;
-		Pagination page = new Pagination();
 		switch(type) {
-			case "table":
-				String current = request.getParameter("current");
-				String rows = request.getParameter("rows");
-				if(Lib.istEmpty(current)) {
-					page.setCurrent(Integer.parseInt(current));
-				}
-				else {
-					page.setCurrent(1);
-				}
-				if(Lib.istEmpty(rows)) {
-					page.setRows(Integer.parseInt(rows));
-				}
-				else {
-					page.setRows(20);
-				}
-				
-				departmentModels = departmentService.getTable(page);
-
-				
-				JSONObject jo = new JSONObject();
-				JSONObject jp = new JSONObject();
-				JSONArray jds = new JSONArray();
-				jp.put("total", page.getTotal());
-				jp.put("records", page.getRecords());
-				jp.put("rows", page.getRows());
-				jp.put("current", page.getCurrent());
-				
-				for(int i=0; i<departmentModels.length; i++) {
-					JSONObject jd = new JSONObject();
-					jd.put("O_DEPARTID", departmentModels[i].getO_DEPARTID());
-					jd.put("O_PARENTID", departmentModels[i].getO_PARENTID());
-					jd.put("O_DEPARTNAME", departmentModels[i].getO_DEPARTNAME());
-					jd.put("O_PARENTNAME", departmentModels[i].getO_PARENTNAME());
-					jd.put("F_DEPARTMENTTYPE", departmentModels[i].getF_DEPARTMENTTYPE());
-					jd.put("O_DEPARTNAMEPATH", departmentModels[i].getO_DEPARTNAMEPATH());
-					jds.add(jd);
-				}
-				
-				jo.put("data", jds);
-				jo.put("pagination", jp);
-				
-				response.setContentType("application/json; charset=utf-8");
-				response.getWriter().write(content(jo));
+			case "search":
+				search(request, response);
 				break;
 			case "add":
-				departmentModel = new DepartmentModel();
-				departmentModel.setO_PARENTID(request.getParameter("O_PARENTID"));
-				departmentModel.setO_DEPARTTYPE(request.getParameter("O_DEPARTTYPE"));
-				departmentModel.setO_DEPARTNAME(request.getParameter("O_DEPARTNAME"));
-				departmentModel.setO_PARENTNAME(request.getParameter("O_PARENTNAME"));
-
-				boolean a = departmentService.addDepartment(departmentModel);
-				if(a) {
-					response.setContentType("application/json; charset=utf-8");
-					response.getWriter().write(success("创建成功"));
-				} 
-				else {
-					response.setContentType("application/json; charset=utf-8");
-					response.getWriter().write(error(2, "创建失败"));
-				}
+				add(request, response);
 				break;
 			case "update":
-				
+				update(request, response);
 				break;
 			case "delete":
-				
+				delete(request, response);
 				break;
-			default: break;
+			case "select":
+				select(request, response);
+				break;
+			case "tree":
+				tree(request, response);
+				break;
+			default: 
+				response.getWriter().write(error(3, "ajax参数错误"));
+				break;
 		}
 		
 	}
+	private void tree(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	private void add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		JSONObject jo = toJSON(request);
+		
+		DepartmentModel departmentModel = departmentService.jTB(jo);
+
+		boolean a = departmentService.addDepartment(departmentModel);
+		if(a) {
+			response.getWriter().write(success("创建成功"));
+		} 
+		else {
+			response.getWriter().write(error(2, "创建失败"));
+		}
+	}
+
+	private void select(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		DepartmentModel[] departmentModels;
+		JSONObject jOb;
+		JSONArray jArr;
+
+		departmentModels = departmentService.getAll();
+		
+		jOb = new JSONObject();
+		jArr = new JSONArray();
+		
+		for(int i=0; i<departmentModels.length; i++) {
+			JSONObject jEle = new JSONObject();
+			jEle.put("ODEPARTID", departmentModels[i].getODEPARTID());
+			jEle.put("OPARENTID", departmentModels[i].getOPARENTID());
+			jEle.put("ODEPARTCODE", departmentModels[i].getODEPARTCODE());
+			jEle.put("ODEPARTNAME", departmentModels[i].getODEPARTNAME());
+			jEle.put("FDEPARTMENTTYPE", departmentModels[i].getFDEPARTMENTTYPE());
+			jEle.put("ODEPARTNAMEPATH", departmentModels[i].getODEPARTNAMEPATH());
+			jArr.add(jEle);
+		}
+		
+		jOb.put("data", jArr);
+		
+		response.getWriter().write(content(jOb));
+	}
+
+	private void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+
+		String[] ids = request.getParameterValues("ids[]");
+
+		boolean a = departmentService.deleteDepartment(ids);
+		if(a) {
+			response.getWriter().write(success("删除成功"));
+		} 
+		else {
+			response.getWriter().write(error(2, "删除失败，该部门下还有车辆或人员"));
+		}
+	}
+
+	private void update(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		JSONObject jo = toJSON(request);
+		
+		DepartmentModel departmentModel = departmentService.jTB(jo);
+
+		boolean a = departmentService.updateDepartment(departmentModel);
+		if(a) {
+			response.getWriter().write(success("修改成功"));
+		} 
+		else {
+			response.getWriter().write(error(2, "修改失败"));
+		}
+	}
+
+	private void search(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		DepartmentModel[] departmentModels;
+		Pagination p;
+		JSONObject jOb;
+		JSONArray jArr;
+		
+		p = departmentService.dTP(request.getParameter("current"), request.getParameter("rows"));
+
+		JSONObject jo = toJSON(request);
+		DepartmentModel departmentModel = departmentService.jTB(jo);
+		
+		departmentModels = departmentService.getTable(p, departmentModel);
+		
+		jOb = new JSONObject();
+		jArr = new JSONArray();
+		
+		for(int i=0; i<departmentModels.length; i++) {
+			JSONObject jEle = new JSONObject();
+			jEle.put("ODEPARTID", departmentModels[i].getODEPARTID());
+			jEle.put("OPARENTID", departmentModels[i].getOPARENTID());
+			jEle.put("ODEPARTNAME", departmentModels[i].getODEPARTNAME());
+			jEle.put("OPARENTNAME", departmentModels[i].getOPARENTNAME());
+			jEle.put("FDEPARTMENTTYPE", departmentModels[i].getFDEPARTMENTTYPE());
+			jEle.put("ODEPARTCODE", departmentModels[i].getODEPARTCODE());
+			jEle.put("ODEPARTNAMEPATH", departmentModels[i].getODEPARTNAMEPATH());
+			jArr.add(jEle);
+		}
+		
+		jOb.put("data", jArr);
+		jOb.put("pagination", departmentService.pTJ(p));
+		
+		response.getWriter().write(content(jOb));
+	}
+	
 }

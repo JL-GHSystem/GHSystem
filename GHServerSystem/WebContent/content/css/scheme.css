@@ -1,0 +1,39 @@
+@charset "UTF-8";
+.main
+{
+	display:　block;
+	padding-left: 300px;
+	height: 100%;
+}
+.leftFrame
+{
+	width: 300px;
+	height: 100%;
+	float: left;
+	margin-left: -300px;
+}
+
+.centerFrame
+{
+	display: block;
+	float: left;
+	width: 60%;
+	height: 100%;
+}
+
+.rightFrame
+{
+	display: block;
+	float: left;
+	width: 40%;
+	height: 100%;
+}
+.frame:nth-child(1)
+{
+	margin: 10px 10px;
+}
+#searchF
+{
+	float: left;
+	margin: 0 8px 5px 0;
+}

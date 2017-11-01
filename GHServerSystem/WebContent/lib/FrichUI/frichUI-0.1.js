@@ -292,6 +292,25 @@
 	    	})
 	        return td;
 	    },
+	    createLabel:function(id,value){
+	    	var la=$("<label></label>");
+	    	la.attr({
+	    		for:id
+	    	});
+	    	la.append(value);
+	    	return la;
+	    },
+	    createInput:function(id,type,value,disabled,hidden){
+	    	var inp=$("<input></input>");
+	    	inp.attr({
+	    		id:id,
+	    		type:type,
+	    		value:value,
+	    		disabled:disabled,
+	    		hidden:hidden
+	    	});
+	    	return inp;
+	    },
 		initCreate: function(dom, customer){
 			options = $.extend(true, {}, this.defaul, customer);
 			$(dom).empty();
@@ -376,7 +395,6 @@
 			models: [],							//列模型 [{},{}]
 			//data: null						//数据模型 {v:,c:},{v:,c:}
 			pagination: this.defaulPagination,
-	    	ajaxType: "table",
 			ajax: {
 				type: "POST",
 			    url: null,
@@ -483,43 +501,22 @@
 				var tr = this.createTr("FrichUI_Table_r"+ (k+1) +" FrichUI_Table_DataRow");
 				var i = 0;
 				
-				if(onlyFixed){
-					if(options.enableSingleSelect){
-						var td = this.createTd("FrichUI_Table_RadioColumn");
-						var div = this.createDiv("FrichUI_Table_c" + i, "<input type=\"radio\" name=\"radioF\">");
-						td.attr({width: options.selectModel.width});
-						td.append(div);
-						tr.append(td);
-						i++;
-					}
-					
-					if(options.enableMuiltSelect){
-						var td = this.createTd("FrichUI_Table_CheckColumn");
-						var div = this.createDiv("FrichUI_Table_c" + i, "<input type=\"checkbox\" name=\"checkboxF\">");
-						td.attr({width: options.selectModel.width});
-						td.append(div);
-						tr.append(td);
-						i++;
-					}
+				if(options.enableSingleSelect){
+					var td = this.createTd("FrichUI_Table_RadioColumn");
+					var div = this.createDiv("FrichUI_Table_c" + i, "<input type=\"radio\" name=\""+ options.id +"radioF\">");
+					td.attr({width: options.selectModel.width});
+					td.append(div);
+					tr.append(td);
+					i++;
 				}
-				else {
-					if(options.enableSingleSelect){
-						var td = this.createTd("FrichUI_Table_RadioColumn");
-						var div = this.createDiv("FrichUI_Table_c" + i, "<input type=\"radio\" name=\"radioC\">");
-						td.attr({width: options.selectModel.width});
-						td.append(div);
-						tr.append(td);
-						i++;
-					}
-					
-					if(options.enableMuiltSelect){
-						var td = this.createTd("FrichUI_Table_CheckColumn");
-						var div = this.createDiv("FrichUI_Table_c" + i, "<input type=\"checkbox\" name=\"checkboxC\">");
-						td.attr({width: options.selectModel.width});
-						td.append(div);
-						tr.append(td);
-						i++;
-					}
+				
+				if(options.enableMuiltSelect){
+					var td = this.createTd("FrichUI_Table_CheckColumn");
+					var div = this.createDiv("FrichUI_Table_c" + i, "<input type=\"checkbox\" name=\""+ options.id +"checkboxF\">");
+					td.attr({width: options.selectModel.width});
+					td.append(div);
+					tr.append(td);
+					i++;
 				}
 				
 				if(options.enableAutoSerial){
@@ -713,53 +710,70 @@
 			house.append(skip);
 			
 			var select = this.createDiv("FrichUI_Table_Pagination_Select");
-			if(options.pagination.current == 1) {
-				select.append("<a class=\"FrichUI_Table_Pagination_First_undown\"></a>"
-						+ "<a class=\"FrichUI_Table_Pagination_Previous_undown\"></a>");
-				
-			}
-			else {
-				select.append("<a class=\"FrichUI_Table_Pagination_First\"></a>"
-						+ "<a class=\"FrichUI_Table_Pagination_Previous\"></a>");
-				
-			}
-			
-			if(options.pagination.total > options.pagination.pages*2 + 5) {
-				if(options.pagination.current <= options.pagination.pages + 3){
-					for(var i=1; i<=options.pagination.pages*2 + 3; i++){
-						if(i == options.pagination.current) {
-							select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
-						}
-						else {
-							select.append(this.createA("FrichUI_Table_Pagination_Page", i));
-						}
-					}
-					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i=options.pagination.total - 1; i<=options.pagination.total; i++){
-						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
-					}
-				}
-				else if(options.pagination.current >= (options.pagination.total - (options.pagination.pages + 2))){
-					for(var i=1; i<=2; i++){
-						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
-					}
-					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i=(options.pagination.total - (options.pagination.pages*2 + 2))
-							; i<= options.pagination.total; i++){
-						if(i == options.pagination.current) {
-							select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
-						}
-						else {
-							select.append(this.createA("FrichUI_Table_Pagination_Page", i));
-						}
-					}
+			if(options.pagination.total > 0) {
+				if(options.pagination.current == 1) {
+					select.append("<a class=\"FrichUI_Table_Pagination_First_undown\"></a>"
+							+ "<a class=\"FrichUI_Table_Pagination_Previous_undown\"></a>");
+					
 				}
 				else {
-					for(var i=1; i<=2; i++){
-						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+					select.append("<a class=\"FrichUI_Table_Pagination_First\"></a>"
+							+ "<a class=\"FrichUI_Table_Pagination_Previous\"></a>");
+					
+				}
+				
+				if(options.pagination.total > options.pagination.pages*2 + 5) {
+					if(options.pagination.current <= options.pagination.pages + 3){
+						for(var i=1; i<=options.pagination.pages*2 + 3; i++){
+							if(i == options.pagination.current) {
+								select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
+							}
+							else {
+								select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+							}
+						}
+						select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
+						for(var i=options.pagination.total - 1; i<=options.pagination.total; i++){
+							select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+						}
 					}
-					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i = options.pagination.current-1; i<=options.pagination.current+1; i++){
+					else if(options.pagination.current >= (options.pagination.total - (options.pagination.pages + 2))){
+						for(var i=1; i<=2; i++){
+							select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+						}
+						select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
+						for(var i=(options.pagination.total - (options.pagination.pages*2 + 2))
+								; i<= options.pagination.total; i++){
+							if(i == options.pagination.current) {
+								select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
+							}
+							else {
+								select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+							}
+						}
+					}
+					else {
+						for(var i=1; i<=2; i++){
+							select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+						}
+						select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
+						for(var i = options.pagination.current-1; i<=options.pagination.current+1; i++){
+							if(i == options.pagination.current) {
+								select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
+							}
+							else {
+								select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+							}
+						}
+						select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
+						for(var i=options.pagination.total - 1; i<=options.pagination.total; i++){
+							select.append(this.createA("FrichUI_Table_Pagination_Page", i));
+						}
+					}
+					
+				}
+				else {
+					for(var i=1; i<=options.pagination.total; i++){
 						if(i == options.pagination.current) {
 							select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
 						}
@@ -767,32 +781,18 @@
 							select.append(this.createA("FrichUI_Table_Pagination_Page", i));
 						}
 					}
-					select.append(this.createA("FrichUI_Table_Pagination_Decode", '…'));
-					for(var i=options.pagination.total - 1; i<=options.pagination.total; i++){
-						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
-					}
 				}
-				
-			}
-			else {
-				for(var i=1; i<=options.pagination.total; i++){
-					if(i == options.pagination.current) {
-						select.append(this.createA("FrichUI_Table_Pagination_Page_undown", i));
-					}
-					else {
-						select.append(this.createA("FrichUI_Table_Pagination_Page", i));
-					}
-				}
-			}
 
-			if(options.pagination.current == options.pagination.total) {
-				select.append("<a class=\"FrichUI_Table_Pagination_Next_undown\"></a>"
-						+ "<a class=\"FrichUI_Table_Pagination_Last_undown\"></a>");
+				if(options.pagination.current == options.pagination.total) {
+					select.append("<a class=\"FrichUI_Table_Pagination_Next_undown\"></a>"
+							+ "<a class=\"FrichUI_Table_Pagination_Last_undown\"></a>");
+				}
+				else {
+					select.append("<a class=\"FrichUI_Table_Pagination_Next\"></a>"
+							+ "<a class=\"FrichUI_Table_Pagination_Last\"></a>");
+				}
 			}
-			else {
-				select.append("<a class=\"FrichUI_Table_Pagination_Next\"></a>"
-						+ "<a class=\"FrichUI_Table_Pagination_Last\"></a>");
-			}
+			
 			house.append(select);
 			
 			frame.append(house);
@@ -972,9 +972,9 @@
 			
 			var width = $(dom).find(".FrichUI_Table_Pagination_House").width();
 			
-			var selectWidth = 300,
-				skipWidth = $(dom).find(".FrichUI_Table_Pagination_Skip").width(),
-				tipsWidth = $(dom).find(".FrichUI_Table_Pagination_Tips").width();
+			var selectWidth = $(dom).find(".FrichUI_Table_Pagination_Select").width(),
+				skipWidth = $(dom).find(".FrichUI_Table_Pagination_Skip").width() + 5,
+				tipsWidth = $(dom).find(".FrichUI_Table_Pagination_Tips").width() + 5;
 			
 			if(width >= selectWidth + skipWidth + tipsWidth) {
 				fa.find(".FrichUI_Table_Pagination_Skip").show();
@@ -986,10 +986,10 @@
 				fa.find(".FrichUI_Table_Pagination_Tips").hide();
 				fa.find(".FrichUI_Table_Pagination_Select").show();
 			}
-			else if(width >= tipsWidth + skipWidth) {
-				fa.find(".FrichUI_Table_Pagination_Skip").show();
-				fa.find(".FrichUI_Table_Pagination_Tips").show();
-				fa.find(".FrichUI_Table_Pagination_Select").hide();
+			else if(width >= selectWidth) {
+				fa.find(".FrichUI_Table_Pagination_Skip").hide();
+				fa.find(".FrichUI_Table_Pagination_Tips").hide();
+				fa.find(".FrichUI_Table_Pagination_Select").show();
 			}
 			else if(width >= skipWidth) {
 				fa.find(".FrichUI_Table_Pagination_Skip").show();
@@ -1012,32 +1012,50 @@
 		
 		var fa = this;
 		if(options.enableAjax) {
-			var data = $.extend(true, { 
-				type: options.ajaxType,
-				current: options.pagination.current,
-				rows: options.pagination.rows
-			}, options.ajax.data);
-			
-			$.ajax({
-				type: "POST",
-			    url: options.ajax.url,
-			    data: data,
-			    beforeSend: function(){
-			    	options.ajax.beforeSend();
-			    },
-			    success: function (data) {
-			    	options.ajax.success(data, options);
-			    	fa.load(dom, options);
-			    },
-			    error: function (err) {
-			    	options.ajax.error(err);
-			    }
-			});
+			if(options.loadPagination) {
+				var data = $.extend(true, options.ajax.data, options.pagination);
+				
+				$.ajax({
+					type: "POST",
+				    url: options.ajax.url,
+				    data: data,
+				    dataType: "json",
+				    beforeSend: function(){
+				    	options.ajax.beforeSend();
+				    },
+				    success: function (data) {
+				    	options.ajax.success(data, options);
+				    	fa.load(dom, options);
+				    },
+				    error: function (err) {
+				    	options.ajax.error(err);
+				    }
+				});
+			}
+			else {
+				var data = options.ajax.data;
+				
+				$.ajax({
+					type: "POST",
+				    url: options.ajax.url,
+				    data: data,
+				    dataType: "json",
+				    beforeSend: function(){
+				    	options.ajax.beforeSend();
+				    },
+				    success: function (data) {
+				    	options.ajax.success(data, options);
+				    	fa.load(dom, options);
+				    },
+				    error: function (err) {
+				    	options.ajax.error(err);
+				    }
+				});
+			}
 		}
 		else {
 			fa.load(dom, options);
 		}
-		
 		
 		//根据options设置contentHouse addClass no Pagnation
 	}
@@ -1056,10 +1074,10 @@
 			return $(this.dom).find(".FrichUI_Table_r" + row + " .FrichUI_Table_c" + col).html();
 		}
 		this.getSingleValue = function(col) {
-			return $(this.dom).find("input[name='radioC']:checked").parents("tr").find(".FrichUI_Table_c" + col).html();
+			return $(this.dom).find(".FrichUI_Table_DataRow_Select").find(".FrichUI_Table_c" + col).html();
 		}
 		this.getSingleRow = function() {
-			var c = $(this.dom).find("input[name='radioC']:checked").parents("tr");
+			var c = $(this.dom).find(".FrichUI_Table_DataRow_Select");
 			if(c.length == 0)	{
 				return;
 			}
@@ -1073,7 +1091,7 @@
 		}
 		
 		this.getMuiltValue = function(col){
-			var c = $(this.dom).find("input[name='checkboxC']:checked").parents("tr");
+			var c = $(this.dom).find(".FrichUI_Table_DataRow_Select");
 			if(c.length == 0)	{
 				return;
 			}
@@ -1088,7 +1106,7 @@
 		this.getMuiltRow = function(){
 			var fa = this;
 			
-			var c = $(this.dom).find("input[name='checkboxC']:checked").parents("tr");
+			var c = $(this.dom).find("input[type='checkbox']:checked").parents("tr");
 			if(c.length == 0)	{
 				return;
 			}
@@ -1940,7 +1958,170 @@
 	}
 	
 	FrichUI.prototype.Affair = new AffairFactory();
+	
+	/*
+	 * 2.3.8 form组件
+	 */	
+	var FormFactory = function(){
+		Factory.call(this);		
+		
+		this.defaul = $.extend(true, {}, this.defaul, {
+			model: "<div class='FrichUI_Form_Content'><i class='FrichUI_Form_checkBox FrichUI_Form_checkBox_nocheck'></i><a>{name}</a></div>",
+			data: null,
+			inputs:null,
+		});
 
+		this.createULLI = function(options, model, data, level){
+			var child = options.child;
+			
+			var ul = this.createUl("FrichUI_Form_House " + "FrichUI_Form_Level" + level);
+			
+			var param = model.match(reg1);
+			for(var a in param){
+				param[a] = param[a].replace(/\{/, '').replace(/\}/, '');
+			}
+			
+			for(var i=0; i<data.length; i++){
+				var li = this.createLi("FrichUI_Form_Room");
+				
+				var str = model;
+				for(var j=0; j<param.length; j++){
+					var d = data[i][param[j]];
+					if(frichUI.istEmpty(d)){
+						var reg = new RegExp("\{"+param[j]+"\}", "g");
+						str = str.replace(reg, d);
+					}
+				}
+				
+				li.append(str);
+				
+				if(!$.isEmptyObject(data[i][child])){
+					li.append(this.createULLI(options, model, data[i][child], level+1));
+				}
+				
+				ul.append(li);
+			}
+			
+			return ul;
+		};
+		
+		
+		this.createInputs = function(inputs){
+			var inphouse=this.createDiv("FrichUI_Form_InputHouse");
+			for(var i=0;i<inputs.length;i++){
+				var inputcontent = this.createDiv("FrichUI_Form_Input");
+				if(inputs[i].showLabel){
+					var label = this.createLabel(inputs[i].id,inputs[i].title)
+					inputcontent.append(label);
+				}
+				var input = this.createInput(inputs[i].id,inputs[i].type,inputs[i].defaul,
+							inputs[i].disabled,inputs[i].hidden);
+				inputcontent.append(input);
+				inphouse.append(inputcontent);
+			}
+			return inphouse;
+		};
+		
+	}
+
+	FormFactory.prototype = new Factory();
+	
+	FormFactory.prototype.make = function(dom, customer){
+		var options = this.initCreate(dom, customer);
+		
+		/* 创建基架 */
+		var frame = this.createFrame("FrichUI_Form_Frame");
+		
+		frame.append(this.createULLI(options, options.model, options.data, 1));
+		frame.append(this.createInputs(options.inputs));
+		frame.appendTo(dom);
+		formEntity = new FormEntity(frame, options);
+		frichUI.push(formEntity);
+		
+		return formEntity;
+	};
+	
+	/*Form实体*/
+	var FormEntity = function(frame,options){
+		this.frame= frame;
+		this.options=options;
+		
+		var fa = this;
+		$(frame).find(".FrichUI_Form_checkBox").click(function() {
+			fa.iterator($(this));
+		});
+		
+		this.iterator = function (i){
+			if(i.hasClass("FrichUI_Form_checkBox_checked")) {
+				i.parent(".FrichUI_Form_Content").parent(".FrichUI_Form_Room").find(".FrichUI_Form_checkBox")
+				.removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_nocheck");
+				this.CheckTree($(".FrichUI_Form_Frame"), 1);
+			}
+			else if (i.hasClass("FrichUI_Form_checkBox_halfcheck")) {
+				i.parent(".FrichUI_Form_Content").parent(".FrichUI_Form_Room").find(".FrichUI_Form_checkBox")
+				.removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_checked");
+				
+				this.CheckTree($(".FrichUI_Form_Frame"), 1);
+			}
+			else if (i.hasClass("FrichUI_Form_checkBox_nocheck")){
+				i.parent(".FrichUI_Form_Content").parent(".FrichUI_Form_Room").find(".FrichUI_Form_checkBox")
+				.removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_checked");
+				
+				this.CheckTree($(".FrichUI_Form_Frame"), 1);
+			}
+		}
+		
+		this.CheckTree = function (i, level){
+			var rooms = $(i).children(".FrichUI_Form_Level" + level).children(".FrichUI_Form_Room");
+			
+			if(rooms.length > 0) {
+				var total = 0;
+				var must = false;
+				for(var k=0; k<rooms.length; k++) {
+					var count = this.CheckTree(rooms[k], level + 1);
+					if(count == "half") {
+						must = true;
+					}
+					else {
+						total += count;
+					}
+				}
+				if(must) {
+					$(i).children(".FrichUI_Form_Content")
+					.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_halfcheck");
+					return "half";
+				}
+				else if(total == 0) {
+					$(i).children(".FrichUI_Form_Content")
+					.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_nocheck");
+					return 0;
+				}
+				else if(total == rooms.length) {
+					$(i).children(".FrichUI_Form_Content")
+					.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_checked");
+					return 1;
+				}
+				else if(total < rooms.length) {
+					$(i).children(".FrichUI_Form_Content")
+					.children("i").removeClass().addClass("FrichUI_Form_checkBox FrichUI_Form_checkBox_halfcheck");
+					return "half";
+				}
+			}
+			else {
+				if($(i).children(".FrichUI_Form_Content")
+						.children("i")
+						.hasClass("FrichUI_Form_checkBox_checked")){
+					return 1;
+				}
+				else {
+					return 0;
+				}
+			}
+		}
+	}
+		
+	
+	FrichUI.prototype.Form = new FormFactory();
 	/*
 	 * 3. 静态定义层
 	 */

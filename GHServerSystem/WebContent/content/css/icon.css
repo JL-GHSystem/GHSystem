@@ -17,7 +17,7 @@
 	height: 40px;
 	background: url(../../img/userHead/head.jpg);
 }
-.add
+i.add
 {
 	position: static;
 	display: block;
@@ -25,7 +25,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat -56px -30px;
 }
-.update
+i.update
 {
 	position: static;
 	display: block;
@@ -33,7 +33,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat -5px -57px;
 }
-.search
+i.search
 {
 	position: static;
 	display: block;
@@ -41,7 +41,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat -2px -4px;
 }
-.input
+i.input
 {
 	position: static;
 	display: block;
@@ -49,7 +49,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat -56px -3px;
 }
-.output
+i.output
 {
 	position: static;
 	display: block;
@@ -57,7 +57,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat -25px -3px;
 }
-.download
+i.download
 {
 	position: static;
 	display: block;
@@ -65,7 +65,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat -28px -30px;
 }
-.delete
+i.delete
 {
 	position: static;
 	display: block;
@@ -73,7 +73,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat  -3px -30px;
 }
-.bind
+i.bind
 {
 	position: static;
 	display: block;
@@ -81,7 +81,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat  -3px -30px;
 }
-.unbind
+i.unbind
 {
 	position: static;
 	display: block;
@@ -89,7 +89,7 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat  -3px -30px;
 }
-.hide
+i.hide
 {
 	position: static;
 	display: block;
@@ -97,12 +97,27 @@
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat  -3px -30px;
 }
-
-.save
+i.save
 {
 	position: static;
 	display: block;
 	width: 20px;
 	height: 20px;
 	background: url(../../icon/tools.png) no-repeat -3px -30px;	
+}
+i.complete
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/tools.png) no-repeat -56px -54px;	
+}
+i.cancle
+{
+	position: static;
+	display: block;
+	width: 20px;
+	height: 20px;
+	background: url(../../icon/tools.png) no-repeat -27px -56px;	
 }

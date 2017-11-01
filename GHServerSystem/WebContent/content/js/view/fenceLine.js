@@ -35,7 +35,20 @@ function update() {
 				    url: "../json/fence.do",
 				    data: a + "&type=updateBind",
 				    success: function (data) {
-				    	
+				    	if(data.r == "1") {
+					    	F.Affair.make(undefined, {
+					    		type: "success",
+					    		message: data.m,
+					    		reload: true
+					    	})
+				    	}
+				    	else {
+					    	F.Affair.make(undefined, {
+					    		type: "error",
+					    		message: data.m,
+					    		reload: false
+					    	})
+				    	}
 				    },
 				    error: function (err) {
 				    	F.Affair.make(undefined, {
@@ -357,9 +370,9 @@ function ajax(){
 $(document).ready(function(){
 	ajax();
 	
-	$(".searchA").click(searchAll);
-	$(".searchC").click(searchCurrent);
-	$(".searchM").click(searchMap);
+	$("#searchA").click(searchAll);
+	$("#searchC").click(searchCurrent);
+	$("#searchM").click(searchMap);
 	
 	$("#update").click(update);
 	$("#unbind").click(unbind);

@@ -3,8 +3,12 @@ package com.server.service;
 import com.common.enums.Pagination;
 import com.server.app.FenceApp;
 import com.server.model.FenceModel;
+import com.server.model.IModel;
 
-public class FenceService {
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
+public class FenceService implements IService{
 	private FenceApp fenceApp = new FenceApp();
 
 	public FenceModel[] getTable(Pagination page, String search) {
@@ -65,6 +69,18 @@ public class FenceService {
 	public boolean updateFenceInLine(FenceModel fenceModel) {
 		// TODO Auto-generated method stub
 		return fenceApp.updateFenceInLine(fenceModel);
+	}
+
+	@Override
+	public IModel jTB(JSONObject jo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IModel[] jTB(JSONArray ja) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

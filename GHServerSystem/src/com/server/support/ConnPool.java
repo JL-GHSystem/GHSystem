@@ -7,7 +7,7 @@ import com.common.enums.Driver;
 
 public class ConnPool {
 	public static final int MAX_CONNECTION = 20;
-	public static final int TIMEOUT_CONNECTION = 1000 * 10;
+	public static final int TIMEOUT_CONNECTION = 1000 * 2;
 	
 	private String driver;
 	private String url;

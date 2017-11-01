@@ -1,20 +1,22 @@
 package com.common.enums;
 
 public class Pagination {
-
-/*	private int total;*/
-/*	private int pages;*/
-	private int records;
-	private int current;
-	private int rows;
 	
-	public int getTotal() {
+	private int records = 0;
+	private int current = 1;
+	private int rows = 20;
+	private int total = 0;
+
+	public void setTotal() {
 		if(records % rows == 0) {
-			return records / rows;
+			total = records / rows;
 		}
 		else {
-			return records / rows + 1;
+			total = records / rows + 1;
 		}
+	}
+	public int getTotal() {
+		return total;
 	}
 	public int getRecords() {
 		return records;

@@ -11,16 +11,15 @@
 			F.init("../../../lib/FrichUI/", F.FRICHUI_THEME_DARK);
 			
 			var data = {
-				type: "table"
+				type: "select"
 			}
 			
-			
 			F.Table.make($("#table"), {
-				enableAutoSerial: true,
+				loadHead: false,
+				loadPagination: false,
 				enableSingleSelect: true,
 				showSingleSelect: true,
 				enableAjax: true,
-				title: "部门管理",
 				models: [{
 					name: "id",
 					hide: true
@@ -28,9 +27,9 @@
 					name: "fid",
 					hide: true
 				},{
-					name: "部门名"
+					name: "部门编号"
 				},{
-					name: "上级部门名"
+					name: "部门名"
 				},{
 					name: "部门类型"
 				},{
@@ -39,20 +38,13 @@
 				}],
 				ajax: {
 					url: "../../../json/department.do",
-					data: null,
+					data: data,
 					beforeSend: function() {
 						
 					},
 				    success: function (data, options) {
 				    	options.data = data.o.data;
-				    	var pages = options.pagination.pages;
-				    	options.pagination = {
-							total: data.o.pagination.total,
-							pages: pages,					//当前页基础上显示几页 > 0
-							records: data.o.pagination.records,
-							current: data.o.pagination.current,
-							rows: data.o.pagination.rows
-						}
+				    	options.pagination = $.extend(true, {}, options.pagination, data.o.pagination);
 				    },
 				    error: function (err) {
 				    	F.Affair.make(undefined, {
@@ -67,8 +59,10 @@
 		
 		var select = function(){
 			return {
-				id: F.entitys("table").getSingleValue(2),
+				id: F.entitys("table").getSingleValue(1),
+				code: F.entitys("table").getSingleValue(3),
 				name: F.entitys("table").getSingleValue(4),
+				path: F.entitys("table").getSingleValue(6)
 			}
 		}
 	</script>

@@ -14,26 +14,58 @@
 			<tbody>
 				<tr>
 					<td>
-						<input id="O_PARENTID" name="O_PARENTID" type="text" class="hide">
-						<input id="O_DEPARTTYPE" name="O_DEPARTTYPE" type="text" value='bd877733-1a30-4bc1-bf12-9a3efe1ce932' class="hide">
+						<input id="OPARENTID" name="OPARENTID" type="text" class="hide" readonly="readonly">
+						<input id="ODEPARTTYPE" name="ODEPARTTYPE" type="text" value='bd877733-1a30-4bc1-bf12-9a3efe1ce932' class="hide NoEmpty" readonly="readonly">
+						<input id="OPARENTPATH" name="OPARENTPATH" type="text" class="hide" readonly="readonly">
 					</td>
 				</tr>
 				<tr>
 					<td>
-						<label for="O_DEPARTNAME">部门名*</label>
-						<input id="O_DEPARTNAME" name="O_DEPARTNAME" type="text" class="NoEmpty">
+						<label for="OPARENTNAME">上级部门</label>
 					</td>
 					<td>
-						<label for="O_PARENTNAME">上级部门*</label>
-						<input id="O_PARENTNAME" name="O_PARENTNAME" type="text" class="NoEmpty">
+						<input id="OPARENTNAME" name="OPARENTNAME" type="text">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ODEPARTNAME">部门名*</label>
+					</td>
+					<td>
+						<input id="ODEPARTNAME" name="ODEPARTNAME" type="text" class="NoEmpty">
+					</td>
+					<td>
+						<label for="ODEPARTCODE">部门编号*</label>
+					</td>
+					<td>
+						<input id="ODEPARTCODE" name="ODEPARTCODE" type="text" value="1001" class="NoEmpty">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="ODEPARTNAMEPATH">部门路径*</label>
+					</td>
+					<td>
+						<input id="ODEPARTNAMEPATH" name="ODEPARTNAMEPATH" type="text" class="NoEmpty" placeholder="自动同步..." readonly="readonly">
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</form>
+	<p class="info"></p>
 	<script type="text/javascript">
+		function link() {
+			var v = $("#ODEPARTNAME").val();
+			var p = $("#OPARENTPATH").val();
+			$("#ODEPARTNAMEPATH").val(p + "/" + v);
+		}
+	
+		$("#ODEPARTNAME").blur(function() {
+			link();
+		});
+
 		var a = true;
-		$("#O_PARENTNAME").focus(function(){
+		$("#OPARENTNAME").focus(function(){
 			if(a) {
 				F.Dialog.make(undefined, {
 					title: "选择父节点",
@@ -53,8 +85,10 @@
 					},
 					confirmClick: function(doc, fa){
 						var rs = doc.contentWindow.select();
-						$("#O_PARENTID").val(rs.id);
-						$("#O_PARENTNAME").val(rs.name);
+						$("#OPARENTID").val(rs.id);
+						$("#OPARENTNAME").val(rs.name);
+						$("#OPARENTPATH").val(rs.path);
+						link();
 						fa.clear();
 					},
 					cancleClick: function(){

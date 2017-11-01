@@ -16,6 +16,7 @@ import com.server.iDao.IFenceDao;
 import com.server.map.Map;
 import com.server.model.FenceModel;
 import com.server.model.FenceNodeModel;
+import com.server.model.SchemeModel;
 import com.server.support.ConnBean;
 import com.server.support.Dao;
 
@@ -130,7 +131,8 @@ public class FenceDao extends Dao implements IFenceDao {
 						.on(Map.FENCE_LINE_MAP, "O_FENCEID", "T1")
 						.leftJoin(sql2)
 						.on(Map.FENCE_LINE_MAP, "O_DEPARTID", "T2")
-						.where("T2.O_DEPARTID = ?").end(), page);
+						.where("T2.O_DEPARTID = ?")
+						.orderBy("O_FENCENO").end(), page);
 				
 				//DTO²Ù×÷
 				PreparedStatement pst = cn.prepareStatement(sql);
@@ -146,6 +148,52 @@ public class FenceDao extends Dao implements IFenceDao {
 					fenceModel.setF_DEPARTNAME(rs.getString(4));
 					fenceModel.setO_FENCETYPE(Fence.parseInt(rs.getInt(5)));
 					page.setRecords(rs.getInt(6));
+					fenceModels.add(fenceModel);
+				}
+				rs.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Dao.freeConn(cb);
+		}
+		return fenceModels;
+	}
+
+	@Override
+	public ArrayList<FenceModel> selectByLine(String o_LineCode) {
+		// TODO Auto-generated method stub
+		ArrayList<FenceModel> fenceModels = new ArrayList<FenceModel>();
+		if(Lib.isEmpty(o_LineCode)) {
+			return fenceModels;
+		}
+		ConnBean cb = Dao.getConn();
+		if(cb != null){
+			Connection cn = cb.getConn();
+			try {
+				String sql = ex.select("O_FENCENO", 
+						"O_AREANAME", "O_FENCENAME", "O_FENCETYPE")
+						.from(Map.FENCE_LINE_MAP, "t1")
+						.leftJoin(Map.DEPARTMENT_MAP, "t2")
+						.on("t1", "O_DEPARTID", "t2")
+						.leftJoin(Map.FENCE_MAP, "t3")
+						.on("t1", "O_FENCEID", "t3")
+						.where("O_DEPARTCODE = ?")
+						.orderBy("O_FENCENO").end();
+				
+				//DTO²Ù×÷
+				PreparedStatement pst = cn.prepareStatement(sql);
+				pst.setString(1, o_LineCode);
+				
+				ResultSet rs = pst.executeQuery();
+				while(rs.next()) 
+				{
+					FenceModel fenceModel = new FenceModel();
+					fenceModel.setF_FENCENO(rs.getInt(1));
+					fenceModel.setF_AREANAME(rs.getString(2));
+					fenceModel.setO_FENCENAME(rs.getString(3));
+					fenceModel.setO_FENCETYPE(Fence.parseInt(rs.getInt(4)));
 					fenceModels.add(fenceModel);
 				}
 				rs.close();
@@ -293,6 +341,67 @@ public class FenceDao extends Dao implements IFenceDao {
 			Dao.freeConn(cb);
 		}
 		return fenceModel;
+	}
+
+	@Override
+	public ArrayList<FenceModel> selectByScheme(SchemeModel schemeModel) {
+		ArrayList<FenceModel> fenceModels = new ArrayList<FenceModel>();
+		ConnBean cb = Dao.getConn();
+		if(cb != null){
+			Connection cn = cb.getConn();
+			try {
+				String sql = ex.select("T1.O_FENCEID", "T1.O_DEPARTID", 
+						"T2.O_DEPARTCODE", "T1.O_FENCENO", "T1.O_AREANAME", 
+						"T3.O_FENCENAME", "T3.O_FENCETYPE")
+						.from(Map.FENCE_LINE_MAP, "T1")
+						.leftJoin(Map.DEPARTMENT_MAP, "T2")
+						.on("T1", "O_DEPARTID", "T2")
+						.leftJoin(Map.FENCE_MAP, "T3")
+						.on("T1", "O_FENCEID", "T3")
+						.whereIn("T1.O_FENCENO", schemeModel.getO_PROGRAMID().size())
+						.and("T2.O_DEPARTCODE = ?")
+						.orderByDecode("t1.O_FENCENO", schemeModel.getO_PROGRAMID().size()).end();
+				
+				//DTO²Ù×÷
+				PreparedStatement pst = cn.prepareStatement(sql);
+				int i = 1;
+				Iterator<Integer> it = schemeModel.getO_PROGRAMID().iterator();
+				while(it.hasNext()) {
+					pst.setInt(i, it.next());
+					i++;
+				}
+				
+				pst.setString(i, schemeModel.getO_DEPARTCODE());
+				i++;
+				
+				it = schemeModel.getO_PROGRAMID().iterator();
+				while(it.hasNext()) {
+					pst.setInt(i, it.next());
+					i++;
+				}
+				
+				ResultSet rs = pst.executeQuery();
+				while(rs.next()) 
+				{
+					FenceModel fenceModel = new FenceModel();
+					fenceModel.setO_FENCEID(rs.getString(1));
+					fenceModel.setF_DEPARTID(rs.getString(2));
+					fenceModel.setF_DEPARTCODE(rs.getString(3));
+					fenceModel.setF_FENCENO(rs.getInt(4));
+					fenceModel.setF_AREANAME(rs.getString(5));
+					fenceModel.setO_FENCENAME(rs.getString(6));
+					fenceModel.setO_FENCETYPE(Fence.parseInt(rs.getInt(7)));
+					fenceModels.add(fenceModel);
+				}
+				rs.close();
+				pst.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Dao.freeConn(cb);
+		}
+		return fenceModels;
 	}
 
 	@Override

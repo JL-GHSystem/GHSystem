@@ -13,62 +13,54 @@
 </head>
 <body>
 	<div class="frame">
-		<div class="selection">
-			<form id="form">
-				<table>
-					<tbody>
-						<tr>
-							<td>
-								<label>部门</label>
-								<input type="text"/>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
-		</div>
-		<div class="selectBox">
-			<a class="tool" id="search">
+		<div class="selection topSelection" id="selection">
+			<label for="ODEPARTNAME">车辆编号</label><input type="text" id="ODEPARTNAME" name="ODEPARTNAME"/>
+			<label for="OPARENTNAME">所属部门</label><input type="text" id="OPARENTNAME" name="OPARENTNAME"/>
+			<a class="tool search" id="search">
 				<I class="search"></I>
 				<label>查询</label>
 			</a>
-			<a class="tool" id="hide">
-				<I class="hide"></I>
-				<label>隐藏</label>
-			</a>
 		</div>
-	</div>
-	<div class="hr">
-	
-	</div>
-	<div class="frame">
+		
 		<div class="toolBox">
-			<a class="tool" id="add">
+			<a class="tool add" id="add">
 				<I class="add"></I>
 				<label>新增</label>
 			</a>
-			<a class="tool" id="update">
+			<a class="tool update" id="update">
 				<I class="update"></I>
 				<label>修改</label>
 			</a>
-			<a class="tool" id="input">
+			<a class="tool complete" id="complete">
+				<I class="complete"></I>
+				<label>确认删除</label>
+			</a>
+			<a class="tool cancle" id="cancle">
+				<I class="cancle"></I>
+				<label>取消删除</label>
+			</a>
+			<a class="tool input" id="input">
 				<I class="input"></I>
 				<label>导入</label>
 			</a>
-			<a class="tool" id="output">
+			<a class="tool output" id="output">
 				<I class="output"></I>
 				<label>导出</label>
 			</a>
-			<a class="tool" id="download">
+			<a class="tool download" id="download">
 				<I class="download"></I>
 				<label>下载</label>
 			</a>
-			<a class="tool" id="delete">
+			<a class="tool hide" id="hide">
+				<I class="hide"></I>
+				<label>展开</label>
+			</a>
+			<a class="tool delete" id="delete">
 				<I class="delete"></I>
 				<label>删除</label>
 			</a>
 		</div>
-		<div id="table">
+		<div class="table" id="table">
 		
 		</div>
 	</div>

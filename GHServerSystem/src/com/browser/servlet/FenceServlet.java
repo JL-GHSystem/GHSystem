@@ -231,20 +231,7 @@ public class FenceServlet extends HttpServlet implements IServlet {
 				}
 				break;
 			case "fenceInLine":
-				String currents = request.getParameter("current");
-				String rowss = request.getParameter("rows");
-				if(Lib.istEmpty(currents)) {
-					page.setCurrent(Integer.parseInt(currents));
-				}
-				else {
-					page.setCurrent(1);
-				}
-				if(Lib.istEmpty(rowss)) {
-					page.setRows(Integer.parseInt(rowss));
-				}
-				else {
-					page.setRows(20);
-				}
+				page = fenceService.dTP(request.getParameter("current"), request.getParameter("rows"));
 				
 				String o_LineId = request.getParameter("id");
 				if(Lib.istEmpty(o_LineId)) {

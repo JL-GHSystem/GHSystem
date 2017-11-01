@@ -256,6 +256,7 @@
 	border-top: 1px solid #a3aabb;
 	color: #444b5d;
 	font-weight: bold;
+	text-align: center;
 }
 .FrichUI_Table_Pagination_Tips,
 .FrichUI_Table_Pagination_Skip
@@ -278,9 +279,8 @@
 
 .FrichUI_Table_Pagination_Select
 {
-	display:block;
+	display:inline-block;
 	height: 100%;
-	text-align: center;
 }
 .FrichUI_Table_Pagination_Select a
 {

@@ -19,7 +19,7 @@ import net.sf.json.JSONObject;
  * Servlet implementation class MenuServlet
  */
 
-public class MenuServlet extends HttpServlet implements IServlet {
+public class MenuServlet extends ServletBase implements IServlet {
 	private static final long serialVersionUID = 1L;
 	private MenuService menuService = new MenuService();
 
@@ -51,12 +51,11 @@ public class MenuServlet extends HttpServlet implements IServlet {
 		UserModel userModel = (UserModel) session.getAttribute("P_User");
 
 		MenuModel[] menuModels;
-		MenuModel menuModel = new MenuModel();
+		MenuModel menuModel = new MenuModel(); 
 		switch(type) {
 			case "tree":
 				menuModels = menuService.getMenu(userModel);
 				
-				response.setContentType("application/json; charset=utf-8");
 				response.getWriter().write(content(JSONArray.fromObject(menuModels)));
 				break;
 			case "table":

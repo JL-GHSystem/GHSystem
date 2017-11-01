@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<link href="../content/css/content.css" rel="stylesheet" type="text/css">
+
+<script src="../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	F.init("../lib/FrichUI/", F.FRICHUI_THEME_DARK);
+	
+	F.Form.make($("#tree"), {
+		 data:"",
+		 inputs:[{
+				id:"treeI",
+				showLabel: true,
+				title:"性别",
+				type: "",
+				hide: false,
+				disable: false,
+				defaul:""	
+			},
+			{
+				id:"12",
+				showLabel: true,
+				title:"hh",
+				type: "",
+				hide: false,
+				disable: false,
+				defaul:""
+				
+			}]
+	 });
+});
+</script>
+</head>
+<body>
+	<div id="tree">
+	
+	</div>
+
+</body>
+</html>

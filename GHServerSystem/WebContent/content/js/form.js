@@ -6,15 +6,25 @@ var error = {
 }
 
 function checkForm(){
-	var a = true;
+	var pass = true;
+	$("p.info").html("");
 	$.each($("input.NoEmpty"), function(i, item){
 		if($.isEmptyObject($(item).val())) {
+			var id = $(item).attr("name");
 			$(item).addClass("error");
-			a = false;
-			$("p.info").append($(item).prev("label").html() + error.s1 + "<br>");
+			pass = false;
+			if($("label#" + id).length != 0) {
+				$("p.info").append($("label#" + id).html() + "&nbsp;&nbsp;、&nbsp;&nbsp;");
+			}
+			else {
+				$("p.info").append($("label[for=" + id + "]").html() + "&nbsp;&nbsp;、&nbsp;&nbsp;");
+			}
 		}
 	})
-	return a;
+	if(!pass) {
+		$("p.info").append(error.s1 + "<br>");
+	}
+	return pass;
 }
 
 $(document).ready(function(){

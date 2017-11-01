@@ -105,10 +105,19 @@ public class DaoEx {
         sql.append(" ");
 		return this;
 	}
-	
+
 	public DaoEx leftJoin(String tableName) {
 		sql.append("left join ");
 		sql.append(tableName);
+        sql.append(" ");
+		return this;
+	}
+	
+	public DaoEx leftJoin(String tableName, String displayName) {
+		sql.append("left join ");
+		sql.append(tableName);
+        sql.append(" ");
+		sql.append(displayName);
         sql.append(" ");
 		return this;
 	}
@@ -149,10 +158,11 @@ public class DaoEx {
 		return this;
 	}
 	
-	public DaoEx and(String options) {
-		sql.append("and ");
-    	sql.append(options);
-        sql.append(" ");
+	public DaoEx and(String... options) {
+        for (int i = 0; i < options.length; i++) {
+    		sql.append("and " + options[i]);
+            sql.append(" ");
+        }
 		return this;
 	}
 
@@ -163,7 +173,7 @@ public class DaoEx {
 		return this;
 	}
 	
-	public DaoEx whereIn(String colName, int index, String... options) {
+	public DaoEx whereIn(String colName, int index) {
 		sql.append("where ");
     	sql.append(colName);
     	sql.append(" in (");
@@ -176,9 +186,22 @@ public class DaoEx {
         	}
         }
 		sql.append(") ");
-        for (int i = 0; i < options.length; i++) {
-    		sql.append(" and " + options[i]);
+		return this;
+	}
+
+	public DaoEx andIn(String colName, int index) {
+		sql.append("and ");
+    	sql.append(colName);
+    	sql.append(" in (");
+        for (int i = 0; i < index; i++) {
+        	if(i == 0) {
+            	sql.append("?");
+        	}
+        	else {
+        		sql.append(", ?");
+        	}
         }
+		sql.append(") ");
 		return this;
 	}
 
@@ -192,21 +215,42 @@ public class DaoEx {
 	public DaoEx like(String colName, String search) {
 		// TODO Auto-generated method stub
 		sql.append(colName);
-		sql.append(" like '%"+ search +"%' ");
+		if(search!=null) {
+			sql.append(" like '%"+ search +"%' ");
+		}
+		else {
+			sql.append(" like '%%' ");
+		}
 		return this;
 	}
 	
 	public DaoEx orderBy(String... colName) {
-		sql.append("order by ");
+		sql.append("order by");
         for (int i = 0; i < colName.length; i++) {
         	if(i == 0) {
-            	sql.append(colName[i]);
+            	sql.append(" " + colName[i]);
         	}
         	else {
         		sql.append(", " + colName[i]);
         	}
         }
         sql.append(" ");
+		return this;
+	}
+	
+	public DaoEx orderByDecode(String colName, int index) {
+		sql.append("order by decode (");
+		sql.append(colName);
+		sql.append(", ");
+        for (int i = 1; i <= index; i++) {
+        	if(i == 1) {
+            	sql.append(" ?," + i);
+        	}
+        	else {
+        		sql.append(", ?," + i);
+        	}
+        }
+        sql.append(") ");
 		return this;
 	}
 	

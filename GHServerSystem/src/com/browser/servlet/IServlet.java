@@ -47,4 +47,5 @@ public interface IServlet {
 		js.put("m", msg);
 		return js.toString();
 	}
+	
 }

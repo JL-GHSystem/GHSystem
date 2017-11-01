@@ -1,84 +1,91 @@
 package com.server.model;
 
-public class LineModel {
-	private String O_DEPARTID;
-	private String O_DEPARTNAME;
-	private String O_PARENTID;
-	private String O_PARENTNAME;
-	private String O_DEPARTNAMEPATH;
-	private String O_DEPARTIDPATH;
-	private String O_DEPARTTYPE;
-	private String O_DEPARTCODE;
-	private String O_DEPARTSORTID;
-	private String O_DEPARTBRIEFCODE;
+public class LineModel implements IModel {
+	private String ODEPARTID;
+	private String ODEPARTNAME;
+	private String OPARENTID;
+	private String OPARENTNAME;
+	private String ODEPARTNAMEPATH;
+	private String ODEPARTIDPATH;
+	private String ODEPARTTYPE;
+	private String ODEPARTCODE;
+	private String ODEPARTSORTID;
+	private String ODEPARTBRIEFCODE;
 	
-	private String F_DEPARTMENTTYPE;
+	private String FDEPARTMENTTYPE;
+	private DepartmentModel FDEPART;
 	
-	public String getO_DEPARTID() {
-		return O_DEPARTID;
+	public String getODEPARTID() {
+		return ODEPARTID;
 	}
-	public void setO_DEPARTID(String o_DEPARTID) {
-		O_DEPARTID = o_DEPARTID;
+	public void setODEPARTID(String oDEPARTID) {
+		ODEPARTID = oDEPARTID;
 	}
-	public String getO_DEPARTNAME() {
-		return O_DEPARTNAME;
+	public String getODEPARTNAME() {
+		return ODEPARTNAME;
 	}
-	public void setO_DEPARTNAME(String o_DEPARTNAME) {
-		O_DEPARTNAME = o_DEPARTNAME;
+	public void setODEPARTNAME(String oDEPARTNAME) {
+		ODEPARTNAME = oDEPARTNAME;
 	}
-	public String getO_PARENTID() {
-		return O_PARENTID;
+	public String getOPARENTID() {
+		return OPARENTID;
 	}
-	public void setO_PARENTID(String o_PARENTID) {
-		O_PARENTID = o_PARENTID;
+	public void setOPARENTID(String oPARENTID) {
+		OPARENTID = oPARENTID;
 	}
-	public String getO_PARENTNAME() {
-		return O_PARENTNAME;
+	public String getOPARENTNAME() {
+		return OPARENTNAME;
 	}
-	public void setO_PARENTNAME(String o_PARENTNAME) {
-		O_PARENTNAME = o_PARENTNAME;
+	public void setOPARENTNAME(String oPARENTNAME) {
+		OPARENTNAME = oPARENTNAME;
 	}
-	public String getO_DEPARTNAMEPATH() {
-		return O_DEPARTNAMEPATH;
+	public String getODEPARTNAMEPATH() {
+		return ODEPARTNAMEPATH;
 	}
-	public void setO_DEPARTNAMEPATH(String o_DEPARTNAMEPATH) {
-		O_DEPARTNAMEPATH = o_DEPARTNAMEPATH;
+	public void setODEPARTNAMEPATH(String oDEPARTNAMEPATH) {
+		ODEPARTNAMEPATH = oDEPARTNAMEPATH;
 	}
-	public String getO_DEPARTIDPATH() {
-		return O_DEPARTIDPATH;
+	public String getODEPARTIDPATH() {
+		return ODEPARTIDPATH;
 	}
-	public void setO_DEPARTIDPATH(String o_DEPARTIDPATH) {
-		O_DEPARTIDPATH = o_DEPARTIDPATH;
+	public void setODEPARTIDPATH(String oDEPARTIDPATH) {
+		ODEPARTIDPATH = oDEPARTIDPATH;
 	}
-	public String getO_DEPARTTYPE() {
-		return O_DEPARTTYPE;
+	public String getODEPARTTYPE() {
+		return ODEPARTTYPE;
 	}
-	public void setO_DEPARTTYPE(String o_DEPARTTYPE) {
-		O_DEPARTTYPE = o_DEPARTTYPE;
+	public void setODEPARTTYPE(String oDEPARTTYPE) {
+		ODEPARTTYPE = oDEPARTTYPE;
 	}
-	public String getO_DEPARTCODE() {
-		return O_DEPARTCODE;
+	public String getODEPARTCODE() {
+		return ODEPARTCODE;
 	}
-	public void setO_DEPARTCODE(String o_DEPARTCODE) {
-		O_DEPARTCODE = o_DEPARTCODE;
+	public void setODEPARTCODE(String oDEPARTCODE) {
+		ODEPARTCODE = oDEPARTCODE;
 	}
-	public String getO_DEPARTSORTID() {
-		return O_DEPARTSORTID;
+	public String getODEPARTSORTID() {
+		return ODEPARTSORTID;
 	}
-	public void setO_DEPARTSORTID(String o_DEPARTSORTID) {
-		O_DEPARTSORTID = o_DEPARTSORTID;
+	public void setODEPARTSORTID(String oDEPARTSORTID) {
+		ODEPARTSORTID = oDEPARTSORTID;
 	}
-	public String getO_DEPARTBRIEFCODE() {
-		return O_DEPARTBRIEFCODE;
+	public String getODEPARTBRIEFCODE() {
+		return ODEPARTBRIEFCODE;
 	}
-	public void setO_DEPARTBRIEFCODE(String o_DEPARTBRIEFCODE) {
-		O_DEPARTBRIEFCODE = o_DEPARTBRIEFCODE;
+	public void setODEPARTBRIEFCODE(String oDEPARTBRIEFCODE) {
+		ODEPARTBRIEFCODE = oDEPARTBRIEFCODE;
 	}
-	public String getF_DEPARTMENTTYPE() {
-		return F_DEPARTMENTTYPE;
+	public String getFDEPARTMENTTYPE() {
+		return FDEPARTMENTTYPE;
 	}
-	public void setF_DEPARTMENTTYPE(String f_DEPARTMENTTYPE) {
-		F_DEPARTMENTTYPE = f_DEPARTMENTTYPE;
+	public void setFDEPARTMENTTYPE(String fDEPARTMENTTYPE) {
+		FDEPARTMENTTYPE = fDEPARTMENTTYPE;
+	}
+	public DepartmentModel getFDEPART() {
+		return FDEPART;
+	}
+	public void setFDEPART(DepartmentModel fDEPART) {
+		FDEPART = fDEPART;
 	}
 
 }

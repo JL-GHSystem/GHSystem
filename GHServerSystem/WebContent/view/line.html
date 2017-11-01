@@ -13,32 +13,43 @@
 </head>
 <body>
 	<div class="frame">
+		<div class="selection topSelection" id="selection">
+			<label for="ODEPARTNAME">线路</label><input type="text" id="ODEPARTNAME" name="ODEPARTNAME"/>
+			<label for="OPARENTNAME">所属部门</label><input type="text" id="OPARENTNAME" name="OPARENTNAME"/>
+			<a class="tool search" id="search">
+				<I class="search"></I>
+				<label>查询</label>
+			</a>
+		</div>
+		
 		<div class="toolBox">
-			<a class="tool" id="add">
+			<a class="tool add" id="add">
 				<I class="add"></I>
 				<label>新增</label>
 			</a>
-			<a class="tool" id="update">
+			<a class="tool update" id="update">
 				<I class="update"></I>
 				<label>修改</label>
 			</a>
-			<a class="tool" id="complete">
+			<a class="tool complete" id="complete">
 				<I class="complete"></I>
-				<label>完成</label>
+				<label>确认删除</label>
 			</a>
-			<a class="tool" id="cancle">
+			<a class="tool cancle" id="cancle">
 				<I class="cancle"></I>
-				<label>取消</label>
+				<label>取消删除</label>
 			</a>
-			<a class="tool" id="delete">
+			<a class="tool hide" id="hide">
+				<I class="hide"></I>
+				<label>展开</label>
+			</a>
+			<a class="tool delete" id="delete">
 				<I class="delete"></I>
 				<label>删除</label>
 			</a>
 		</div>
-		<div id="table">
+		<div class="table" id="table">
 		
-		</div>
-		<div class="toolBox" id="submitBox">
 		</div>
 	</div>
 </body>

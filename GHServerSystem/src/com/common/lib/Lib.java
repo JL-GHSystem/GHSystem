@@ -14,12 +14,12 @@ public class Lib {
 		}
 		return false;
 	}
-	public static boolean isEmpty(String[] s) {
-		return !Lib.istEmpty(s);
-	}
-	
 	public static boolean istEmpty(String s){
 		return !Lib.isEmpty(s);
+	}
+	
+	public static boolean isEmpty(String[] s) {
+		return !Lib.istEmpty(s);
 	}
 	public static boolean istEmpty(String[] s){
 		if(s!=null && s.length > 0) {
@@ -29,4 +29,5 @@ public class Lib {
 			return false;
 		}
 	}
+	
 }

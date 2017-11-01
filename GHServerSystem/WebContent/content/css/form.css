@@ -1,23 +1,42 @@
 @charset "UTF-8";
-input
+input[type='text']
 {
+	width: 175px;
 	height: 25px;
 	padding: 0;
 	border: 1px solid #CCC;
 	outline: none;
 	text-indent: 5px;
 }
-input:focus
+input[type='text']:focus
 {
 	border: 1px solid #88F;
 	box-shadow: 0 0 3px #88F;
 }
-input.error
+input[type='text'].error
 {
 	border: 1px solid #F88;
 	box-shadow: 0 0 3px #F88;
 }
-input.hide
+input[type='text'].hide
 {
 	display: none;
+}
+input[readonly='readonly']
+{
+	border: 1px solid #AAA;
+	background-color: #EFEFEF;
+}
+table
+{
+	width: 100%;
+	font-size: 14px;
+}
+p.info
+{
+	margin: 10px 0 0 0;
+	color: #F00;
+	font-size: 14px;
+	height: 22px;
+	line-height: 22px;
 }

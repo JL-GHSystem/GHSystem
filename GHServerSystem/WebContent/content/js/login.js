@@ -17,7 +17,7 @@ $(document).ready(function(){
 			var obj = $("#Login").serialize();
 			$.ajax({
 				type: "POST",
-			    url: "json/login.do",
+			    url: "login.do",
 			    data: obj,// 要提交的表单
 			    beforeSend: function(){
 			    	fa.removeClass();

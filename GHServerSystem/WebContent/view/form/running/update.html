@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script src="../../../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="../../../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+<script src="../../../content/js/form.js" type="text/javascript"></script>
+<link href="../../../content/css/form.css" rel="stylesheet" />
+</head>
+
+<body>
+	<form id="update">
+		<table>
+			<tbody>
+				<tr>
+					<td>
+						<input id="O_USERGROUPID" name="O_USERGROUPID" type="text" class="hide">
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<label for="O_USERGROUPNAME">角色名*</label>
+						<input id="O_USERGROUPNAME" name="O_USERGROUPNAME" type="text" class="NoEmpty">
+					</td>
+				</tr>
+		</table>
+		<h4>权限设置</h4>
+		<div id="table">
+			
+		</div>
+		<div>
+			<p class="info"></p>
+		</div>
+	</form>
+	<script type="text/javascript">
+	function ajax(){
+
+		var data = {
+			type: "table"
+		}
+		
+		$.ajax({
+			type: "POST",
+		    url: "../../../json/menu.do",
+		    data: data,
+		    beforeSend: function(){
+		    	
+		    },
+		    success: function (data) {
+		    	F.Table.make($("#table"), {
+	    			loadHead: false,
+					loadPagination: false,
+		    		enableAutoSerial: true,
+		    		enableMuiltSelect: true,
+		    		showMuiltSelect: true,
+		    		models: [{
+		    			name: "id",
+		    			hide: true
+		    		},{
+		    			name: "fid",
+		    			hide: true
+		    		}, {
+		    			name: "菜单名"
+		    		}, {
+		    			name: "上级菜单"
+		    		}, {
+		    			name: "菜单级别"
+		    		}, {
+		    			name: "菜单排序",
+		    			hide: true
+		    		}, {
+		    			name: "菜单映射",
+		    			hide: true
+		    		}, {
+		    			name: "菜单状态",
+		    			boolDisplay: ["已启用", "已禁用"],
+		    			hide: true
+		    		}],
+		    		data: data.o
+		    	});
+		    },
+		    error: function (err) {
+		    	
+		    }
+		});
+	}
+	
+	$(document).ready(function(){
+		ajax();
+		
+	})
+	</script>
+</body>
+</html>

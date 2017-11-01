@@ -468,8 +468,7 @@ var pagnation = {
 }
 
 //加载围栏数据
-function load_fence(searchWords) {
-	
+function load_fence(searchWords) {	
     $.ajax({
         url: "../json/fence.do",
         data: {
@@ -711,6 +710,12 @@ $(document).ready(function () {
     
     $("#SearchSubmit").click(function(){
         if ($("#Search").val() != "" && $("#Search").val() != undefined) {
+    		pagnation = {
+			    total: 1,
+			    records: 0,
+			    current: 1,
+			    rows: 20
+			}
         	load_fence($("#Search").val());
         }
         else {

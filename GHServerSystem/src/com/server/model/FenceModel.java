@@ -14,6 +14,7 @@ public class FenceModel {
 	
 	private String F_DEPARTNAME;
 	private String F_DEPARTID;
+	private String F_DEPARTCODE;
 
 	private int F_FENCENO;
 	private String F_AREANAME;
@@ -38,7 +39,7 @@ public class FenceModel {
 
 	public void setO_FENCENAME(String o_FENCENAME) {
 		O_FENCENAME = o_FENCENAME;
-	}	
+	}
 
 	public String getO_FENCETYPE() {
 		return O_FENCETYPE;
@@ -152,6 +153,14 @@ public class FenceModel {
 
 	public void setF_SPEEDLIMT(int f_SPEEDLIMT) {
 		F_SPEEDLIMT = f_SPEEDLIMT;
+	}
+
+	public String getF_DEPARTCODE() {
+		return F_DEPARTCODE;
+	}
+
+	public void setF_DEPARTCODE(String f_DEPARTCODE) {
+		F_DEPARTCODE = f_DEPARTCODE;
 	}
 		
 }

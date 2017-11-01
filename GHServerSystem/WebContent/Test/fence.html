@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>围栏绘制</title>
+<script src="../lib/jquery/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=ltqbX4kKrQ7hDpzaTkf57fYv" type="text/javascript"></script>
+<script src="../lib/baiduMap/DrawingManager.js" type="text/javascript"></script>
+<link href="../lib/baiduMap/DrawingManager.css" rel="stylesheet" />
+
+<script src="../lib/coordinate/Convertor.js" type="text/javascript"></script>
+<script src="../lib/FrichUI/frichUI-0.1.js" type="text/javascript"></script>
+<script src="../content/js/content.js" type="text/javascript"></script>
+<link href="../lib/baiduMap/common.css" rel="stylesheet" type="text/css">
+<script src="../content/js/view/fence.js"></script>
+</head>
+<style>
+    #BaiduMap {
+        width: 100%;
+        height: 100%;
+    }
+
+    #FenceShowRoom{
+        position: absolute;
+        top: 20px;
+        left: 35px;
+        width: 300px;
+        height: 630px;
+    }
+
+    .SearchBox
+    {
+        position: relative;
+        display: block;
+        float: right;
+        width: 163px;
+    }
+    .SearchBox input
+    {
+        position: relative;
+        float: right;
+        display: none;
+        outline: none;
+        width: 0;
+        border: 1px solid #DDD;
+        padding: 1px 3px 1px 5px;
+        margin: 8px 6px 8px 0;
+        height: 20px;
+        border-radius: 5px 5px 5px 5px;
+    }
+    .SearchBox input:focus
+    {
+        border-color: #1ABC9C;
+    }
+    .SearchBox .FenceSearch {
+        position: relative;
+        float: right;
+        display: block;
+        width: 17px;
+        height: 17px;
+        margin: 11.5px 10px 11.5px 0;
+        cursor: pointer;
+    }
+
+    /* 如果需要引用，请定义为新的CSS */
+    .FencePage
+    {
+        position: static;
+        display: block;
+        width: 100%;
+        height: 590px;
+        overflow: hidden;
+    }
+    .FenceRoom
+    {
+        position: static;
+        display: block;
+        width: 100%;
+        height: 550px;
+        overflow: hidden;
+    }
+    .FenceDL
+    {
+        position: static;
+        display: block;
+        padding: 0 0;
+        margin: 0;
+    }
+    .FenceDT
+    {
+    	font-size: 14px;
+    }
+    .FenceContent
+    {
+    	font-size: 12px;
+    }
+    .FenceDT,
+    .FenceContent
+    {
+        position: static;
+        display: block;
+        padding: 0 10px;
+        margin: 0;
+        line-height: 25px;
+        overflow: hidden;
+    }
+    .FenceContent:hover
+    {
+        background-color: rgba(226, 226, 226, 0.7);
+    }
+    .FenceSerial,
+    .FenceName,
+    .FenceType,
+    .FenceDoing
+    {
+        position: static;
+        display: block;
+        float: left;
+        padding: 0 5px 0 0;
+        margin: 0;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break:keep-all;
+        white-space:nowrap;
+    }
+    .FenceSerial
+    {
+        width: 30px;
+        height: 25px;
+    }
+    .FenceId
+    {
+        display: none;
+    }
+    .FenceName
+    {
+        width: 135px;
+        height: 25px;
+    }
+    .FenceType
+    {
+        width: 40px;
+        height: 25px;
+    }
+    .FenceDoing
+    {
+        padding: 0;
+        width: 60px;
+        height: 25px;
+        text-align: right;
+    }
+    .FenceDoing a, 
+    .FenceOperation a
+    {
+        position: static;
+        display: block;
+        float: right;
+        padding: 0 0 0 5px;
+        height: 25px;
+        text-align: right;
+    }
+    .FenceOperation
+    {
+        position: static;
+        display: none;
+        float: left;
+        margin: 0;
+        padding: 0;
+        width: 60px;
+        height: 25px;
+        text-align: right;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break:keep-all;
+        white-space:nowrap;
+    }
+    .FenceDescription
+    {
+        position: static;
+        display: none;
+        float: left;
+        padding: 0 0 0 30px;
+        margin: 0;
+        width: 250px;
+        height: 25px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        word-break:keep-all;
+        white-space:nowrap;
+    }
+    .Select
+    {
+        background-color: rgba(132, 251, 255, 0.5);
+        color: #000;
+    }
+    .Select:hover
+    {
+        background-color: rgba(132, 251, 255, 0.5);
+        color: #000;
+    }
+    .Select .FenceDelete
+    {
+        color: #F00;
+    }
+    .Select .FenceChange
+    {
+        color: #00F;
+    }
+    .Select .FenceSave
+    {
+        color: #F00;
+    }
+    .Select .FenceCancle
+    {
+        color: #F00;
+    }
+    .Select .FenceDescription
+    {
+        display: block;
+    }
+    dd.Error
+    {
+        position: static;
+        display: block;
+        margin: 80px auto 0 auto;
+        padding: 0;
+        width: 100%;
+        height: 200px;
+        line-height: 200px;
+        color: #F00;
+        text-align: center;
+    }
+    dd.Load
+    {
+        position: static;
+        display: block;
+        margin: 80px auto 0 auto;
+        height: 60px;
+    }
+    dd.Load a
+    {
+        position: static;
+        display: block;
+        margin: 0 auto;
+        width: 40px;
+        height: 40px;
+    }
+    dd.Load div
+    {
+        position: static;
+        display: block;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+    }
+    
+    .FenceGride
+    {
+        position: static;
+        display: block;
+        width: 100%;
+        height: 40px;
+        overflow: hidden;
+    }
+    .FencePageBox
+    {
+        position: static;
+        display: block;
+        padding: 0 10px;
+        height: 100%;
+    }
+    .FencePageBox a.Tools
+    {
+        width: 21px;
+        height: 21px;
+    }
+    .FencePageBox a:hover
+    {
+        color: #000;
+        background-color: rgba(226, 226, 226, 0.7);
+    }
+    .FencePageBox a.left
+    {
+        float: left;
+        margin: 9.5px 5px 9.5px 0;
+    }
+    .FencePageBox a.right
+    {
+        float: right;
+        margin: 9.5px 0 9.5px 5px;
+    }
+    .FencePageBox input
+    {
+        position: static;
+        display: block;
+        float: left;
+        outline: none;
+        padding: 1px 5px;
+        margin: 8px 9px 8px 0;
+        width: 35px;
+        height: 20px;
+        border: 1px solid #DDD;
+        border-radius: 5px 5px 5px 5px;
+    }
+    .FencePageBox input:focus 
+    {
+        border-color: #1ABC9C;
+    }
+
+    #FenceDrawRoom
+    {
+        position: absolute;
+        top: 20px;
+        left: 370px;
+    }
+    .FenceDrawHead
+    {
+        position: static;
+        display: block;
+        padding: 0 10px;
+        height: 30px;
+    }
+    .FenceDrawHead a.Tools
+    {
+        height: 21px;
+        width: 21px;
+    }
+    .FenceDrawHead a.left
+    {
+        float: left;
+        margin: 4.5px 5px 4.5px 0;
+    }
+    .FenceDrawHead a.right
+    {
+        float: right;
+        margin: 4.5px 0 4.5px 5px;
+    }
+
+    .FenceDrawTools
+    {
+        position: static;
+        display: block;
+        padding: 0 10px;
+        height: 60px;
+    }
+    .FenceDrawTools a.Tools
+    {
+        margin: 10px 10px 0 0;
+        float: left;
+        width: 40px;
+        height: 40px;
+    }
+    .FenceDrawTools a.Tools:last-child
+    {
+        margin: 10px 0 0 0;
+    }
+    .FenceDrawTools a.Select,
+    .FenceDrawHead a.Select
+    {
+        background-color: rgba(132, 251, 255, 0.5);
+    }
+    .FenceDrawTools a.Select:hover,
+    .FenceDrawHead a.Select:hover
+    {
+        background-color: rgba(132, 251, 255, 0.5);
+    }
+
+</style>
+<body>
+	<div id="BaiduMap">
+
+    </div>
+    <script src="../lib/baiduMap/InitMap.js" type="text/javascript"></script>
+    <!-- 围栏查看控件 -->
+    <div id="FenceShowRoom" class="Frame">
+        <div class="Title FenceTitle">
+            <h5 class="Name">围栏检索</h5>
+            <div class="SearchBox">
+                <a class="Tools Search FenceSearch" id="SearchSubmit"></a>
+                <input placeholder="开始搜索……" id="Search" />
+            </div>
+        </div>
+        <div class="FencePage">
+            <div class="FenceRoom">
+                <dl class="FenceDL" id="FenceDL">
+                    <dt class="FenceDT">
+                        <span class="FenceSerial">序号</span>
+                        <span class="FenceName">围栏名</span>
+                        <span class="FenceType">类型</span>
+                        <span class="FenceDoing">操作</span>
+                    </dt>
+                </dl>
+            </div>
+            <div class="FenceGride">
+                <div class="FencePageBox">
+                    <a id="First" class="Tools First left" title="首页"></a>
+                    <a id="Previous" class="Tools Previous left" title="前一页"></a>
+                    <input type="text" class="Page" value="1"/>
+                    <a id="PageSubmit" class="Tools PageSubmit left" title="跳转">Go</a>
+                    <a id="Next" class="Tools Next left" title="下一页"></a>
+                    <a id="Last" class="Tools Last left" title="尾页"></a>
+                    <a class="Tools OperationList right" title="批量操作"></a>
+                    <a class="Tools Locked right" title="锁定"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 围栏绘制控件 -->
+    <div id="FenceDrawRoom" class="Frame">
+        <div class="Title">
+            <h5 class="Name">围栏绘制</h5>
+            <a class="Tools Locked" title="锁定"></a>
+        </div>
+        <div class="FenceDrawHead">
+            <!-- 新建 -->
+            <a id="New"class="Tools New left" title="新建"></a>
+
+            <!-- 保存 -->
+            <a id="Save" class="Tools Save left" title="保存"></a>
+
+            <!-- 清除所有 -->
+            <a id="Clear" class="Tools Clear left" title="清除所有"></a>
+
+            <!-- 退出 -->
+            <a id="Close" class="Tools Close right" title="退出"></a>
+        </div>
+        <div class="FenceDrawTools">            
+            <!-- 画多边形 -->
+            <a id="Polygon" class="Tools Polygon" title="多边形"></a>
+            
+            <!-- 画圆 -->
+            <a id="Oval" class="Tools Oval" title="圆形"></a>
+            
+            <!-- 画线 -->
+            <a id="Line" class="Tools Line" title="折线"></a>            
+            
+            <!-- 画矩形 -->
+            <a id="Acetangle" class="Tools Acetangle" title="矩形"></a>
+        </div>
+    </div>
+</body>
+</html>

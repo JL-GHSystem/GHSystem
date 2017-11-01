@@ -42,7 +42,7 @@ public class LoginFilter implements Filter {
 		// place your code here
 		HttpSession session = ((HttpServletRequest)request).getSession();
 		UserModel user = (UserModel)session.getAttribute("P_User");
-		if( user != null && !Lib.isEmpty(user.getO_USERID()) ) {
+		if( user != null && Lib.istEmpty(user.getO_USERID()) ) {
 			chain.doFilter(request, response);
 		}
 		else {

@@ -33,13 +33,25 @@
     <filter-name>loginFilter</filter-name>
     <url-pattern>/view/*</url-pattern>
   </filter-mapping>
+  <filter-mapping>
+    <filter-name>loginFilter</filter-name>
+    <url-pattern>/json/*</url-pattern>
+  </filter-mapping>
+  <filter>
+    <filter-name>jsonFilter</filter-name>
+    <filter-class>com.browser.filter.JSONFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>jsonFilter</filter-name>
+    <url-pattern>/json/*</url-pattern>
+  </filter-mapping>
   <servlet>
     <servlet-name>loginServlet</servlet-name>
     <servlet-class>com.browser.servlet.LoginServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>loginServlet</servlet-name>
-    <url-pattern>/json/login.do</url-pattern>
+    <url-pattern>/login.do</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>logoutServlet</servlet-name>
@@ -104,5 +116,21 @@
   <servlet-mapping>
     <servlet-name>vehicleServlet</servlet-name>
     <url-pattern>/json/vehicle.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>schemeServlet</servlet-name>
+    <servlet-class>com.browser.servlet.SchemeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>schemeServlet</servlet-name>
+    <url-pattern>/json/scheme.do</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>runServlet</servlet-name>
+    <servlet-class>com.browser.servlet.RunServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>runServlet</servlet-name>
+    <url-pattern>/json/run.do</url-pattern>
   </servlet-mapping>
 </web-app>
